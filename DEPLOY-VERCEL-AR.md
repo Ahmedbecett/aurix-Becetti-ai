@@ -37,3 +37,21 @@
   تحديث اللوحة.
 - لا تضع أي مفاتيح Admin أو Cloudflare في المستودع. إعدادات Firebase العامة
   فقط (وهي عامة بطبيعتها).
+
+## 5) حذف طبقات الإعلانات بالكامل
+النسخة الموجودة في هذا المستودع **خالية من الإعلانات** (لا سكربتات bicea/arwf/afders
+ولا iframes إعلانية). الإعلانات كانت في نسخة Firebase المنشورة بتاريخ 25 أكتوبر فقط.
+لإزالتها من الموقع الحي:
+
+```sh
+# مرة واحدة على جهازك
+npm i -g firebase-tools
+firebase login
+firebase deploy --only hosting --project aurix-ea09b
+```
+
+أو بدون تسجيل دخول تفاعلي:
+
+```sh
+FIREBASE_TOKEN="$(firebase login:ci)" bash deploy/firebase-clean.sh
+```
