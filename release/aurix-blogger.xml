@@ -1,0 +1,751 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://www.google.com/2005/gml/b" xmlns:data="http://www.google.com/2005/gml/data" xmlns:expr="http://www.google.com/2005/gml/expr" b:css="false" b:defaultwidgetversion="2" b:layoutsVersion="3" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<meta content="#0b1020" name="theme-color"/>
+<meta content="AURIX is an AI creative studio for real image generation, coding assistance and writing. Imagine. Create. Build." name="description"/>
+<link expr:href="data:blog.canonicalUrl" rel="canonical"/>
+<meta content="website" property="og:type"/>
+<meta content="AURIX — Imagine. Create. Build." property="og:title"/>
+<meta content="Real AI tools for images, code, and writing. No fake results." property="og:description"/>
+<meta expr:content="data:blog.canonicalUrl" property="og:url"/>
+<title><data:blog.pageTitle/></title>
+<b:skin><![CDATA[/* ============================================================
+   AURIX — Skull AI Studio · design system
+   Dark navy / charcoal · orange + violet accents · RTL-aware
+   ============================================================ */
+:root{
+  --bg:#0b1020; --bg2:#0d1226; --surface:#141a2e; --surface2:#1a2138;
+  --line:#232c48; --line2:#2d3757;
+  --text:#e8eaf2; --muted:#9aa3bd; --muted2:#6b7492;
+  --orange:#ff7a1a; --orange2:#ff9440; --violet:#8b5cf6; --violet2:#a78bfa;
+  --ok:#34d399; --warn:#fbbf24; --err:#f87171;
+  --grad:linear-gradient(135deg,#ff7a1a 0%,#8b5cf6 100%);
+  --radius:14px; --radius-sm:10px;
+  --shadow:0 10px 30px rgba(2,6,20,.45);
+  --side-w:248px;
+  --ff:"Segoe UI",system-ui,-apple-system,Roboto,"Helvetica Neue",Arial,sans-serif;
+  --fm:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--ff);font-size:15.5px;line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh}
+img{max-width:100%;display:block}
+a{color:var(--violet2);text-decoration:none}
+a:hover{color:var(--orange2)}
+button{font-family:inherit;cursor:pointer}
+input,textarea,select{font-family:inherit;font-size:15px}
+[hidden]{display:none!important}
+.skip-link{position:absolute;left:-9999px;top:0;background:var(--orange);color:#0b1020;padding:8px 14px;border-radius:0 0 10px 0;z-index:200;font-weight:700}
+.skip-link:focus{left:0}
+::selection{background:rgba(139,92,246,.4)}
+:focus-visible{outline:2px solid var(--orange);outline-offset:2px}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-thumb{background:var(--line2);border-radius:8px}
+::-webkit-scrollbar-track{background:transparent}
+
+/* ---------- shell ---------- */
+.aurix-shell{display:flex;min-height:100vh}
+.aurix-side{width:var(--side-w);flex:0 0 var(--side-w);background:var(--bg2);border-inline-end:1px solid var(--line);position:fixed;inset-block:0;inset-inline-start:0;z-index:100;display:flex;flex-direction:column;overflow-y:auto;transition:transform .22s ease}
+.aurix-wrap{margin-inline-start:var(--side-w);flex:1;min-width:0;display:flex;flex-direction:column;min-height:100vh}
+.aurix-top{position:sticky;top:0;z-index:90;background:rgba(11,16,32,.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:10px 20px;min-height:58px}
+.aurix-main{flex:1;padding:26px clamp(16px,4vw,44px) 60px;max-width:1180px;width:100%;margin:0 auto}
+
+/* brand */
+.brand{display:flex;align-items:center;gap:11px;padding:16px 18px;border-bottom:1px solid var(--line)}
+.brand .logo{width:40px;height:40px;flex:0 0 40px;filter:drop-shadow(0 0 12px rgba(255,122,26,.35))}
+.brand b{font-size:19px;letter-spacing:2.5px;font-weight:800}
+.brand small{display:block;color:var(--muted2);font-size:10.5px;letter-spacing:1.6px;text-transform:uppercase}
+.brand .bname{display:flex;flex-direction:column;line-height:1.25}
+
+/* nav */
+.nav{padding:12px 10px;display:flex;flex-direction:column;gap:2px;flex:1}
+.nav .grp{color:var(--muted2);font-size:10.5px;letter-spacing:1.8px;text-transform:uppercase;padding:14px 10px 6px;font-weight:700}
+.nav a{display:flex;align-items:center;gap:11px;padding:9px 12px;border-radius:var(--radius-sm);color:var(--muted);font-weight:600;font-size:14px;transition:background .15s,color .15s}
+.nav a svg{width:19px;height:19px;flex:0 0 19px;opacity:.85}
+.nav a:hover{background:var(--surface);color:var(--text)}
+.nav a.active{background:linear-gradient(90deg,rgba(255,122,26,.14),rgba(139,92,246,.14));color:var(--text);box-shadow:inset 3px 0 0 var(--orange)}
+[dir=rtl] .nav a.active{box-shadow:inset -3px 0 0 var(--orange)}
+.nav a .badge{margin-inline-start:auto;font-size:10px;background:var(--violet);color:#fff;border-radius:20px;padding:1px 8px;font-weight:700}
+.side-foot{padding:14px 18px;border-top:1px solid var(--line);color:var(--muted2);font-size:11.5px;line-height:1.5}
+
+/* topbar */
+.burger{display:none;background:var(--surface);border:1px solid var(--line2);color:var(--text);width:40px;height:40px;border-radius:10px;align-items:center;justify-content:center}
+.top-title{font-weight:800;font-size:16px;letter-spacing:.4px;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.top-actions{display:flex;align-items:center;gap:8px}
+.langs{display:flex;background:var(--surface);border:1px solid var(--line2);border-radius:10px;overflow:hidden}
+.langs button{background:transparent;border:0;color:var(--muted);padding:8px 11px;font-weight:700;font-size:12.5px}
+.langs button.active{background:var(--grad);color:#fff}
+.backdrop{display:none;position:fixed;inset:0;background:rgba(4,7,18,.6);z-index:99}
+
+/* ---------- generic UI ---------- */
+.page-head{margin-bottom:22px}
+.page-head h1{font-size:clamp(22px,3.4vw,30px);font-weight:800;letter-spacing:.3px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.page-head h1 .ic{width:34px;height:34px;color:var(--orange)}
+.page-head p{color:var(--muted);margin-top:6px;max-width:760px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:22px;box-shadow:var(--shadow)}
+.card + .card{margin-top:18px}
+.card h2{font-size:17px;font-weight:800;margin-bottom:14px;display:flex;align-items:center;gap:9px}
+.card h2 svg{width:19px;height:19px;color:var(--violet2)}
+.field{margin-bottom:15px}
+.field label{display:block;font-size:12.5px;font-weight:700;color:var(--muted);margin-bottom:7px;letter-spacing:.4px}
+.input,.ta,select.input{width:100%;background:var(--bg2);border:1px solid var(--line2);color:var(--text);border-radius:var(--radius-sm);padding:11px 13px;transition:border .15s}
+.input:focus,.ta:focus,select.input:focus{border-color:var(--violet);outline:none;box-shadow:0 0 0 3px rgba(139,92,246,.18)}
+.ta{min-height:120px;resize:vertical;line-height:1.55}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{background:var(--bg2);border:1px solid var(--line2);color:var(--muted);border-radius:30px;padding:7px 14px;font-size:13px;font-weight:600;transition:all .15s}
+.chip:hover{border-color:var(--violet);color:var(--text)}
+.chip.on{background:var(--grad);border-color:transparent;color:#fff;font-weight:700}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;background:var(--grad);color:#fff;border:0;border-radius:var(--radius-sm);padding:12px 22px;font-size:15px;font-weight:800;letter-spacing:.3px;transition:transform .12s,box-shadow .15s;box-shadow:0 6px 20px rgba(255,122,26,.25)}
+.btn:hover{transform:translateY(-1px);box-shadow:0 9px 26px rgba(139,92,246,.35)}
+.btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.btn.ghost{background:var(--surface2);border:1px solid var(--line2);color:var(--text);box-shadow:none}
+.btn.ghost:hover{border-color:var(--violet)}
+.btn.sm{padding:8px 14px;font-size:13px}
+.btn svg{width:17px;height:17px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.hint{font-size:12.5px;color:var(--muted2);margin-top:8px;line-height:1.5}
+.hint b{color:var(--muted)}
+.note{border-radius:var(--radius-sm);padding:12px 15px;font-size:13.5px;line-height:1.55;border:1px solid}
+.note.info{background:rgba(139,92,246,.09);border-color:rgba(139,92,246,.35);color:#cfc4f7}
+.note.warn{background:rgba(251,191,36,.08);border-color:rgba(251,191,36,.35);color:#fde9b0}
+.note.err{background:rgba(248,113,113,.08);border-color:rgba(248,113,113,.4);color:#fecaca}
+.note.ok{background:rgba(52,211,153,.08);border-color:rgba(52,211,153,.35);color:#b8f5dd}
+
+/* states */
+.spinner{width:22px;height:22px;border:3px solid var(--line2);border-top-color:var(--orange);border-radius:50%;animation:spin .8s linear infinite;flex:0 0 22px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.state{display:flex;gap:13px;align-items:flex-start;padding:15px;border-radius:var(--radius-sm);margin-top:14px}
+.state.loading{background:rgba(255,122,26,.07);border:1px solid rgba(255,122,26,.25)}
+.state.error{background:rgba(248,113,113,.08);border:1px solid rgba(248,113,113,.35)}
+.state .msg{font-size:14px}
+.state .msg b{display:block;margin-bottom:2px}
+.pulse{animation:pulse 1.6s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.45}}
+.empty{padding:44px 20px;text-align:center;color:var(--muted2);border:1.5px dashed var(--line2);border-radius:var(--radius)}
+.empty svg{width:44px;height:44px;margin:0 auto 12px;opacity:.5}
+.empty b{color:var(--muted);display:block;font-size:15px;margin-bottom:4px}
+
+/* rate ring */
+.ratebox{display:flex;align-items:center;gap:10px;margin-top:12px;font-size:12.5px;color:var(--muted)}
+.ratering{width:30px;height:30px;position:relative;flex:0 0 30px}
+.ratering svg{transform:rotate(-90deg)}
+.ratering .bgc{stroke:var(--line2)}
+.ratering .fgc{stroke:var(--orange);transition:stroke-dashoffset 1s linear}
+
+/* ---------- landing ---------- */
+.hero{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:20px;background:radial-gradient(1200px 500px at 85% -10%,rgba(139,92,246,.16),transparent 60%),radial-gradient(900px 420px at -10% 110%,rgba(255,122,26,.13),transparent 55%),var(--surface);padding:clamp(34px,6vw,72px) clamp(22px,5vw,64px);text-align:center}
+.hero .skull{width:clamp(88px,13vw,132px);margin:0 auto 20px;filter:drop-shadow(0 0 34px rgba(255,122,26,.45))}
+.hero h1{font-size:clamp(34px,6.4vw,62px);font-weight:900;letter-spacing:6px;margin-bottom:10px}
+.hero h1 span{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero .tag{font-size:clamp(15px,2.2vw,19px);color:var(--muted);letter-spacing:2.5px;text-transform:uppercase;font-weight:600}
+.hero .sub{max-width:640px;margin:16px auto 26px;color:var(--muted)}
+.hero .cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.tools-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;margin-top:18px}
+.tool-card{position:relative;display:block;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:22px;transition:transform .15s,border .15s,box-shadow .15s;color:var(--text)}
+.tool-card:hover{transform:translateY(-3px);border-color:var(--line2);box-shadow:var(--shadow)}
+.tool-card .ic{width:46px;height:46px;border-radius:13px;display:flex;align-items:center;justify-content:center;background:rgba(255,122,26,.12);color:var(--orange);margin-bottom:14px}
+.tool-card.v .ic{background:rgba(139,92,246,.14);color:var(--violet2)}
+.tool-card b{font-size:16.5px;display:block;margin-bottom:5px}
+.tool-card p{color:var(--muted);font-size:13.5px;line-height:1.5}
+.tool-card .flag{position:absolute;top:14px;inset-inline-end:14px;font-size:10.5px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;background:var(--surface2);border:1px solid var(--line2);color:var(--muted);padding:3px 9px;border-radius:20px}
+.tool-card .flag.off{color:var(--warn);border-color:rgba(251,191,36,.4)}
+.feat-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;margin-top:18px}
+.feat{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;display:flex;gap:12px;align-items:flex-start}
+.feat svg{width:22px;height:22px;color:var(--violet2);flex:0 0 22px;margin-top:2px}
+.feat b{display:block;font-size:14px;margin-bottom:2px}
+.feat p{color:var(--muted);font-size:12.5px;line-height:1.5}
+
+/* ---------- image studio ---------- */
+.img-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px;margin-top:16px}
+.img-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;position:relative}
+.img-card img{width:100%;aspect-ratio:1/1;object-fit:cover;background:var(--bg2)}
+.img-card .bar{display:flex;gap:6px;padding:9px 11px;align-items:center}
+.img-card .bar .ttl{flex:1;font-size:11.5px;color:var(--muted2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.icon-btn{background:var(--surface2);border:1px solid var(--line2);color:var(--muted);width:33px;height:33px;border-radius:9px;display:inline-flex;align-items:center;justify-content:center;transition:all .14s}
+.icon-btn:hover{color:var(--text);border-color:var(--violet)}
+.icon-btn.fav.on{color:var(--orange);border-color:rgba(255,122,26,.5);background:rgba(255,122,26,.12)}
+.icon-btn svg{width:16px;height:16px}
+.result-frame{margin-top:16px;border:1px solid var(--line);border-radius:var(--radius);background:var(--bg2);padding:14px;text-align:center}
+.result-frame img{max-width:min(560px,100%);margin:0 auto;border-radius:10px;box-shadow:var(--shadow)}
+.result-frame .meta{color:var(--muted2);font-size:12px;margin-top:9px}
+.ratio-preview{display:inline-block;border:2px solid var(--line2);border-radius:5px;background:var(--surface2);vertical-align:middle}
+
+/* ---------- code studio ---------- */
+.code-out{background:#0a0e1d;border:1px solid var(--line);border-radius:var(--radius-sm);overflow:auto;max-height:460px;margin-top:14px}
+.code-out pre{padding:16px;font-family:var(--fm);font-size:13px;line-height:1.6;tab-size:2}
+.code-out code{font-family:var(--fm)}
+.tk-kw{color:#c792ea}.tk-str{color:#c3e88d}.tk-com{color:#5c6a92;font-style:italic}.tk-num{color:#f78c6c}.tk-tag{color:#ff8a9d}.tk-attr{color:#ffcb6b}.tk-fn{color:#82aaff}
+.preview-frame{width:100%;height:340px;border:1px solid var(--line2);border-radius:var(--radius-sm);background:#fff;margin-top:12px}
+.out-head{display:flex;align-items:center;gap:10px;margin-top:16px;flex-wrap:wrap}
+.out-head h3{font-size:14.5px;flex:1;min-width:140px}
+
+/* ---------- writer ---------- */
+.tools-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
+.tool-opt{text-align:start;background:var(--bg2);border:1px solid var(--line2);border-radius:var(--radius-sm);padding:13px 14px;color:var(--text);transition:all .14s}
+.tool-opt:hover{border-color:var(--violet)}
+.tool-opt.on{border-color:var(--orange);background:rgba(255,122,26,.1)}
+.tool-opt b{display:block;font-size:13.5px;margin-bottom:2px}
+.tool-opt small{color:var(--muted2);font-size:11.5px;line-height:1.4;display:block}
+.writer-out{background:#0a0e1d;border:1px solid var(--line);border-radius:var(--radius-sm);padding:18px;margin-top:14px;white-space:pre-wrap;line-height:1.7;font-size:14.5px;max-height:520px;overflow:auto}
+
+/* ---------- history / projects ---------- */
+.hist-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:13px;margin-top:14px}
+.hist-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:15px;display:flex;flex-direction:column;gap:9px}
+.hist-card .thumb{border-radius:8px;overflow:hidden;background:var(--bg2);max-height:130px}
+.hist-card .thumb img{width:100%;height:130px;object-fit:cover}
+.hist-card .kind{font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--violet2)}
+.hist-card .kind.k-image{color:var(--orange2)}
+.hist-card .kind.k-code{color:#82aaff}
+.hist-card p{font-size:13px;color:var(--muted);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.hist-card time{font-size:11px;color:var(--muted2)}
+.proj-folders{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:13px;margin-top:14px}
+
+/* ---------- settings ---------- */
+.set-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
+.set-tile{background:var(--bg2);border:1px solid var(--line2);border-radius:var(--radius-sm);padding:16px}
+.set-tile b{display:block;margin-bottom:4px;font-size:14px}
+.set-tile p{color:var(--muted);font-size:12.5px;margin-bottom:10px;line-height:1.5}
+
+/* ---------- info pages ---------- */
+.aurix-page{max-width:840px;margin:0 auto}
+.aurix-page h1{font-size:clamp(24px,3.6vw,34px);font-weight:800;margin-bottom:18px}
+.aurix-page .content{color:var(--muted);line-height:1.75}
+.aurix-page .content h2{color:var(--text);font-size:19px;margin:26px 0 10px}
+.aurix-page .content h3{color:var(--text);font-size:16px;margin:20px 0 8px}
+.aurix-page .content p{margin-bottom:13px}
+.aurix-page .content ul{margin:0 0 13px;padding-inline-start:22px}
+.aurix-page .content li{margin-bottom:7px}
+.aurix-page .content b,.aurix-page .content strong{color:var(--text)}
+
+/* toast */
+.toasts{position:fixed;bottom:18px;inset-inline-end:18px;z-index:300;display:flex;flex-direction:column;gap:9px}
+.toast{background:var(--surface2);border:1px solid var(--line2);border-inline-start:4px solid var(--orange);color:var(--text);padding:12px 16px;border-radius:10px;font-size:13.5px;box-shadow:var(--shadow);max-width:340px;animation:tin .25s ease}
+.toast.ok{border-inline-start-color:var(--ok)}
+.toast.err{border-inline-start-color:var(--err)}
+@keyframes tin{from{transform:translateY(8px);opacity:0}to{transform:none;opacity:1}}
+
+/* footer */
+.aurix-foot{border-top:1px solid var(--line);padding:22px clamp(16px,4vw,44px);color:var(--muted2);font-size:12.5px;text-align:center}
+
+/* ads placeholders — hidden until an ad network approves the site */
+.ad-slot{display:none}
+
+/* ---------- responsive ---------- */
+@media (max-width:1023px){
+  .aurix-side{transform:translateX(-105%)}
+  [dir=rtl] .aurix-side{transform:translateX(105%)}
+  .aurix-side.open{transform:none}
+  .aurix-wrap{margin-inline-start:0}
+  .burger{display:inline-flex}
+  .backdrop.show{display:block}
+}
+@media (max-width:560px){
+  body{font-size:15px}
+  .aurix-main{padding:18px 14px 50px}
+  .card{padding:16px}
+  .hero .cta .btn{width:100%}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.01ms!important;transition-duration:.01ms!important}
+}
+
+/* ---------- AURIX welcome / Google sign-in (original brand identity) ---------- */
+body.auth-mode{background:#faf9f8;color:#17151a}
+body.auth-mode .aurix-side,body.auth-mode .aurix-top,body.auth-mode .aurix-foot,body.auth-mode .backdrop{display:none!important}
+body.auth-mode .aurix-wrap{margin-inline-start:0}
+body.auth-mode .aurix-main{padding:0;max-width:none;margin:0;width:100%;min-height:100svh}
+body.auth-mode .skip-link{background:#17151a;color:#fff}
+.auth-screen{min-height:100svh;background:radial-gradient(700px 470px at 95% -30%,rgba(139,92,246,.08),transparent),#faf9f8;padding:clamp(22px,4vw,42px) 24px max(28px,env(safe-area-inset-bottom));display:flex;align-items:center;justify-content:center}
+.auth-panel{width:min(100%,530px);min-height:min(780px,calc(100svh - 48px));display:flex;flex-direction:column}
+.auth-head{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:clamp(42px,8vh,92px)}
+.auth-brand{display:flex;align-items:center;gap:11px;color:#18151e;font-weight:900;letter-spacing:3px;font-size:22px}
+.auth-brand img{width:46px;height:46px;border-radius:12px;object-fit:cover;background:#0b1020}
+.auth-head .auth-langs{display:flex;gap:2px;background:#efebed;padding:3px;border-radius:12px}
+.auth-head .auth-langs button{border:0;background:transparent;color:#6a6470;font-size:12px;font-weight:800;border-radius:9px;padding:7px 9px}
+.auth-head .auth-langs button.active{background:#fff;color:#1d1822;box-shadow:0 1px 5px rgba(15,15,25,.12)}
+.auth-intro h1{font-size:clamp(34px,6vw,48px);line-height:1.15;letter-spacing:-1.5px;font-weight:800;color:#17151a;margin-bottom:16px}
+.auth-intro h1 em{font-style:normal;background:linear-gradient(115deg,#ef6b1c 10%,#8254e7 90%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.auth-intro>p{font-size:clamp(17px,2.2vw,20px);line-height:1.48;color:#4d4851;margin-bottom:32px;max-width:490px}
+.auth-facts{border-top:1px solid #e7e4e6}
+.auth-fact{display:grid;grid-template-columns:28px 1fr;gap:16px;padding:22px 0;border-bottom:1px solid #e7e4e6}
+[dir=rtl] .auth-fact{grid-template-columns:28px 1fr}
+.auth-fact svg{width:25px;height:25px;color:#605964;stroke-width:1.8;margin-top:3px}
+.auth-fact b{display:block;font-size:16px;line-height:1.3;margin-bottom:4px;color:#1f1b22}
+.auth-fact p{font-size:15px;line-height:1.45;color:#55505a}
+.auth-fact a,.auth-consent a{color:#30283d;text-decoration:underline;text-underline-offset:3px;font-weight:600}
+.auth-actions{margin-top:auto;padding-top:50px}
+.auth-consent{border:1px solid #ddd8de;border-radius:15px;background:#fff;padding:17px 19px;color:#4a434c;font-size:14px;line-height:1.55;margin-bottom:20px}
+.auth-google{width:100%;height:55px;display:flex;align-items:center;justify-content:center;gap:12px;border-radius:999px;font-size:16px;font-weight:800;transition:transform .15s,box-shadow .15s}
+.auth-google{background:#16131b;color:#fff;border:1px solid #16131b}
+.auth-google:hover{background:#30283b;transform:translateY(-1px);box-shadow:0 8px 18px rgba(28,23,35,.16)}
+.auth-google:disabled{opacity:.55;cursor:not-allowed;transform:none}
+.auth-google svg{width:23px;height:23px}
+.auth-status{color:#ae2d36;font-size:13px;line-height:1.5;min-height:20px;margin:10px 0 2px;text-align:center}
+.auth-hint{text-align:center;font-size:12px;color:#756e79;margin-top:18px;line-height:1.45}
+.auth-hint span{display:block}
+@media(max-width:560px){
+  .auth-screen{padding:22px 24px max(22px,env(safe-area-inset-bottom));align-items:stretch}
+  .auth-panel{min-height:calc(100svh - 44px)}
+  .auth-head{margin-bottom:clamp(35px,6vh,68px)}
+  .auth-intro h1{font-size:clamp(32px,8vw,39px)}
+  .auth-fact{padding:18px 0}
+  .auth-actions{padding-top:32px}
+}
+.auth-google-mark{font-family:Arial,sans-serif;font-weight:900;font-size:27px;line-height:1;background:conic-gradient(from 50deg,#4285f4 0 25%,#34a853 25% 50%,#fbbc05 50% 73%,#ea4335 73% 88%,#4285f4 88%);-webkit-background-clip:text;background-clip:text;color:transparent}
+/* AURIX conversation: real answers, local PDF reading */
+.sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.chat-box{max-width:830px;margin:0 auto;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow)}
+.chat-top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-bottom:16px;border-bottom:1px solid var(--line)}
+.chat-top b{font-size:18px;color:var(--text)}
+.chat-messages{min-height:260px;max-height:55svh;overflow:auto;display:flex;flex-direction:column;gap:16px;padding:22px 4px;scroll-behavior:smooth}
+.chat-empty{color:var(--muted);text-align:center;margin:auto;max-width:410px;line-height:1.65}
+.chat-empty b{display:block;color:var(--text);font-size:19px;margin-bottom:8px}
+.chat-line{max-width:min(92%,620px);padding:15px 18px;border:1px solid var(--line);border-radius:18px;background:var(--surface2);overflow-wrap:anywhere}
+.chat-line.user{align-self:flex-end;background:rgba(137,78,225,.18);border-color:rgba(148,95,223,.4)}
+.chat-line.assistant{align-self:flex-start}
+.chat-line b{display:block;font-size:12px;margin-bottom:6px;color:var(--muted)}
+.chat-line p{white-space:pre-wrap;line-height:1.65;color:var(--text)}
+.chat-attachment{padding:10px 12px;color:var(--muted);background:var(--surface2);border:1px solid var(--line);border-radius:12px;font-size:12px;line-height:1.6;margin-bottom:12px}
+.chat-attachment button{background:transparent;border:0;color:var(--accent);font-weight:700;text-decoration:underline;margin-inline-start:8px}
+.chat-actions{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:12px 0}
+.chat-attach{cursor:pointer}
+@media(max-width:600px){.chat-box{padding:15px}.chat-messages{min-height:240px;max-height:52svh}.chat-top .badge{font-size:10px}.chat-line{max-width:96%}}
+
+/* Public, crawlable guides remain accessible without bypassing Google-only tools. */
+.auth-public-links{margin-top:22px;padding-top:16px;border-top:1px solid #dedbe5;font-size:13px;line-height:1.7;color:#514c5f}.auth-public-links b{display:block;color:#17151a;font-size:14px}.auth-public-links p{margin:4px 0 9px}.auth-public-links a{display:inline-block;margin-inline-end:13px;color:#5e2fa8;text-decoration:underline}.seo-fallback{max-width:760px;margin:auto;padding:70px 24px;line-height:1.75}.seo-fallback a{color:var(--orange)}
+
+.public-page-nav{display:block;line-height:2;margin:0 0 20px;color:var(--muted)}.public-page-nav a,.public-page-footer a{color:var(--orange)}.public-page-footer{padding:20px 0;color:var(--muted);font-size:13px}.seo-fallback nav a{display:inline-block;margin-inline-end:8px}
+
+/* 2026 AURIX brand polish: consistent icon rhythm, mobile-first spacing */
+.aurix-side{background:linear-gradient(180deg,#11162a 0%,#0d1223 100%)}
+.brand{min-height:77px;gap:12px}
+.brand .logo{width:44px;height:44px;flex:0 0 44px;border-radius:12px;object-fit:cover}
+.nav{gap:3px;padding:14px 10px}
+.nav .grp{padding:17px 12px 7px}
+.nav a{min-height:44px;gap:12px;padding:9px 12px;line-height:1.3}
+.nav .nav-icon{width:20px;height:20px;flex:0 0 20px;opacity:.85;display:block}
+.nav a.active .nav-icon{color:var(--orange);opacity:1}
+.nav a .badge{flex:none}
+.hero{padding-block:clamp(30px,5vw,56px)}
+.hero-eyebrow{color:var(--violet2);font-size:11px;font-weight:800;letter-spacing:2.4px;margin-bottom:15px}
+.hero .skull{width:clamp(158px,23vw,220px);aspect-ratio:1;object-fit:contain;margin:0 auto 15px;border-radius:22px;filter:drop-shadow(0 10px 28px rgba(139,92,246,.18))}
+.hero .hero-title{font-size:clamp(26px,4vw,40px);line-height:1.15;font-weight:900;letter-spacing:2px;margin:0 0 9px;color:var(--text)}
+.hero .hero-title span{color:var(--orange2)}
+.tool-card{min-height:177px;display:flex;flex-direction:column;align-items:flex-start;padding:23px}
+.tool-card .ic{flex:0 0 48px;width:48px;height:48px;margin-bottom:16px}
+.tool-card .ic .nav-icon{width:24px;height:24px;display:block}
+.tool-card .flag{max-width:calc(100% - 100px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tool-card b,.tool-card p{max-width:100%}
+@media(max-width:560px){
+ .hero{padding:30px 18px}
+ .hero .skull{width:clamp(150px,45vw,192px)}
+ .hero-eyebrow{font-size:10px;letter-spacing:1.6px}
+ .tools-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+ .tool-card{min-height:170px;padding:14px}
+ .tool-card .ic{width:40px;height:40px;flex-basis:40px;margin-bottom:12px}
+ .tool-card .ic .nav-icon{width:21px;height:21px}
+ .tool-card .flag{position:static;order:4;margin-top:auto;max-width:100%;font-size:9px}
+ .tool-card b{font-size:14px}
+ .tool-card p{font-size:12px;line-height:1.4;margin-bottom:8px}
+ .aurix-top{padding:8px 12px;gap:8px}
+ .top-title{font-size:14px}
+ .langs button{padding:8px 8px}
+ .auth-brand{gap:9px;font-size:19px;letter-spacing:1.5px}
+ .auth-brand img{width:44px;height:44px}
+}
+@media(max-width:360px){.tools-grid{grid-template-columns:1fr}.top-actions{gap:4px}.langs button{padding:7px 6px}}
+
+.blogger-content{max-width:850px;margin:36px auto;padding:0 20px 70px}.blogger-content .post-outer{background:var(--surface);border:1px solid var(--line);padding:26px;border-radius:var(--radius)}.blogger-content .post-body{color:var(--muted);line-height:1.75}.blogger-content .post-body h2{color:var(--text);margin:20px 0 8px}.blogger-content .post-title{font-size:28px}.blogger-content .post-header,.blogger-content .post-footer{color:var(--muted2)}.blogger-back{display:inline-flex;margin-bottom:16px}]]></b:skin>
+</head>
+<body>
+<b:if cond="data:view.isHomepage">
+<a class="skip-link" href="#aurix-main">Skip to content</a>
+<div class="aurix-shell" id="aurix-app">
+  <div class="backdrop" id="backdrop"></div>
+  <aside class="aurix-side" id="side" aria-label="Main navigation">
+    <a class="brand" href="https://skullaistudio.blogspot.com/#home"><img class="logo" src="data:image/webp;base64,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" alt="AURIX skull logo"/><span class="bname"><b>AURIX</b><small>AI Creative Studio</small></span></a>
+    <nav class="nav" id="nav">
+      <span class="grp">Workspace</span>
+      <a href="https://skullaistudio.blogspot.com/#home" data-route="home"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg><span data-i="home">Home</span></a>
+      <a href="#chat" data-route="chat"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11.5a7.5 7.5 0 0 1-7.5 7.5H6l-3 2v-6.5A7.5 7.5 0 1 1 20 11.5Z"/><path d="M8 11h8M8 14h5"/></svg><span data-i="chat">AI Chat</span></a>
+      <a href="https://skullaistudio.blogspot.com/#image" data-route="image"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m4 17 5-5 3 3 3-4 5 6"/></svg><span data-i="image">AI Image Studio</span></a>
+      <a href="https://skullaistudio.blogspot.com/#video" data-route="video"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="m10 9 5 3-5 3z"/></svg><span data-i="video">AI Video Studio</span><span class="badge">Soon</span></a>
+      <a href="https://skullaistudio.blogspot.com/#code" data-route="code"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="m9 9-3 3 3 3m6-6 3 3-3 3"/></svg><span data-i="code">AI Code Studio</span></a>
+      <a href="https://skullaistudio.blogspot.com/#writer" data-route="writer"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h16M6 16l10.5-10.5a2.12 2.12 0 0 1 3 3L9 19H6z"/></svg><span data-i="writer">AI Writer</span></a>
+      <span class="grp">Library</span>
+      <a href="https://skullaistudio.blogspot.com/#projects" data-route="projects"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><span data-i="projects">My Projects</span></a>
+      <a href="https://skullaistudio.blogspot.com/#history" data-route="history"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 2.7-6.4L3 8"/><path d="M3 3v5h5M12 7v5l3 2"/></svg><span data-i="history">History</span></a>
+      <a href="https://skullaistudio.blogspot.com/#favorites" data-route="favorites"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.8 8.6c0 4.2-8.8 10.4-8.8 10.4S3.2 12.8 3.2 8.6a4.6 4.6 0 0 1 8.8-1.8 4.6 4.6 0 0 1 8.8 1.8z"/></svg><span data-i="favorites">Favorites</span></a>
+      <a href="https://skullaistudio.blogspot.com/#settings" data-route="settings"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.1-1l2-1.5-2-3.4-2.4 1A7 7 0 0 0 15 6l-.4-2.5h-4.2L10 6a7 7 0 0 0-1.5 1.1l-2.4-1-2 3.4 2 1.5a7 7 0 0 0 0 2l-2 1.5 2 3.4 2.4-1A7 7 0 0 0 10 18l.4 2.5h4.2L15 18a7 7 0 0 0 1.5-1.1l2.4 1 2-3.4-2-1.5a7 7 0 0 0 .1-1z"/></svg><span data-i="settings">Profile &amp; Settings</span></a>
+      <span class="grp">Information</span>
+      <a href="https://skullaistudio.blogspot.com/p/about.html" data-route="about"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5m0-8h.01"/></svg><span data-i="about">About</span></a>
+      <a href="https://skullaistudio.blogspot.com/p/contact.html" data-route="contact"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg><span data-i="contact">Contact</span></a>
+      <a href="https://skullaistudio.blogspot.com/p/privacy.html" data-route="privacy"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 4 6v5c0 5 3.4 8.2 8 10 4.6-1.8 8-5 8-10V6z"/><path d="m9 12 2 2 4-4"/></svg><span data-i="privacy">Privacy Policy</span></a>
+      <a href="https://skullaistudio.blogspot.com/p/terms.html" data-route="terms"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h8l4 4v14H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zm8 0v5h4M9 12h6M9 16h6"/></svg><span data-i="terms">Terms of Service</span></a>
+    </nav>
+    <div class="side-foot">Powered by real AI providers.<br/>Google account required · Save projects by choice.</div>
+  </aside>
+  <div class="aurix-wrap">
+    <header class="aurix-top">
+      <button class="burger" id="burger" type="button" aria-label="Open navigation" aria-expanded="false">☰</button>
+      <span class="top-title" id="top-title">AURIX</span>
+      <div class="top-actions"><button type="button" id="top-signin" class="btn sm ghost">Sign in</button><div class="langs" aria-label="Language"><button type="button" data-lang="en" class="active">EN</button><button type="button" data-lang="fr">FR</button><button type="button" data-lang="ar">AR</button></div></div>
+    </header>
+    <main class="aurix-main" id="aurix-main" tabindex="-1"><div id="view"><section aria-label="AURIX introduction" class="seo-fallback"><h1>AURIX — Imagine. Create. Build.</h1><p>AURIX is an independent AI creative workspace for image ideas, writing, coding and text-based PDF questions. Google sign-in is required to use the interactive studio. Image results need review, free providers have usage limits, and video generation is not available.</p><nav aria-label="Public guides"><a href="/pages/image-guide.html">Guide to writing better AI image prompts</a> · <a href="/pages/code-guide.html">Review AI-generated code</a> · <a href="/pages/writer-guide.html">Edit AI writing responsibly</a> · <a href="/pages/about.html">About AURIX</a> · <a href="/pages/contact.html">Contact</a> · <a href="/pages/privacy.html">Privacy</a> · <a href="/pages/terms.html">Terms</a></nav></section></div></main>
+    <footer class="aurix-foot">© <span id="year"></span> AURIX · Imagine. Create. Build. · <a href="https://skullaistudio.blogspot.com/p/privacy.html">Privacy</a> · <a href="https://skullaistudio.blogspot.com/p/terms.html">Terms</a><br/>AURIX is an independent project, not affiliated with its AI provider.</footer>
+  </div>
+</div>
+<div class="toasts" id="toasts" aria-live="polite"></div>
+
+<script type="text/javascript"><![CDATA[/* AURIX — real-provider client with Google sign-in gate. No embedded API secrets. */
+(function(){'use strict';
+const API='https://aurix-api-ea09b.ahmedbecetti41.workers.dev';
+const LS='aurix_v1_';
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const safe=(s)=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const tr={
+ en:{home:'Home',chat:'AI Chat',image:'AI Image Studio',video:'AI Video Studio',code:'AI Code Studio',writer:'AI Writer',projects:'My Projects',history:'History',favorites:'Favorites',settings:'Profile & Settings',about:'About',contact:'Contact',privacy:'Privacy Policy',terms:'Terms of Service',create:'Create',recent:'Recent creations',saved:'Saved locally on this browser',unavailable:'Currently unavailable',generate:'Generate'},
+ fr:{home:'Accueil',chat:'Discussion IA',image:'Studio Image IA',video:'Studio Vidéo IA',code:'Studio Code IA',writer:'Rédaction IA',projects:'Mes projets',history:'Historique',favorites:'Favoris',settings:'Profil et paramètres',about:'À propos',contact:'Contact',privacy:'Confidentialité',terms:"Conditions d'utilisation",create:'Créer',recent:'Créations récentes',saved:'Enregistré localement dans ce navigateur',unavailable:'Indisponible',generate:'Générer'},
+ ar:{home:'الرئيسية',chat:'محادثة ذكية',image:'استوديو الصور',video:'استوديو الفيديو',code:'استوديو البرمجة',writer:'الكاتب الذكي',projects:'مشاريعي',history:'السجل',favorites:'المفضلة',settings:'الملف والإعدادات',about:'من نحن',contact:'اتصل بنا',privacy:'سياسة الخصوصية',terms:'شروط الاستخدام',create:'إنشاء',recent:'أحدث الإبداعات',saved:'محفوظ محليًا في هذا المتصفح',unavailable:'غير متاح حاليًا',generate:'توليد'}
+};
+const localCopy={
+ fr:{'Tools connected to real providers':'Des outils qui fonctionnent','Start creating →':'Commencer →','Explore studios':'Explorer les studios','Real provider':'Vrai fournisseur','Not available':'Indisponible','Image Studio':"Studio d’images",'Code Studio':'Studio de code','Video Studio':'Studio vidéo','AI Writer':'Rédaction IA','No fabricated outputs':'Aucun faux résultat','Private by design':'Confidentialité intégrée','Free, best effort':'Gratuit, sans garantie','Describe your image':'Décrivez votre image','Optional visual direction · modifies the prompt (not a different model)':'Style visuel · ajouté au prompt (pas un autre modèle)','Aspect ratio':'Format','Generate image':'Créer une image','Image gallery':'Galerie d’images','No images yet':'Aucune image','Action':'Action','Language / format':'Langue / format','Describe what you need or paste code':'Décrivez votre demande ou collez du code','Ask AI':'Interroger l’IA','Choose an action':'Choisir une action','Topic, instructions, or source text':'Sujet, consignes ou texte source','Output language':'Langue de sortie','Generate text':'Générer un texte','Currently unavailable':'Indisponible pour le moment','New folder':'Nouveau dossier','Create folder':'Créer un dossier','Export your work':'Exporter vos travaux','Delete local data':'Supprimer les données locales','No history yet':'Aucun historique','No favorites':'Aucun favori'},
+ ar:{'Tools connected to real providers':'أدوات تعمل بالفعل','Start creating →':'ابدأ الإبداع ←','Explore studios':'استكشف الاستوديوهات','Real provider':'مزود حقيقي','Not available':'غير متاح','Image Studio':'استوديو الصور','Code Studio':'استوديو البرمجة','Video Studio':'استوديو الفيديو','AI Writer':'الكاتب الذكي','No fabricated outputs':'لا نتائج وهمية','Private by design':'خصوصية من البداية','Free, best effort':'مجاني حسب التوفر','Describe your image':'صف الصورة التي تريدها','Optional visual direction · modifies the prompt (not a different model)':'النمط البصري · يضاف للوصف وليس نموذجًا منفصلًا','Aspect ratio':'نسبة الأبعاد','Generate image':'أنشئ صورة','Image gallery':'معرض الصور','No images yet':'لا توجد صور بعد','Action':'المهمة','Language / format':'اللغة / الصيغة','Describe what you need or paste code':'صف المطلوب أو الصق الشيفرة','Ask AI':'اسأل الذكاء الاصطناعي','Choose an action':'اختر المهمة','Topic, instructions, or source text':'الموضوع أو التعليمات أو النص الأصلي','Output language':'لغة النتيجة','Generate text':'أنشئ النص','Currently unavailable':'غير متاح حاليًا','New folder':'مجلد جديد','Create folder':'إنشاء مجلد','Export your work':'تصدير أعمالك','Delete local data':'حذف البيانات المحلية','No history yet':'لا يوجد سجل بعد','No favorites':'لا توجد مفضلة'}
+};
+function translateView(){if(lang==='en')return;const dict=localCopy[lang],w=document.createTreeWalker($('#view'),NodeFilter.SHOW_TEXT);while(w.nextNode()){let n=w.currentNode,k=n.nodeValue.trim();if(dict[k])n.nodeValue=n.nodeValue.replace(k,dict[k])}}
+let lang=localStorage.getItem(LS+'lang')||'en', route='home', busy=false, activeJob=null;
+let activeUserId=null,items=[],folders=['Unsorted'],cloudItems=[],chatMessages=[],chatPdf=null;
+const key=(k)=>LS+(['items','folders','chat'].includes(k)?'user_'+(activeUserId||'locked')+'_':'')+k;
+const PHOTO='aurix-image:';
+let photoDbPromise=null;
+const photoUrls=new Map();
+function clearPhotoUrls(){for(const url of photoUrls.values())URL.revokeObjectURL(url);photoUrls.clear()}
+function photoDB(){
+ if(!photoDbPromise)photoDbPromise=new Promise((resolve,reject)=>{
+  if(!window.indexedDB)return reject(Error('This browser does not support local image storage.'));
+  const r=indexedDB.open('aurix-photos-v1',1);
+  r.onupgradeneeded=()=>r.result.createObjectStore('photos');
+  r.onsuccess=()=>resolve(r.result);
+  r.onerror=()=>reject(r.error||Error('Image storage unavailable'));
+ }).catch(e=>{photoDbPromise=null;throw e});
+ return photoDbPromise;
+}
+async function photoPut(id,blob){
+ const uid=activeUserId;if(!uid)throw Error('Sign in first.');const db=await photoDB();
+ return new Promise((resolve,reject)=>{const tx=db.transaction('photos','readwrite');tx.objectStore('photos').put(blob,uid+':'+id);tx.oncomplete=()=>resolve();tx.onerror=()=>reject(tx.error||Error('Image storage full'));tx.onabort=()=>reject(tx.error||Error('Image storage unavailable'))});
+}
+async function photoGet(id,uid=activeUserId){
+ if(!uid)return null;const db=await photoDB();
+ return new Promise((resolve,reject)=>{const r=db.transaction('photos').objectStore('photos').get(uid+':'+id);r.onsuccess=()=>resolve(r.result||null);r.onerror=()=>reject(r.error)});
+}
+async function photoDelete(id,uid=activeUserId){if(!uid)return;const db=await photoDB();return new Promise((resolve,reject)=>{const tx=db.transaction('photos','readwrite');tx.objectStore('photos').delete(uid+':'+id);tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error)})}
+async function photoClear(uid){if(!uid)return;const db=await photoDB();return new Promise((resolve,reject)=>{const tx=db.transaction('photos','readwrite'),store=tx.objectStore('photos');store.openCursor().onsuccess=e=>{const cur=e.target.result;if(cur){if(String(cur.key).startsWith(uid+':'))cur.delete();cur.continue()}};tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error)})}
+async function hydratePhotos(){
+ const uid=activeUserId;if(!uid)return;
+ for(const img of $$('img[data-photo-id]')){
+  const id=img.dataset.photoId,k=uid+':'+id;
+  try{if(!photoUrls.has(k)){const blob=await photoGet(id,uid);if(!blob)continue;photoUrls.set(k,URL.createObjectURL(blob))}
+   if(activeUserId===uid&&img.isConnected)img.src=photoUrls.get(k);
+  }catch{ /* Local storage may be unavailable; keep a visible placeholder. */ }
+ }
+}
+function imageMarkup(o){return o.result?.startsWith(PHOTO)?`data-photo-id="${safe(o.id)}"`: `src="${safe(o.result)}"`}
+
+function syncAccount(){const id=window.AurixCloud?.user?.uid||null;if(id===activeUserId)return;clearPhotoUrls();activeUserId=id;items=read('items',[]);folders=read('folders',['Unsorted']);chatMessages=read('chat',[]);chatPdf=null;cloudItems=[]}
+function read(k,def){try{let x=JSON.parse(localStorage.getItem(key(k)));return x??def}catch{return def}}
+function save(k,x){try{localStorage.setItem(key(k),JSON.stringify(x));return true}catch{toast('Browser storage is full or unavailable. Export your work.','err');return false}}
+const t=(k)=>tr[lang]?.[k]||tr.en[k]||k;
+function toast(msg,type=''){const n=document.createElement('div');n.className='toast '+type;n.textContent=msg;$('#toasts').append(n);setTimeout(()=>n.remove(),5500)}
+function stamp(){return new Date().toISOString()}
+function addItem(kind,prompt,result,meta={},fixedId=null){const o={id:fixedId||Date.now().toString(36)+Math.random().toString(36).slice(2,7),kind,prompt,result,meta,at:stamp(),fav:false,folder:'Unsorted'};items.unshift(o);items=items.slice(0,60);save('items',items);return o}
+function toggleFav(id){let o=items.find(x=>x.id===id);if(o){o.fav=!o.fav;save('items',items);render()}}
+function delItem(id){const old=items.find(x=>x.id===id);if(old?.result?.startsWith(PHOTO)){const uid=activeUserId,k=uid+':'+id;if(photoUrls.has(k)){URL.revokeObjectURL(photoUrls.get(k));photoUrls.delete(k)}photoDelete(id,uid).catch(()=>toast('Could not remove local image data.','err'))}items=items.filter(x=>x.id!==id);save('items',items);render()}
+function fmt(d){try{return new Date(d).toLocaleString(lang)}catch{return d}}
+function head(title,sub){return `<div class="page-head"><h1>${safe(title)}</h1>${sub?`<p>${sub}</p>`:''}</div>`}
+function state(id){return `<div id="${id}" role="status" aria-live="polite"></div>`}
+function showState(el,type,msg){el.className='state '+type;el.innerHTML=(type==='loading'?'<span class="spinner" aria-hidden="true"></span>':'')+'<div class="msg">'+safe(msg)+'</div>'}
+function clearState(el){el.className='';el.textContent=''}
+function nav(){const h=decodeURIComponent(location.hash.slice(1)).split('?')[0];if(h==='privacy'||h==='terms')return h;const signedIn=!!window.AurixCloud?.user;if(!signedIn)return 'login';return ['home','chat','image','video','code','writer','projects','history','favorites','settings','about','contact'].includes(h)?h:'home'}
+function applyLang(){if(!tr[lang])lang='en';document.documentElement.lang=lang;document.documentElement.dir=lang==='ar'?'rtl':'ltr';$$('[data-i]').forEach(e=>e.textContent=t(e.dataset.i));$$('[data-lang]').forEach(e=>e.classList.toggle('active',e.dataset.lang===lang));}
+function render(){syncAccount();if(activeJob){activeJob.controller.abort();clearTimeout(activeJob.timeout);clearInterval(activeJob.tick);activeJob=null}route=nav();applyLang();document.body.classList.toggle('auth-mode',route==='login');$('#top-title').textContent=t(route);$('#top-signin').hidden=route==='login';$('#top-signin').textContent=window.AurixCloud?.user?(lang==='ar'?'تسجيل الخروج':lang==='fr'?'Déconnexion':'Sign out'):(lang==='ar'?'تسجيل الدخول':lang==='fr'?'Connexion':'Sign in');$$('[data-route]').forEach(a=>{const active=a.dataset.route===route;a.classList.toggle('active',active);active?a.setAttribute('aria-current','page'):a.removeAttribute('aria-current')});let view=$('#view');view.innerHTML=({login,home,chat,image,video,code,writer,projects,history,favorites,settings,about,contact,privacy,terms})[route]();$('#year').textContent=new Date().getFullYear();document.title=(route==='home'?'AURIX — Imagine. Create. Build.':route==='login'?'Welcome to AURIX — Sign in':t(route)+' — AURIX');$('#side').classList.remove('open');$('#backdrop').classList.remove('show');$('#burger').setAttribute('aria-expanded','false');busy=false;bindRoute();translateView();hydratePhotos();}
+const authCopy={
+ en:{welcome:'Welcome to',intro:'Turn your ideas into images, code and words. Sign in with Google to use the AURIX studio and save selected projects.',caution:'AI results need review',cautionText:'Images may miss details in your prompt. Check writing and code before relying on them.',privacy:'Your privacy, your choice',privacyText:'Prompts go to an external AI provider when you generate. Work saved locally stays on this device unless you choose to save it to your account.',choices:'Read your privacy choices',consent:'By continuing, you agree to the',terms:'Terms of Service',policy:'Privacy Policy',and:'and have read the',google:'Continue with Google',connecting:'Connecting to Google…',accountHint:'A Google account is required to enter. Cloud saving is optional.',cancel:'Google sign-in was cancelled. Try again to enter AURIX.',blocked:'Your browser blocked the Google window. Allow pop-ups for this site and retry.',unavailable:'Google sign-in is unavailable right now. Please try again later.'},
+ fr:{welcome:'Bienvenue sur',intro:'Transformez vos idées en images, code et textes. Connectez-vous avec Google pour accéder à AURIX et sauvegarder vos projets.',caution:'Vérifiez les résultats de l’IA',cautionText:'Les images peuvent manquer des détails. Vérifiez les textes et le code avant de les utiliser.',privacy:'Votre vie privée, votre choix',privacyText:'Les demandes sont envoyées à un fournisseur d’IA lors de la génération. Vos créations locales restent sur cet appareil, sauf sauvegarde dans votre compte.',choices:'Lire les choix de confidentialité',consent:'En continuant, vous acceptez les',terms:'Conditions d’utilisation',policy:'Politique de confidentialité',and:'et avez lu notre',google:'Continuer avec Google',connecting:'Connexion à Google…',accountHint:'Un compte Google est nécessaire. La sauvegarde en ligne est facultative.',cancel:'Connexion Google annulée. Réessayez pour accéder à AURIX.',blocked:'La fenêtre Google a été bloquée. Autorisez les fenêtres contextuelles et réessayez.',unavailable:'Connexion Google indisponible. Réessayez plus tard.'},
+ ar:{welcome:'مرحبًا بك في',intro:'حوّل أفكارك إلى صور وشيفرات ونصوص. سجّل الدخول بحساب Google لاستخدام AURIX وحفظ مشاريع تختارها.',caution:'راجع نتائج الذكاء الاصطناعي',cautionText:'قد لا تتبع الصور كل تفاصيل وصفك. تحقّق من النصوص والشيفرات قبل استخدامها.',privacy:'خصوصيتك بيدك',privacyText:'يُرسل وصفك إلى مزود ذكاء اصطناعي خارجي عند التوليد. تبقى الأعمال المحفوظة محليًا في جهازك إلا إذا اخترت حفظها في حسابك.',choices:'اقرأ خيارات الخصوصية',consent:'بالمتابعة، توافق على',terms:'شروط الاستخدام',policy:'سياسة الخصوصية',and:'وتقرّ بقراءة',google:'المتابعة عبر Google',connecting:'جارٍ الاتصال بـGoogle…',accountHint:'يجب تسجيل الدخول بحساب Google. الحفظ السحابي اختياري.',cancel:'أُلغيت عملية الدخول عبر Google. أعد المحاولة للدخول إلى AURIX.',blocked:'حظر المتصفح نافذة Google. اسمح بالنوافذ المنبثقة لهذا الموقع وأعد المحاولة.',unavailable:'تسجيل الدخول عبر Google غير متاح الآن. حاول لاحقًا.'}
+};
+function login(){
+ const c=authCopy[lang]||authCopy.en,logo=$('.brand .logo')?.getAttribute('src')||'';
+ const star='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.5l1.9 5.8 5.8 1.9-5.8 1.9-1.9 5.8-1.9-5.8-5.8-1.9 5.8-1.9z"/><path d="M19 18l.7 1.3L21 20l-1.3.7L19 22l-.7-1.3L17 20l1.3-.7z"/></svg>';
+ const shield='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2.5l8 3.5v5.5c0 5.2-3.4 8.3-8 10-4.6-1.7-8-4.8-8-10V6z"/><path d="M9.5 11.5l1.8 1.8 3.5-3.5"/></svg>';
+ return `<section class="auth-screen"><div class="auth-panel"><div class="auth-head"><div class="auth-brand"><img src="${safe(logo)}" alt="AURIX skull symbol"/><span>AURIX</span></div><div class="auth-langs" aria-label="Language">${['en','fr','ar'].map(l=>`<button type="button" data-auth-lang="${l}" class="${lang===l?'active':''}" aria-pressed="${lang===l}">${l.toUpperCase()}</button>`).join('')}</div></div><div class="auth-intro"><h1>${safe(c.welcome)} <em>AURIX</em></h1><p>${safe(c.intro)}</p><div class="auth-facts"><div class="auth-fact">${star}<div><b>${safe(c.caution)}</b><p>${safe(c.cautionText)}</p></div></div><div class="auth-fact">${shield}<div><b>${safe(c.privacy)}</b><p>${safe(c.privacyText)} <a href="#privacy">${safe(c.choices)}</a>.</p></div></div></div></div><div class="auth-actions"><div class="auth-consent">${safe(c.consent)} <a href="#terms">${safe(c.terms)}</a> ${safe(c.and)} <a href="#privacy">${safe(c.policy)}</a>.</div><button class="auth-google" type="button" id="login-google" ${window.AurixCloud?'':'disabled'}><span class="auth-google-mark" aria-hidden="true">G</span><span>${safe(window.AurixCloud?c.google:c.connecting)}</span></button><p class="auth-status" id="login-status" role="alert" aria-live="polite"></p><p class="auth-hint">${safe(c.accountHint)}</p><nav class="auth-public-links" aria-label="Public AURIX guides"><b>Explore AURIX before signing in</b><p>Read practical guides and our site information without an account. Google sign-in is required only for interactive tools.</p><a href="/pages/image-guide.html">Image prompt guide</a><a href="/pages/code-guide.html">Code review guide</a><a href="/pages/writer-guide.html">AI writing guide</a><a href="/pages/about.html">About AURIX</a><a href="/pages/contact.html">Contact</a></nav></div></div></section>`;
+}
+function home(){const logo=$('.brand .logo')?.getAttribute('src')||'';return `<section class="hero"><p class="hero-eyebrow">YOUR CREATIVE COMMAND CENTER</p><h1 class="sr-only">AURIX AI creative studio</h1><img class="skull" src="${safe(logo)}" alt="AURIX AI emblem with skull"/><p class="hero-title">AURIX <span>AI</span></p><p class="tag">IMAGINE. CREATE. BUILD.</p><p class="sub">One studio for visual ideas, code, and words. Create with real AI models — no demo results, no invented credits.</p><div class="cta"><a class="btn" href="#image">Start creating →</a><a class="btn ghost" href="#code">Explore studios</a></div></section><section aria-label="AI studios"><h2 style="margin:32px 0 0">Tools connected to real providers</h2><div class="tools-grid">${[['image','◈','Image Studio','Turn text into AI-generated visuals.','Real provider'],['code','⌘','Code Studio','Generate, explain and fix code with AI.','Real provider'],['writer','✎','AI Writer','Write, refine and translate with AI.','Real provider'],['video','▷','Video Studio','Text-to-video and image-to-video.','Not available']].map(([r,i,n,d,f],z)=>`<a class="tool-card ${z%2?'v':''}" href="#${r}"><span class="flag ${r==='video'?'off':''}">${f}</span><span class="ic">${$('[data-route="'+r+'"] .nav-icon')?.outerHTML||i}</span><b>${n}</b><p>${d}</p></a>`).join('')}</div></section><div class="feat-strip"><div class="feat"><span style="font-size:22px">◇</span><div><b>No fabricated outputs</b><p>Every result comes from a live provider. Unavailable features say so.</p></div></div><div class="feat"><span style="font-size:22px">⊙</span><div><b>Private by design</b><p>Local work stays in this browser under your account; generation prompts go to the provider.</p></div></div><div class="feat"><span style="font-size:22px">✦</span><div><b>Free, best effort</b><p>Provider limits and availability can change without notice.</p></div></div></div><div class="note warn" style="margin-top:24px">Beta · The authenticated AURIX API and free AI provider are best-effort, with rate limits or outages. Do not enter sensitive information.</div>`}
+function chatMessageMarkup(){return chatMessages.length?chatMessages.filter(m=>m&&['user','assistant'].includes(m.role)&&typeof m.text==='string').map(m=>`<div class="chat-line ${m.role==='user'?'user':'assistant'}"><b>${m.role==='user'?'You':'AURIX'}</b><p>${safe(m.text)}</p></div>`).join(''):'<div class="chat-empty"><b>Ask AURIX anything</b><p>Chat about ideas, writing or code. Attach a text-based PDF for document questions. Answers are generated only when the free chat model is configured; no invented replies.</p></div>'}
+function chat(){return `${head(t('chat'),'Google sign-in required · your messages stay on this device unless sent to the AI provider for an answer.')}<section class="chat-box"><div class="chat-top"><b>✳ AURIX Chat</b><span class="badge">Free-tier only · best effort</span></div><div class="chat-messages" id="chat-messages" role="log" aria-live="polite">${chatMessageMarkup()}</div><div class="chat-attachment" id="chat-attachment">${chatPdf?`<b>PDF:</b> ${safe(chatPdf.name)} · ${chatPdf.pages} pages ${chatPdf.truncated?'· first 12,000 characters only':''} <button id="chat-remove-pdf" type="button">Remove</button>`:'PDF stays in this browser. Only extracted text is sent when you ask; free-tier requests may be used by the provider to improve services. Maximum 5 MB and 20 pages.'}</div><form id="chat-form"><label class="sr-only" for="chat-input">Your message</label><textarea id="chat-input" class="ta" rows="3" maxlength="2000" minlength="2" required placeholder="Ask AURIX a question about your PDF or another topic…"></textarea><div class="chat-actions"><label class="btn sm ghost chat-attach" for="chat-file">＋ Attach PDF</label><input type="file" id="chat-file" accept="application/pdf,.pdf" hidden/><button class="btn sm" id="chat-send" type="submit">Send →</button></div></form>${state('chat-state')}<p class="hint">Text-based PDFs only; scanned-image PDFs need OCR, which is not configured. AURIX does not upload or save the original PDF.</p></section>`}
+function image(){return `${head(t('image'),'Transform a prompt into a real image. A real but rate-limited free image model. Describe exactly what must appear; results are not guaranteed to match.')}
+<div class="card"><form id="image-form"><div class="field"><label for="img-prompt">Describe your image</label><textarea id="img-prompt" class="ta" maxlength="600" minlength="4" required placeholder="A floating citadel above an ocean at sunrise, intricate cinematic lighting..." spellcheck="true"></textarea><div class="row" style="margin-top:10px"><button type="button" class="btn sm ghost" id="img-translate">Translate prompt to English (optional)</button><span class="hint">If writing in Arabic or French, review the suggested translation before generating. Uses one text-model request.</span></div></div><div class="field"><label>Optional visual direction · modifies the prompt (not a different model)</label><div class="chips" id="styles">${['As written','Realistic','Cinematic','Anime','Illustration','3D','Fantasy','Minimalist'].map((v,i)=>`<button type="button" class="chip ${i===0?'on':''}" data-style="${v}" aria-pressed="${i===0}">${v}</button>`).join('')}</div></div><div class="field"><label>Aspect ratio</label><div class="chips" id="ratios">${[['Square','1:1']].map(([n,v],i)=>`<button type="button" class="chip ${i===0?'on':''}" data-ratio="${v}" aria-pressed="${i===0}">${n} · ${v}</button>`).join('')}</div></div><div class="field"><label>Generation size</label><div class="chips" id="qualities"><button type="button" class="chip on" data-quality="fast" aria-pressed="true">Fast · 4 steps</button><button type="button" class="chip" data-quality="detail" aria-pressed="false">Detail · 8 steps</button></div></div><div class="row"><button class="btn" id="img-go" type="submit">◈ &nbsp; Generate image</button><span class="hint">Cloudflare Workers AI · square images · daily free allowance on Workers Free.</span></div></form>${state('img-state')}<div id="img-result"></div></div><div class="note info" style="margin-top:16px">Your prompt is processed by Cloudflare Workers AI using FLUX.1 Schnell. Free usage depends on the Workers Free daily allocation and may stop when exhausted. It currently creates square images only. This model may miss details; verify every image. New images are saved only on this device in your browser image storage, not in Firestore. Download copies you want to keep. Older image entries may still contain provider links.</div><h2 style="margin-top:28px">Image gallery</h2><div id="img-gallery" class="img-grid">${imageCards(items.filter(o=>o.kind==='image').slice(0,12))}</div>`}
+function imageCards(list){return list.length?list.map(o=>`<article class="img-card"><img loading="lazy" ${imageMarkup(o)} alt="AI image: ${safe(o.prompt.slice(0,80))}"/><div class="bar"><span class="ttl" title="${safe(o.prompt)}">${safe(o.prompt)}</span><button class="icon-btn fav ${o.fav?'on':''}" data-fav="${safe(o.id)}" aria-label="Toggle favorite">♥</button><button class="icon-btn" data-download="${safe(o.id)}" aria-label="Download image">↓</button></div></article>`).join(''):`<div class="empty" style="grid-column:1/-1"><b>No images yet</b>Generate your first image above.</div>`}
+function video(){return `${head(t('video'),'Real video generation only — no simulated videos or fake progress.')}
+<div class="card" style="text-align:center;padding:50px 24px"><div style="font-size:58px;color:var(--violet2)">▷</div><h2 style="display:block;margin:15px 0">${t('unavailable')}</h2><p style="color:var(--muted);max-width:560px;margin:0 auto 18px">Text-to-video and image-to-video are disabled. We have not configured a provider with a verified sustainable quota and usage rights. No video is being generated here.</p><div class="note info" style="max-width:560px;margin:auto;text-align:start">When a genuine provider is configured and tested, supported duration, aspect ratio, progress and downloads can be added. We will not show controls that cannot work.</div></div>`}
+const codeTasks={generate:'Generate code',explain:'Explain code',fix:'Fix errors',improve:'Improve code',component:'Website component'};
+function code(){return `${head(t('code'),'Generate and understand code with a real text model. Always review and test generated code before production.')}
+<div class="card"><form id="code-form"><div class="field"><label for="code-task">Action</label><select class="input" id="code-task">${Object.entries(codeTasks).map(([k,v])=>`<option value="${k}">${v}</option>`).join('')}</select></div><div class="field"><label for="code-lang">Language / format</label><select class="input" id="code-lang"><option>HTML/CSS/JavaScript</option><option>JavaScript</option><option>HTML</option><option>CSS</option><option>Python</option><option>Other</option></select></div><div class="field"><label for="code-prompt">Describe what you need or paste code</label><textarea class="ta" id="code-prompt" minlength="5" maxlength="3500" required style="min-height:150px" placeholder="Build a responsive pricing card using HTML and CSS..."></textarea></div><button class="btn" type="submit" id="code-go">⌘ &nbsp; Ask AI</button></form>${state('code-state')}<div id="code-result" hidden><div class="out-head"><h3>Model output · verify before use</h3><button type="button" class="btn sm ghost" id="code-copy">Copy</button><button type="button" class="btn sm ghost" id="code-save">Save snippet</button><button type="button" class="btn sm ghost" id="code-download">Download .txt</button></div><div class="code-out"><pre><code id="code-text"></code></pre></div><div class="row" style="margin-top:14px"><label style="color:var(--muted);font-size:13px"><input type="checkbox" id="preview-check"/> I understand that running generated HTML/JS can be risky; show isolated preview</label></div><div id="preview-area" hidden><iframe class="preview-frame" id="preview-frame" sandbox="allow-scripts" referrerpolicy="no-referrer" title="Isolated code preview"></iframe><p class="hint">Only HTML documents can be previewed; sandboxed frame has no same-origin access. Untrusted code may still contact external sites; never run sensitive code.</p></div></div></div><div class="note warn" style="margin-top:16px">AI-generated code can contain bugs and security flaws. Never paste credentials. Your request and any pasted code are sent to Pollinations.ai for processing.</div>`}
+const writerTasks={article:['Article or website copy','Write detailed, original content for a specified audience'],caption:['Social caption','Create platform-ready social captions'],product:['Product description','Describe product benefits clearly'],rewrite:['Rewrite','Improve clarity while preserving meaning'],summary:['Summarize','Create a concise, accurate summary'],grammar:['Grammar','Correct spelling and grammar'],translate:['Translate','Translate into a specified language'],prompt:['Creative prompt','Craft a prompt for an image/video model']};
+function writer(){return `${head(t('writer'),'Real AI writing and editing. Provide context and verify factual claims yourself.')}
+<div class="card"><div class="field"><label>Choose an action</label><div class="tools-list" id="writer-tasks">${Object.entries(writerTasks).map(([k,[n,d]],i)=>`<button type="button" class="tool-opt ${i===0?'on':''}" data-wtask="${k}" aria-pressed="${i===0}"><b>${n}</b><small>${d}</small></button>`).join('')}</div></div><form id="writer-form"><div class="field"><label for="writer-prompt">Topic, instructions, or source text</label><textarea class="ta" id="writer-prompt" minlength="5" maxlength="3500" required placeholder="Write an introduction to sustainable packaging for small shops..."></textarea></div><div class="field"><label for="writer-lang">Output language</label><select class="input" id="writer-lang"><option>English</option><option>French</option><option>Arabic</option></select></div><button class="btn" type="submit" id="writer-go">✎ &nbsp; Generate text</button></form>${state('writer-state')}<div id="writer-result" hidden><div class="out-head"><h3>AI-generated output · verify facts</h3><button type="button" class="btn sm ghost" id="writer-copy">Copy</button><button type="button" class="btn sm ghost" id="writer-save">Save to projects</button><button type="button" class="btn sm ghost" id="writer-download">Download .txt</button></div><div class="writer-out" id="writer-text"></div></div></div><div class="note info" style="margin-top:16px">Requests are sent to Pollinations.ai; avoid personal or confidential data. Generated text is not guaranteed to be factual, original or suitable for publication without editing.</div>`}
+function entry(o){return `<article class="hist-card">${o.kind==='image'?`<div class="thumb"><img loading="lazy" ${imageMarkup(o)} alt="Generated image"/></div>`:''}<span class="kind k-${safe(o.kind)}">${safe(o.kind)}</span><b>${safe(o.prompt.slice(0,68))}</b><p>${o.kind==='image'?safe(o.meta?.style||'AI image'):safe(o.result.slice(0,200))}</p><time datetime="${safe(o.at)}">${safe(fmt(o.at))}</time><div class="row"><button class="btn sm ghost" type="button" data-fav="${safe(o.id)}">${o.fav?'♥ Favorited':'♡ Favorite'}</button>${o.kind==='image'?`<button class="btn sm ghost" data-download="${safe(o.id)}">↓ Download</button>`:`<button class="btn sm ghost" data-copy-item="${safe(o.id)}">Copy</button>`}${window.AurixCloud?.user&&!o.result?.startsWith(PHOTO)?`<button class="btn sm ghost" data-cloud-save="${safe(o.id)}">☁ Save to cloud</button>`:''}<button class="btn sm ghost" data-delete="${safe(o.id)}" aria-label="Remove saved item">×</button></div><label class="hint">Folder <select class="input" data-move="${safe(o.id)}" style="margin-top:4px">${folders.map(f=>`<option ${o.folder===f?'selected':''}>${safe(f)}</option>`).join('')}</select></label></article>`}
+function history(){return `${head(t('history'),'Your recent generations are saved only in this browser. Clearing browser data removes them.')}<div class="row"><button type="button" class="btn sm ghost" id="export-items">↓ Export all as JSON</button></div><div class="hist-grid">${items.length?items.map(entry).join(''):'<div class="empty" style="grid-column:1/-1"><b>No history yet</b>Your real generations will appear here.</div>'}</div>`}
+function favorites(){const a=items.filter(o=>o.fav);return `${head(t('favorites'),'Favorite items saved in your browser.')}<div class="hist-grid">${a.length?a.map(entry).join(''):'<div class="empty" style="grid-column:1/-1"><b>No favorites</b>Select the heart on a creation.</div>'}</div>`}
+function projects(){return `${head(t('projects'),'Local folders stay on this device; only projects you choose are copied to your cloud account.')}
+<div class="card"><form id="folder-form" class="row"><label for="folder-name" style="width:100%;font-weight:700">New folder</label><input id="folder-name" class="input" maxlength="42" required style="flex:1;min-width:180px" placeholder="My experiments"/><button class="btn sm" type="submit">+ Create folder</button></form></div><div class="proj-folders">${folders.map(f=>`<div class="card" style="padding:16px"><b>▣ &nbsp;${safe(f)}</b><p class="hint">${items.filter(o=>o.folder===f).length} saved items</p></div>`).join('')}</div><div class="hist-grid">${items.length?items.map(entry).join(''):'<div class="empty" style="grid-column:1/-1"><b>No projects yet</b>Generate and save work to organize it here.</div>'}</div>${window.AurixCloud?.user?'<div class="card" style="margin-top:20px"><h2>Cloud projects</h2><p class="hint">Saved only when you click Save to cloud. Each account sees its own records.</p><div id="cloud-items" aria-live="polite">Loading saved projects…</div></div>':''}`}
+function settings(){return `${head(t('settings'),'Your AURIX account is active. Cloud saving remains your choice.')}
+<div class="card"><h2>Privacy &amp; local data</h2><div class="set-grid"><div class="set-tile"><b>Export your work</b><p>Save prompts, text outputs and metadata as JSON. Locally stored images are NOT embedded in this export; download them separately.</p><button class="btn sm ghost" id="export-items">Download JSON</button></div><div class="set-tile"><b>Delete local data</b><p>Remove this account’s local history, favorites, projects and folders from this browser. This cannot be undone.</p><button class="btn sm ghost" id="clear-data">Clear AURIX data</button></div><div class="set-tile"><b>Accounts</b>${window.AurixCloud?(window.AurixCloud.user?`<p>Signed in as ${safe(window.AurixCloud.user.email||'Google user')}. Only items explicitly saved to cloud are synced.</p><button class="btn sm ghost" type="button" id="google-signout">Sign out</button><button class="btn sm ghost" type="button" id="google-delete" style="margin-top:8px">Delete account and cloud items</button>`:'<p>Google sign-in is available. Google sign-in is required to enter.</p><button class="btn sm" type="button" id="google-signin">Sign in with Google</button>'):'<p>Google sign-in is unavailable. Please retry later.</p>'}</div></div></div><div class="note warn" style="margin-top:16px">AURIX cannot remove data sent to the external provider on your behalf. Consult the provider's privacy policy for its retention and deletion process.</div>`}
+function info(title,content){return `<div class="aurix-page"><h1>${title}</h1><div class="card content">${content}</div></div>`}
+function about(){return info('About AURIX',`<p><strong>AURIX — Imagine. Create. Build.</strong> is an independent creative workspace for images, coding help and writing. It is currently an early-stage site hosted on Firebase Hosting for staging, with a separate Blogger theme available.</p><h2>What works today</h2><p>Signed-in requests pass through the AURIX Cloudflare Worker, which calls Cloudflare Workers AI for images and Pollinations.ai for text. Video generation is not active. ${window.AurixCloud?'Google sign-in is required to use the interactive studio; explicit cloud saves are available.':'User accounts and cloud sync are not active.'} There are no ads at launch.</p><h2>How we build trust</h2><p>We do not simulate model responses, fake quota balances or show pretend generation progress. Free provider availability can change. Always check the results before use, especially code and factual writing.</p><h2>Brand</h2><p>The AURIX skull artwork is based on the project owner’s supplied reference image. AURIX is not affiliated with Pollinations.ai.</p>`)}
+function contact(){return info('Contact',`<p>For questions, feedback or privacy requests, email <a href="mailto:ahmedbecetti41@gmail.com">ahmedbecetti41@gmail.com</a>. Your email application will open; this website does not submit your message itself.</p><p><strong>Site address:</strong> <a href="https://skullaistudio.blogspot.com/">skullaistudio.blogspot.com</a></p><p class="note info">Please allow time for a reply. Do not include passwords or API keys in email.</p>`)}
+function privacy(){return info('Privacy Policy',`<p><strong>Last updated: October 24, 2026.</strong> This policy describes the current AURIX application, including Google sign-in, on its staging domain. It will be updated when features change.</p><h2>Information you provide</h2><p>When you generate images, your prompt is processed through the authenticated Cloudflare Worker by Cloudflare Workers AI using FLUX.1 Schnell (Black Forest Labs). Text/code requests are sent by the Worker to Pollinations.ai. Do not submit private information; each provider's terms and privacy practices apply. For chat, typed messages and text extracted locally from an attached PDF are sent to the AURIX Worker and then to Google Gemini when the free-tier model is configured; the original PDF is not uploaded. Do not submit passwords, secrets, confidential documents or personal data.</p><h2>Local browser data</h2><p>History, recent chat messages, saved text, prompts, favorites, folders and your language preference are saved in this browser’s storage. New image bytes are stored in this browser’s IndexedDB under your account, not in exported JSON or Firestore. Older entries may contain external provider links. You can export or erase this data under Settings. Locally saved projects are stored by account on this browser. Clearing browser data deletes them.</p><h2>Third-party services</h2><p>Firebase Hosting (Google) hosts this staging site and may set cookies and collect technical information under its own privacy terms. Cloudflare processes authenticated API requests; Cloudflare Workers AI processes image prompts, Pollinations.ai receives text/code generation prompts, and Gemini receives chat messages plus extracted PDF text from the Worker and may log request data. Existing older image links may contact Pollinations.ai directly. This site does not currently enable advertising or a separate analytics service.</p><h2>Security and retention</h2><p>${window.AurixCloud?'Google sign-in is required for the studio; Firebase Authentication processes your account identity and Google email; projects you explicitly save to cloud are stored in Cloud Firestore under your user ID. You can delete your account and its saved cloud projects in Settings.':'We do not operate an account database in this version.'} Browser storage is not encrypted or suitable for confidential information. Firebase Authentication checks Google sign-in; the staging website’s static files remain publicly accessible. The owner's control over third-party provider retention is limited. See the provider’s policy for its own deletion requests.</p><h2>Questions</h2><p>See <a href="#contact">Contact</a>. Email <a href="mailto:ahmedbecetti41@gmail.com">ahmedbecetti41@gmail.com</a> for site questions and privacy requests.</p>`)}
+function terms(){return info('Terms of Service',`<p><strong>Last updated: October 24, 2026.</strong> By using AURIX you agree to use it lawfully and responsibly. This early-stage service is provided as available, without a guaranteed uptime or free quota.</p><h2>AI-generated material</h2><p>Outputs may be inaccurate, unsafe, infringing or unsuitable for your purpose. You are responsible for reviewing them. Generated code must be tested and audited before production. AURIX does not guarantee output originality, ownership or commercial-use rights.</p><h2>Provider availability</h2><p>Active features depend on Cloudflare Workers AI for images, Pollinations.ai for text, and applicable provider and model terms. Access, limits and supported features may change or stop at any time. Video generation is not offered in this version. ${window.AurixCloud?'Google sign-in and optional cloud saving are governed by Google/Firebase terms; account deletion is in Settings.':'Account features are not offered.'}</p><h2>Acceptable use</h2><p>Do not submit harmful, illegal or unauthorized content, third-party secrets or personal information without permission. Do not attempt automated abuse or bypass provider limits.</p><h2>Local data</h2><p>Local project data is stored by account in your browser. You are responsible for exporting it if needed. AURIX cannot restore cleared local storage.</p><h2>External terms</h2><p>Your use of Cloudflare Workers AI and Black Forest Labs FLUX models for images and Pollinations.ai for text is subject to applicable terms and policies. The staging site is hosted by Firebase Hosting; a Blogger theme is available separately. Google hosting terms apply. See <a href="#privacy">Privacy Policy</a>.</p>`)}
+function toggleChips(selector,attr){$$(selector+' [data-'+attr+']').forEach(b=>b.addEventListener('click',()=>{$$(selector+' [data-'+attr+']').forEach(c=>{c.classList.remove('on');c.setAttribute('aria-pressed','false')});b.classList.add('on');b.setAttribute('aria-pressed','true')}))}
+function downloadBlob(blob,name){const a=document.createElement('a'),url=URL.createObjectURL(blob);a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),60000)}
+function downloadText(text,name,mime='text/plain'){downloadBlob(new Blob([text],{type:mime}),name)}
+async function downloadImg(o){try{if(o.result.startsWith(PHOTO)){const blob=await photoGet(o.id);if(!blob)throw Error('Image not found on this device');downloadBlob(blob,'aurix-'+o.id+'.jpg');return}const res=await fetch(o.result);if(!res.ok||!res.headers.get('content-type')?.startsWith('image/'))throw Error('Legacy image no longer available');downloadBlob(await res.blob(),'aurix-'+o.id+'.jpg')}catch(e){toast(e.message||'Image download failed.','err')}}
+function textError(res,body){
+  const wait=Number.parseInt(res.headers?.get('Retry-After')||'',10);
+  if(res.status===402||res.status===429||res.headers?.get('Retry-After'))return `Free provider limit reached. ${Number.isFinite(wait)?`Try again in about ${wait} seconds.`:'Wait and try later.'} Image generation may have exhausted the Workers AI daily free allowance on this account.`;
+  let message=String(body||'').slice(0,180);
+  try{const parsed=JSON.parse(body);message=parsed.error?.message||parsed.message||message}catch{}
+  return `Provider error (${res.status}). ${message||'Please try again later.'}`;
+}
+const cooldown={text:30000,image:45000};
+function checkRate(kind){let at=Number(localStorage.getItem(key('last_'+kind))||0),left=cooldown[kind]-(Date.now()-at);if(left>0)throw Error(`Please wait ${Math.ceil(left/1000)} seconds before another ${kind} request. The provider may require longer.`);localStorage.setItem(key('last_'+kind),String(Date.now()))}
+async function apiRequest(kind,payload,signal){
+  const cloud=window.AurixCloud;
+  if(!cloud?.user||!cloud.getIdToken)throw Error('Sign in with Google to use AURIX.');
+  const token=await cloud.getIdToken();
+  if(signal?.aborted)throw new DOMException('Request aborted','AbortError');
+  if(!cloud.user)throw Error('You have signed out. Sign in again.');
+  let response;
+  try{response=await fetch(API+'/api/'+kind,{method:'POST',headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'},body:JSON.stringify(payload),signal,referrerPolicy:'no-referrer'})}
+  catch(e){if(e.name==='AbortError')throw e;throw Error('Secure AURIX API is unreachable. Please try again later.')}
+  if(response.status===401)throw Error('Your Google session expired. Sign out and sign in again.');
+  return response;
+}
+
+function beginJob(st,button,message,limitSeconds){
+  const controller=new AbortController(),started=Date.now();busy=true;button.disabled=true;
+  showState(st,'loading',message);
+  const elapsed=document.createElement('span');elapsed.className='hint';elapsed.style.display='block';elapsed.setAttribute('aria-hidden','true');st.querySelector('.msg').append(elapsed);
+  const cancel=document.createElement('button');cancel.type='button';cancel.className='btn sm ghost';cancel.textContent='Cancel';cancel.setAttribute('aria-label','Cancel request');st.append(cancel);
+  cancel.onclick=()=>controller.abort('cancelled');
+  const tick=setInterval(()=>{elapsed.textContent=`${Math.floor((Date.now()-started)/1000)}s elapsed · maximum ${limitSeconds}s`;},1000);
+  const timeout=setTimeout(()=>controller.abort('timeout'),limitSeconds*1000);
+  activeJob={controller,tick,timeout};return activeJob;
+}
+function finishJob(job,button){clearTimeout(job.timeout);clearInterval(job.tick);button.disabled=false;if(activeJob===job){activeJob=null;busy=false}}
+function jobError(e,job){if(e.name==='AbortError')return job.controller.signal.reason==='timeout'?'The provider took too long; the request was stopped. Try again later or use a shorter prompt.':'Request cancelled. No result was saved.';return e.message||'The provider is unavailable. Try again later.'}
+async function getText(prompt,signal){
+  if(!window.AurixCloud?.user)throw Error('Sign in with Google to use AURIX.');
+  checkRate('text');const res=await apiRequest('text',{prompt},signal);
+  const contentType=res.headers.get('content-type')||'';
+  const body=(contentType.startsWith('text/')||contentType.includes('json'))?await res.text():'';
+  if(!res.ok)throw Error(textError(res,body));
+  if(!body.trim())throw Error('The provider returned an empty response. Please retry later.');
+  return body.trim();
+}
+async function looksLikeLimitCard(blob){
+  if(typeof createImageBitmap!=='function')return false;
+  try{
+    const bitmap=await createImageBitmap(blob),canvas=document.createElement('canvas');canvas.width=bitmap.width;canvas.height=bitmap.height;
+    const ctx=canvas.getContext('2d',{willReadFrequently:true});ctx.drawImage(bitmap,0,0);bitmap.close();
+    const pixel=(x,y)=>[...ctx.getImageData(Math.floor(canvas.width*x),Math.floor(canvas.height*y),1,1).data];
+    const yellow=(v)=>v[0]>235&&v[1]>190&&v[1]<240&&v[2]>75&&v[2]<145;
+    const corners=[[.02,.02],[.98,.02],[.02,.98],[.98,.98]];
+    return corners.every(([x,y])=>yellow(pixel(x,y)))&&pixel(.1,.4)[0]<90;
+  }catch{return false}
+}
+async function getImage(prompt,style,ratio,quality,signal){
+  if(!window.AurixCloud?.user)throw Error('Sign in with Google to use AURIX.');
+  checkRate('image');
+  // As written means do not silently rewrite a user's description.
+  const q=style==='As written'?prompt:`${prompt}. Visual style: ${style}.`;
+  const r=await apiRequest('image',{prompt:q,ratio,quality},signal);
+  if(r.status===502||r.status===503)throw Error('Image generation is temporarily unavailable: the free provider failed. No image was created or saved. Please try later.');
+  if(!r.ok||r.headers.get('Retry-After'))throw Error(textError(r, r.headers.get('content-type')?.includes('json')?await r.text():''));
+  if(!r.headers.get('content-type')?.startsWith('image/'))throw Error('The provider did not return an image.');
+  const blob=await r.blob();
+  if(blob.size<3000)throw Error('The provider returned an incomplete image. No result was saved.');
+  const sig=new Uint8Array(await blob.slice(0,3).arrayBuffer());
+  if(!(sig[0]===0xff&&sig[1]===0xd8&&sig[2]===0xff))throw Error('The provider returned an unexpected file instead of a JPEG image.');
+  return {blob};
+}
+function syntax(s){let parts=String(s).split(/(\/\/[^\n]*|\/\*[\s\S]*?\*\/|<!--[\s\S]*?-->|"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|`(?:[^`\\]|\\.)*`|\b(?:const|let|var|function|return|if|else|class|import|export|async|await|def|for|while|new|try|catch|throw|true|false|null|undefined)\b|\b\d+(?:\.\d+)?\b|<\/?[A-Za-z][\w-]*)/g);return parts.map(p=>{let e=safe(p);if(/^(\/\/|\/\*|<!--)/.test(p))return '<span class="tk-com">'+e+'</span>';if(/^["'`]/.test(p))return '<span class="tk-str">'+e+'</span>';if(/^<\/?[A-Za-z]/.test(p))return '<span class="tk-tag">'+e+'</span>';if(/^\d/.test(p))return '<span class="tk-num">'+e+'</span>';if(/^(const|let|var|function|return|if|else|class|import|export|async|await|def|for|while|new|try|catch|throw|true|false|null|undefined)$/.test(p))return '<span class="tk-kw">'+e+'</span>';return e}).join('')}
+let currentCode='',currentWrite='',lastCodePrompt='',lastWritePrompt='';
+async function signOutToLogin(){if(!window.AurixCloud?.user)return;await window.AurixCloud.signOut();activeUserId=null;items=[];folders=['Unsorted'];chatMessages=[];chatPdf=null;cloudItems=[];location.hash='#login';render()}
+function bindRoute(){
+ if(route==='login'){
+  const c=authCopy[lang]||authCopy.en;
+  $$('.auth-langs [data-auth-lang]').forEach(b=>b.onclick=()=>{lang=b.dataset.authLang;save('lang',lang);render()});
+  $('#login-google').onclick=async()=>{
+    if(!window.AurixCloud)return;
+    const button=$('#login-google'),status=$('#login-status');button.disabled=true;status.textContent=c.connecting;
+    try{await window.AurixCloud.signIn();location.hash='#home'}
+    catch(e){
+      if(e.code==='auth/popup-closed-by-user'||e.code==='auth/cancelled-popup-request')status.textContent=c.cancel;
+      else if(e.code==='auth/popup-blocked')status.textContent=c.blocked;
+      else if(e.code==='auth/unauthorized-domain')status.textContent='This domain is not authorized for Google sign-in. Contact AURIX support.';
+      else status.textContent=`${c.unavailable} ${String(e.code||'').slice(0,60)}`;
+      button.disabled=false;
+    }
+  };
+ }
+ if(route==='chat'){
+  const updateAttachment=()=>{const box=$('#chat-attachment');if(!box)return;box.innerHTML=chatPdf?`<b>PDF:</b> ${safe(chatPdf.name)} · ${chatPdf.pages} pages ${chatPdf.truncated?'· first 12,000 characters only':''} <button id="chat-remove-pdf" type="button">Remove</button>`:'PDF stays in this browser. Only extracted text is sent when you ask; free-tier requests may be used by the provider to improve services. Maximum 5 MB and 20 pages.';if($('#chat-remove-pdf'))$('#chat-remove-pdf').onclick=()=>{chatPdf=null;$('#chat-file').value='';updateAttachment()}};
+  $('#chat-file').onchange=async e=>{
+    const file=e.target.files?.[0],st=$('#chat-state');if(!file)return;
+    chatPdf=null;updateAttachment();showState(st,'loading','Reading the PDF locally. The original file is not uploaded.');
+    try{if(!window.AurixPdf)throw Error('PDF reader is loading. Wait a moment and select the file again.');const result=await window.AurixPdf.extract(file);chatPdf={name:file.name,pages:result.pages,text:result.text,truncated:result.truncated};updateAttachment();showState(st,'ok',`Extracted text from ${result.pages} pages locally.${result.truncated?' Only the first 12,000 characters can be sent.':''}`)}
+    catch(err){chatPdf=null;updateAttachment();showState(st,'error',err.message||'Cannot read this PDF.');$('#chat-file').value=''}
+  };
+  updateAttachment();
+  $('#chat-form').addEventListener('submit',async ev=>{
+    ev.preventDefault();if(busy)return;
+    const text=$('#chat-input').value.trim();if(text.length<2)return;
+    const button=$('#chat-send'),st=$('#chat-state'),job=beginJob(st,button,'Waiting for a real answer from the free chat model. You can cancel.',37);
+    try{
+      const history=chatMessages.slice(-8).map(m=>({role:m.role,text:m.text}));
+      const res=await apiRequest('chat',{messages:[...history,{role:'user',text}],documentText:chatPdf?.text||''},job.controller.signal);
+      const answer=(await res.text()).trim();
+      if(!res.ok)throw Error(answer.slice(0,170)||`Chat is unavailable (${res.status}).`);
+      if(!answer)throw Error('The chat model returned an empty answer.');
+      if(job.controller.signal.aborted)throw new DOMException('Request aborted','AbortError');
+      chatMessages.push({role:'user',text},{role:'assistant',text:answer.slice(0,10000)});
+      chatMessages=chatMessages.slice(-16);save('chat',chatMessages);
+      $('#chat-messages').innerHTML=chatMessageMarkup();$('#chat-messages').scrollTop=$('#chat-messages').scrollHeight;
+      $('#chat-input').value='';clearState(st);
+    }catch(e){if(!job.controller.signal.aborted||job.controller.signal.reason!=='navigation')showState(st,'error',jobError(e,job))}
+    finally{finishJob(job,button)}
+  });
+ }
+ if(route==='image'){
+  toggleChips('#styles','style');toggleChips('#ratios','ratio');toggleChips('#qualities','quality');
+  $('#img-translate').onclick=async()=>{
+    if(busy)return;
+    const original=$('#img-prompt').value.trim();
+    if(original.length<4)return showState($('#img-state'),'error','Write a description first.');
+    const button=$('#img-translate'),st=$('#img-state'),job=beginJob(st,button,'Translating with a real text model. Review the English prompt before generating.',40);
+    try{
+      const instruction=`Translate the following image prompt into clear English without adding, removing or inventing details. Preserve subjects, object counts, colors, layout and visible text exactly. Respond ONLY with the English prompt: ${original}`;
+      const translated=await getText(instruction,job.controller.signal);
+      if(job.controller.signal.aborted)throw new DOMException('Request aborted','AbortError');
+      $('#img-prompt').value=translated.trim();
+      showState(st,'ok','English translation is ready. Check that it preserves your idea, then press Generate image.');
+    }catch(e){if(!job.controller.signal.aborted||job.controller.signal.reason!=='navigation')showState(st,'error',jobError(e,job))}
+    finally{finishJob(job,button)}
+  };
+  $('#image-form').addEventListener('submit',async ev=>{
+    ev.preventDefault();if(busy)return;
+    const prompt=$('#img-prompt').value.trim(),style=$('#styles .on').dataset.style,ratio=$('#ratios .on').dataset.ratio,quality=$('#qualities .on').dataset.quality;
+    if(prompt.length<4)return;
+    if(/[\u0600-\u06ff]/.test(prompt))return showState($('#img-state'),'error','Arabic prompts can produce an unrelated picture with this free model. Press “Translate prompt to English”, review the text, then generate. / الوصف العربي قد ينتج صورة لا تطابق طلبك؛ اضغط ترجمة الوصف أولًا وراجعه.');
+    const button=$('#img-go'),st=$('#img-state'),job=beginJob(st,button,'Generating an actual image. You may cancel if the free provider is slow.',70);
+    try{
+      const {blob}=await getImage(prompt,style,ratio,quality,job.controller.signal);
+      if(job.controller.signal.aborted)throw new DOMException('Request aborted','AbortError');
+      const id=Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+      const preview=URL.createObjectURL(blob);
+      let stored=true;
+      try{await photoPut(id,blob)}catch{stored=false}
+      if(job.controller.signal.aborted){URL.revokeObjectURL(preview);throw new DOMException('Request aborted','AbortError')}
+      const o=stored?addItem('image',prompt,PHOTO+id,{style,ratio,quality},id):{id,at:stamp()};
+      photoUrls.set(activeUserId+':'+id,preview);
+      $('#img-result').innerHTML=`<div class="result-frame"><img id="result-photo" alt="Generated image for ${safe(prompt.slice(0,100))}"/><div class="meta">${safe(style)} · ${safe(ratio)} · ${safe(quality)} · ${safe(fmt(o.at))}</div><p class="hint">Review the image yourself: the free model can miss details in your prompt.</p><div class="row" style="justify-content:center;margin-top:12px"><button type="button" class="btn sm" id="result-save">↓ Download image</button>${stored?`<button type="button" class="btn sm ghost" data-fav="${safe(o.id)}">♡ Favorite</button>`:''}</div></div>`;
+      $('#result-photo').src=preview;
+      $('#result-save').onclick=()=>downloadBlob(blob,'aurix-'+o.id+'.jpg');
+      $('#img-gallery').innerHTML=imageCards(items.filter(x=>x.kind==='image').slice(0,12));
+      hydratePhotos();
+      if(stored){clearState(st);toast('Image received and saved on this device. Review it.','ok')}
+      else showState(st,'error','Image received but could not be saved on this device. Download it now; it will not appear in your gallery.');
+    }catch(e){if(!job.controller.signal.aborted||job.controller.signal.reason!=='navigation')showState(st,'error',jobError(e,job))}
+    finally{finishJob(job,button)}
+  });
+ }
+ if(route==='code'){$('#code-form').addEventListener('submit',async ev=>{ev.preventDefault();if(busy)return;let task=$('#code-task').value,language=$('#code-lang').value,user=$('#code-prompt').value.trim();if(user.length<5)return;const button=$('#code-go'),st=$('#code-state'),job=beginJob(st,button,'Waiting for the real text model. Cancel if it takes too long.',40);try{let instruction=`You are a careful coding assistant. Task: ${codeTasks[task]}. Language: ${language}. If generating a website component, provide a complete standalone HTML document with embedded CSS and optional JS; no markdown fencing. Otherwise use clear explanations and code. Mention important limitations briefly. User request or code: ${user}`;currentCode=await getText(instruction,job.controller.signal);if(job.controller.signal.aborted)throw new DOMException('Request aborted','AbortError');lastCodePrompt=user;$('#code-text').innerHTML=syntax(currentCode);$('#code-result').hidden=false;clearState(st)}catch(e){if(!job.controller.signal.aborted||job.controller.signal.reason!=='navigation')showState(st,'error',jobError(e,job))}finally{finishJob(job,button)}});$('#code-copy').onclick=()=>navigator.clipboard.writeText(currentCode).then(()=>toast('Copied.','ok')).catch(()=>toast('Clipboard unavailable.','err'));$('#code-save').onclick=()=>{addItem('code',lastCodePrompt,currentCode,{language:$('#code-lang').value});toast('Saved in this browser.','ok')};$('#code-download').onclick=()=>downloadText(currentCode,'aurix-code.txt');$('#preview-check').addEventListener('change',e=>{let a=$('#preview-area'),f=$('#preview-frame');a.hidden=!e.target.checked;if(e.target.checked){let h=currentCode.trim().replace(/^```(?:html)?\s*/i,'').replace(/\s*```$/,'');if(!/^<!doctype html|^<html|^<head|^<body|^<div|^<section|^<style/i.test(h)){a.hidden=true;e.target.checked=false;toast('Preview requires HTML output.','err');return}f.srcdoc=`<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data: blob:; font-src data:; connect-src 'none'; form-action 'none'">`+h}else f.srcdoc=''})}
+ if(route==='writer'){toggleChips('#writer-tasks','wtask');$('#writer-form').addEventListener('submit',async ev=>{ev.preventDefault();if(busy)return;let task=$('#writer-tasks .on').dataset.wtask,user=$('#writer-prompt').value.trim(),output=$('#writer-lang').value;if(user.length<5)return;const button=$('#writer-go'),st=$('#writer-state'),job=beginJob(st,button,'Waiting for the real text model. Cancel if it takes too long.',40);try{let instruction=`You are a helpful writing assistant. Task: ${writerTasks[task][0]}. Output language: ${output}. Write original, clear text. For translation, preserve meaning; for factual claims, do not fabricate sources. User input: ${user}`;currentWrite=await getText(instruction,job.controller.signal);if(job.controller.signal.aborted)throw new DOMException('Request aborted','AbortError');lastWritePrompt=user;$('#writer-text').textContent=currentWrite;$('#writer-result').hidden=false;clearState(st)}catch(e){if(!job.controller.signal.aborted||job.controller.signal.reason!=='navigation')showState(st,'error',jobError(e,job))}finally{finishJob(job,button)}});$('#writer-copy').onclick=()=>navigator.clipboard.writeText(currentWrite).then(()=>toast('Copied.','ok')).catch(()=>toast('Clipboard unavailable.','err'));$('#writer-save').onclick=()=>{addItem('writer',lastWritePrompt,currentWrite,{task:$('#writer-tasks .on').dataset.wtask});toast('Saved in this browser.','ok')};$('#writer-download').onclick=()=>downloadText(currentWrite,'aurix-writing.txt')}
+ if(route==='projects'){if($('#cloud-items'))window.AurixCloud.list().then(a=>{cloudItems=a;$('#cloud-items').innerHTML=a.length?a.map(o=>`<div class="hist-card" style="margin-top:10px"><b>${safe((o.prompt||'Untitled').slice(0,90))}</b><small>${safe(o.kind)} · ${safe(o.at||'')}</small><p>${safe((o.result||'').slice(0,230))}</p><button type="button" class="btn sm ghost" data-cloud-import="${safe(o.id)}">Restore to this browser</button><button type="button" class="btn sm ghost" data-cloud-remove="${safe(o.id)}">Delete cloud copy</button></div>`).join(''):'No cloud projects yet.'}).catch(e=>{$('#cloud-items').textContent='Could not load cloud projects: '+e.message});$('#folder-form').addEventListener('submit',e=>{e.preventDefault();let f=$('#folder-name').value.trim();if(f&&!folders.some(x=>x.toLowerCase()===f.toLowerCase())){folders.push(f);save('folders',folders);render()}else toast('Folder already exists or name is empty.','err')})}
+ if(route==='settings'){if($('#google-signin'))$('#google-signin').onclick=async()=>{try{await window.AurixCloud.signIn();toast('Signed in.','ok')}catch(e){toast(e.message||'Sign-in unavailable.','err')}};if($('#google-signout'))$('#google-signout').onclick=async()=>{try{await signOutToLogin()}catch(e){toast(e.message,'err')}};if($('#google-delete'))$('#google-delete').onclick=async()=>{if(!confirm('Delete your Google sign-in for AURIX and ALL associated cloud projects? This cannot be undone. Local browser data is kept unless you clear it separately.'))return;try{await window.AurixCloud.deleteAccount();activeUserId=null;items=[];cloudItems=[];location.hash='#login';render();toast('Account and cloud items removed.','ok')}catch(e){toast('Deletion failed: '+e.message,'err')}};$('#clear-data').onclick=()=>{if(confirm('Permanently delete this account’s AURIX local history, favorites and folders on this browser?')){[key('items'),key('folders'),key('chat')].forEach(x=>localStorage.removeItem(x));photoClear(activeUserId).catch(()=>toast('Could not clear stored images.','err'));clearPhotoUrls();items=[];folders=['Unsorted'];chatMessages=[];chatPdf=null;render();toast('This account’s local data cleared.','ok')}}}
+ if(route==='history'||route==='settings'){$('#export-items').onclick=()=>downloadText(JSON.stringify({exportedAt:stamp(),items,folders},null,2),'aurix-export.json','application/json')}
+}
+document.addEventListener('click',e=>{let b=e.target.closest('[data-fav],[data-delete],[data-copy-item],[data-download],[data-cloud-save],[data-cloud-remove],[data-cloud-import]');if(!b)return;if(b.dataset.cloudImport){const o=cloudItems.find(x=>x.id===b.dataset.cloudImport);if(o){if(items.some(x=>x.id===o.id))return toast('Already saved locally.','err');items.unshift({...o,meta:{},fav:!!o.fav});save('items',items);render();toast('Restored to this browser.','ok')}return}if(b.dataset.cloudRemove){if(!confirm('Delete the cloud copy of this project?'))return;window.AurixCloud?.remove(b.dataset.cloudRemove).then(()=>{toast('Cloud copy removed.','ok');render()}).catch(e=>toast(e.message,'err'));return}let id=b.dataset.fav||b.dataset.delete||b.dataset.copyItem||b.dataset.download||b.dataset.cloudSave,o=items.find(x=>x.id===id);if(!o)return;if(b.dataset.cloudSave){window.AurixCloud?.save(o).then(()=>toast('Saved to your cloud account.','ok')).catch(e=>toast(e.message,'err'));return}if(b.dataset.fav)toggleFav(id);else if(b.dataset.delete){if(confirm('Remove this saved item?'))delItem(id)}else if(b.dataset.copyItem)navigator.clipboard.writeText(o.result).then(()=>toast('Copied.','ok')).catch(()=>toast('Clipboard unavailable.','err'));else if(b.dataset.download)downloadImg(o)});
+document.addEventListener('change',e=>{let s=e.target.closest('[data-move]');if(!s)return;let o=items.find(x=>x.id===s.dataset.move);if(o){o.folder=s.value;save('items',items);toast('Moved to '+s.value,'ok')}});
+$$('[data-lang]').forEach(b=>b.onclick=()=>{lang=b.dataset.lang;save('lang',lang);render()});$('#top-signin').onclick=async()=>{if(window.AurixCloud?.user){try{await signOutToLogin()}catch(e){toast(e.message||'Sign-out failed.','err')}}else location.hash='#login'};
+$('#burger').onclick=()=>{let open=$('#side').classList.toggle('open');$('#backdrop').classList.toggle('show',open);$('#burger').setAttribute('aria-expanded',String(open))};$('#backdrop').onclick=()=>{$('#side').classList.remove('open');$('#backdrop').classList.remove('show');$('#burger').setAttribute('aria-expanded','false')};window.addEventListener('hashchange',()=>{render();window.scrollTo(0,0)});window.addEventListener('aurix-cloud',()=>{const user=window.AurixCloud?.user;syncAccount();if(user&&route==='login'){location.hash='#home';render();return}if(!user&&route!=='login'&&!['privacy','terms'].includes(route)){location.hash='#login';render();return}render()});window.addEventListener('aurix-cloud-error',e=>toast(e.detail||'Account service is unavailable.','err'));render();setTimeout(()=>{if(route==='login'&&!window.AurixCloud){const b=$('#login-google');if(b){const label=b.querySelector('span:last-child');if(label)label.textContent=(authCopy[lang]||authCopy.en).unavailable}}},8000);
+})();
+]]></script>
+<script type="text/javascript"><![CDATA[window.AURIX_FIREBASE_CONFIG={"apiKey":"AIzaSyC1zSm5cLXvAh52qqGgek7yiYyXjSMhY4Q","authDomain":"aurix-ea09b.firebaseapp.com","projectId":"aurix-ea09b","appId":"1:72543340803:web:3d2b925ea38e6b7e6fc136"};]]></script><script type="module"><![CDATA[/* Optional Firebase adapter. Loaded only when the owner supplies a PUBLIC Firebase web config.
+   No Admin SDK, service-account credentials, or provider secrets belong here. */
+const cfg = window.AURIX_FIREBASE_CONFIG;
+if (cfg && cfg.apiKey && cfg.authDomain && cfg.projectId && cfg.appId) {
+  const version = '10.14.1';
+  const base = `https://www.gstatic.com/firebasejs/${version}/`;
+  try {
+    const [{ initializeApp }, auth, fs] = await Promise.all([
+      import(base + 'firebase-app.js'),
+      import(base + 'firebase-auth.js'),
+      import(base + 'firebase-firestore.js')
+    ]);
+    const app = initializeApp(cfg);
+    const a = auth.getAuth(app);
+    const db = fs.getFirestore(app);
+    const provider = new auth.GoogleAuthProvider();
+    provider.setCustomParameters({ prompt: 'select_account' });
+    const path = () => {
+      if (!a.currentUser) throw Error('Sign in to save projects to the cloud.');
+      return fs.collection(db, 'users', a.currentUser.uid, 'items');
+    };
+    const cloud = {
+      get user() { return a.currentUser; },
+      async signIn() { return auth.signInWithPopup(a, provider); },
+      async getIdToken() { if (!a.currentUser) throw Error('Sign in with Google first.'); return a.currentUser.getIdToken(); },
+      async signOut() { return auth.signOut(a); },
+      async list() { const snapshot = await fs.getDocs(path()); return snapshot.docs.map(d => ({ id: d.id, ...d.data() })); },
+      async save(item) {
+        if (!item || !item.id || !['image', 'code', 'writer'].includes(item.kind)) throw Error('Invalid project.');
+        await fs.setDoc(fs.doc(path(), item.id), {
+          kind: item.kind, prompt: String(item.prompt || '').slice(0, 3500),
+          result: String(item.result || '').slice(0, 30000),
+          at: String(item.at || ''), folder: String(item.folder || 'Unsorted').slice(0, 42),
+          fav: !!item.fav
+        });
+      },
+      async remove(id) { await fs.deleteDoc(fs.doc(path(), id)); },
+      async deleteAccount() {
+        if (!a.currentUser) throw Error('Not signed in.');
+        // Reauthenticate first. If this fails, no saved projects are deleted.
+        await auth.reauthenticateWithPopup(a.currentUser, provider);
+        while (true) {
+          const docs = await fs.getDocs(fs.query(path(), fs.limit(100)));
+          if (docs.empty) break;
+          const batch = fs.writeBatch(db);
+          docs.forEach(d => batch.delete(d.ref));
+          await batch.commit();
+        }
+        await auth.deleteUser(a.currentUser);
+      }
+    };
+    window.AurixCloud = cloud;
+    auth.onAuthStateChanged(a, () => window.dispatchEvent(new Event('aurix-cloud')));
+    window.dispatchEvent(new Event('aurix-cloud'));
+  } catch (err) {
+    console.error('AURIX cloud initialization failed:', err);
+    window.dispatchEvent(new CustomEvent('aurix-cloud-error', { detail: 'Account service is unavailable.' }));
+  }
+}
+]]></script>
+<b:else/>
+<div class="blogger-content"><a class="btn ghost blogger-back" href="https://skullaistudio.blogspot.com/">← Back to AURIX</a><b:section id="main" class="main" showaddelement="yes"><b:widget id="Blog1" locked="true" title="Blog Posts" type="Blog" version="2"/></b:section></div>
+</b:if>
+</body>
+</html>

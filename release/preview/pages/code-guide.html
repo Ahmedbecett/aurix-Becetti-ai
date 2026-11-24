@@ -1,0 +1,364 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><meta name="description" content="A Practical Checklist for AI-Generated Website Code AI can draft a website component in seconds, but working code is not the same as production-ready code. The "/><link rel="canonical" href="https://aurix-ea09b.web.app/pages/code-guide.html"/><meta name="robots" content="index,follow"/><meta name="theme-color" content="#0b1020"/><title>A Practical Checklist for AI-Generated Website Code — AURIX</title><style>/* ============================================================
+   AURIX — Skull AI Studio · design system
+   Dark navy / charcoal · orange + violet accents · RTL-aware
+   ============================================================ */
+:root{
+  --bg:#0b1020; --bg2:#0d1226; --surface:#141a2e; --surface2:#1a2138;
+  --line:#232c48; --line2:#2d3757;
+  --text:#e8eaf2; --muted:#9aa3bd; --muted2:#6b7492;
+  --orange:#ff7a1a; --orange2:#ff9440; --violet:#8b5cf6; --violet2:#a78bfa;
+  --ok:#34d399; --warn:#fbbf24; --err:#f87171;
+  --grad:linear-gradient(135deg,#ff7a1a 0%,#8b5cf6 100%);
+  --radius:14px; --radius-sm:10px;
+  --shadow:0 10px 30px rgba(2,6,20,.45);
+  --side-w:248px;
+  --ff:"Segoe UI",system-ui,-apple-system,Roboto,"Helvetica Neue",Arial,sans-serif;
+  --fm:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--ff);font-size:15.5px;line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh}
+img{max-width:100%;display:block}
+a{color:var(--violet2);text-decoration:none}
+a:hover{color:var(--orange2)}
+button{font-family:inherit;cursor:pointer}
+input,textarea,select{font-family:inherit;font-size:15px}
+[hidden]{display:none!important}
+.skip-link{position:absolute;left:-9999px;top:0;background:var(--orange);color:#0b1020;padding:8px 14px;border-radius:0 0 10px 0;z-index:200;font-weight:700}
+.skip-link:focus{left:0}
+::selection{background:rgba(139,92,246,.4)}
+:focus-visible{outline:2px solid var(--orange);outline-offset:2px}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-thumb{background:var(--line2);border-radius:8px}
+::-webkit-scrollbar-track{background:transparent}
+
+/* ---------- shell ---------- */
+.aurix-shell{display:flex;min-height:100vh}
+.aurix-side{width:var(--side-w);flex:0 0 var(--side-w);background:var(--bg2);border-inline-end:1px solid var(--line);position:fixed;inset-block:0;inset-inline-start:0;z-index:100;display:flex;flex-direction:column;overflow-y:auto;transition:transform .22s ease}
+.aurix-wrap{margin-inline-start:var(--side-w);flex:1;min-width:0;display:flex;flex-direction:column;min-height:100vh}
+.aurix-top{position:sticky;top:0;z-index:90;background:rgba(11,16,32,.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:10px 20px;min-height:58px}
+.aurix-main{flex:1;padding:26px clamp(16px,4vw,44px) 60px;max-width:1180px;width:100%;margin:0 auto}
+
+/* brand */
+.brand{display:flex;align-items:center;gap:11px;padding:16px 18px;border-bottom:1px solid var(--line)}
+.brand .logo{width:40px;height:40px;flex:0 0 40px;filter:drop-shadow(0 0 12px rgba(255,122,26,.35))}
+.brand b{font-size:19px;letter-spacing:2.5px;font-weight:800}
+.brand small{display:block;color:var(--muted2);font-size:10.5px;letter-spacing:1.6px;text-transform:uppercase}
+.brand .bname{display:flex;flex-direction:column;line-height:1.25}
+
+/* nav */
+.nav{padding:12px 10px;display:flex;flex-direction:column;gap:2px;flex:1}
+.nav .grp{color:var(--muted2);font-size:10.5px;letter-spacing:1.8px;text-transform:uppercase;padding:14px 10px 6px;font-weight:700}
+.nav a{display:flex;align-items:center;gap:11px;padding:9px 12px;border-radius:var(--radius-sm);color:var(--muted);font-weight:600;font-size:14px;transition:background .15s,color .15s}
+.nav a svg{width:19px;height:19px;flex:0 0 19px;opacity:.85}
+.nav a:hover{background:var(--surface);color:var(--text)}
+.nav a.active{background:linear-gradient(90deg,rgba(255,122,26,.14),rgba(139,92,246,.14));color:var(--text);box-shadow:inset 3px 0 0 var(--orange)}
+[dir=rtl] .nav a.active{box-shadow:inset -3px 0 0 var(--orange)}
+.nav a .badge{margin-inline-start:auto;font-size:10px;background:var(--violet);color:#fff;border-radius:20px;padding:1px 8px;font-weight:700}
+.side-foot{padding:14px 18px;border-top:1px solid var(--line);color:var(--muted2);font-size:11.5px;line-height:1.5}
+
+/* topbar */
+.burger{display:none;background:var(--surface);border:1px solid var(--line2);color:var(--text);width:40px;height:40px;border-radius:10px;align-items:center;justify-content:center}
+.top-title{font-weight:800;font-size:16px;letter-spacing:.4px;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.top-actions{display:flex;align-items:center;gap:8px}
+.langs{display:flex;background:var(--surface);border:1px solid var(--line2);border-radius:10px;overflow:hidden}
+.langs button{background:transparent;border:0;color:var(--muted);padding:8px 11px;font-weight:700;font-size:12.5px}
+.langs button.active{background:var(--grad);color:#fff}
+.backdrop{display:none;position:fixed;inset:0;background:rgba(4,7,18,.6);z-index:99}
+
+/* ---------- generic UI ---------- */
+.page-head{margin-bottom:22px}
+.page-head h1{font-size:clamp(22px,3.4vw,30px);font-weight:800;letter-spacing:.3px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.page-head h1 .ic{width:34px;height:34px;color:var(--orange)}
+.page-head p{color:var(--muted);margin-top:6px;max-width:760px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:22px;box-shadow:var(--shadow)}
+.card + .card{margin-top:18px}
+.card h2{font-size:17px;font-weight:800;margin-bottom:14px;display:flex;align-items:center;gap:9px}
+.card h2 svg{width:19px;height:19px;color:var(--violet2)}
+.field{margin-bottom:15px}
+.field label{display:block;font-size:12.5px;font-weight:700;color:var(--muted);margin-bottom:7px;letter-spacing:.4px}
+.input,.ta,select.input{width:100%;background:var(--bg2);border:1px solid var(--line2);color:var(--text);border-radius:var(--radius-sm);padding:11px 13px;transition:border .15s}
+.input:focus,.ta:focus,select.input:focus{border-color:var(--violet);outline:none;box-shadow:0 0 0 3px rgba(139,92,246,.18)}
+.ta{min-height:120px;resize:vertical;line-height:1.55}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{background:var(--bg2);border:1px solid var(--line2);color:var(--muted);border-radius:30px;padding:7px 14px;font-size:13px;font-weight:600;transition:all .15s}
+.chip:hover{border-color:var(--violet);color:var(--text)}
+.chip.on{background:var(--grad);border-color:transparent;color:#fff;font-weight:700}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;background:var(--grad);color:#fff;border:0;border-radius:var(--radius-sm);padding:12px 22px;font-size:15px;font-weight:800;letter-spacing:.3px;transition:transform .12s,box-shadow .15s;box-shadow:0 6px 20px rgba(255,122,26,.25)}
+.btn:hover{transform:translateY(-1px);box-shadow:0 9px 26px rgba(139,92,246,.35)}
+.btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.btn.ghost{background:var(--surface2);border:1px solid var(--line2);color:var(--text);box-shadow:none}
+.btn.ghost:hover{border-color:var(--violet)}
+.btn.sm{padding:8px 14px;font-size:13px}
+.btn svg{width:17px;height:17px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.hint{font-size:12.5px;color:var(--muted2);margin-top:8px;line-height:1.5}
+.hint b{color:var(--muted)}
+.note{border-radius:var(--radius-sm);padding:12px 15px;font-size:13.5px;line-height:1.55;border:1px solid}
+.note.info{background:rgba(139,92,246,.09);border-color:rgba(139,92,246,.35);color:#cfc4f7}
+.note.warn{background:rgba(251,191,36,.08);border-color:rgba(251,191,36,.35);color:#fde9b0}
+.note.err{background:rgba(248,113,113,.08);border-color:rgba(248,113,113,.4);color:#fecaca}
+.note.ok{background:rgba(52,211,153,.08);border-color:rgba(52,211,153,.35);color:#b8f5dd}
+
+/* states */
+.spinner{width:22px;height:22px;border:3px solid var(--line2);border-top-color:var(--orange);border-radius:50%;animation:spin .8s linear infinite;flex:0 0 22px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.state{display:flex;gap:13px;align-items:flex-start;padding:15px;border-radius:var(--radius-sm);margin-top:14px}
+.state.loading{background:rgba(255,122,26,.07);border:1px solid rgba(255,122,26,.25)}
+.state.error{background:rgba(248,113,113,.08);border:1px solid rgba(248,113,113,.35)}
+.state .msg{font-size:14px}
+.state .msg b{display:block;margin-bottom:2px}
+.pulse{animation:pulse 1.6s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.45}}
+.empty{padding:44px 20px;text-align:center;color:var(--muted2);border:1.5px dashed var(--line2);border-radius:var(--radius)}
+.empty svg{width:44px;height:44px;margin:0 auto 12px;opacity:.5}
+.empty b{color:var(--muted);display:block;font-size:15px;margin-bottom:4px}
+
+/* rate ring */
+.ratebox{display:flex;align-items:center;gap:10px;margin-top:12px;font-size:12.5px;color:var(--muted)}
+.ratering{width:30px;height:30px;position:relative;flex:0 0 30px}
+.ratering svg{transform:rotate(-90deg)}
+.ratering .bgc{stroke:var(--line2)}
+.ratering .fgc{stroke:var(--orange);transition:stroke-dashoffset 1s linear}
+
+/* ---------- landing ---------- */
+.hero{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:20px;background:radial-gradient(1200px 500px at 85% -10%,rgba(139,92,246,.16),transparent 60%),radial-gradient(900px 420px at -10% 110%,rgba(255,122,26,.13),transparent 55%),var(--surface);padding:clamp(34px,6vw,72px) clamp(22px,5vw,64px);text-align:center}
+.hero .skull{width:clamp(88px,13vw,132px);margin:0 auto 20px;filter:drop-shadow(0 0 34px rgba(255,122,26,.45))}
+.hero h1{font-size:clamp(34px,6.4vw,62px);font-weight:900;letter-spacing:6px;margin-bottom:10px}
+.hero h1 span{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero .tag{font-size:clamp(15px,2.2vw,19px);color:var(--muted);letter-spacing:2.5px;text-transform:uppercase;font-weight:600}
+.hero .sub{max-width:640px;margin:16px auto 26px;color:var(--muted)}
+.hero .cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.tools-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;margin-top:18px}
+.tool-card{position:relative;display:block;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:22px;transition:transform .15s,border .15s,box-shadow .15s;color:var(--text)}
+.tool-card:hover{transform:translateY(-3px);border-color:var(--line2);box-shadow:var(--shadow)}
+.tool-card .ic{width:46px;height:46px;border-radius:13px;display:flex;align-items:center;justify-content:center;background:rgba(255,122,26,.12);color:var(--orange);margin-bottom:14px}
+.tool-card.v .ic{background:rgba(139,92,246,.14);color:var(--violet2)}
+.tool-card b{font-size:16.5px;display:block;margin-bottom:5px}
+.tool-card p{color:var(--muted);font-size:13.5px;line-height:1.5}
+.tool-card .flag{position:absolute;top:14px;inset-inline-end:14px;font-size:10.5px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;background:var(--surface2);border:1px solid var(--line2);color:var(--muted);padding:3px 9px;border-radius:20px}
+.tool-card .flag.off{color:var(--warn);border-color:rgba(251,191,36,.4)}
+.feat-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;margin-top:18px}
+.feat{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;display:flex;gap:12px;align-items:flex-start}
+.feat svg{width:22px;height:22px;color:var(--violet2);flex:0 0 22px;margin-top:2px}
+.feat b{display:block;font-size:14px;margin-bottom:2px}
+.feat p{color:var(--muted);font-size:12.5px;line-height:1.5}
+
+/* ---------- image studio ---------- */
+.img-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px;margin-top:16px}
+.img-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;position:relative}
+.img-card img{width:100%;aspect-ratio:1/1;object-fit:cover;background:var(--bg2)}
+.img-card .bar{display:flex;gap:6px;padding:9px 11px;align-items:center}
+.img-card .bar .ttl{flex:1;font-size:11.5px;color:var(--muted2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.icon-btn{background:var(--surface2);border:1px solid var(--line2);color:var(--muted);width:33px;height:33px;border-radius:9px;display:inline-flex;align-items:center;justify-content:center;transition:all .14s}
+.icon-btn:hover{color:var(--text);border-color:var(--violet)}
+.icon-btn.fav.on{color:var(--orange);border-color:rgba(255,122,26,.5);background:rgba(255,122,26,.12)}
+.icon-btn svg{width:16px;height:16px}
+.result-frame{margin-top:16px;border:1px solid var(--line);border-radius:var(--radius);background:var(--bg2);padding:14px;text-align:center}
+.result-frame img{max-width:min(560px,100%);margin:0 auto;border-radius:10px;box-shadow:var(--shadow)}
+.result-frame .meta{color:var(--muted2);font-size:12px;margin-top:9px}
+.ratio-preview{display:inline-block;border:2px solid var(--line2);border-radius:5px;background:var(--surface2);vertical-align:middle}
+
+/* ---------- code studio ---------- */
+.code-out{background:#0a0e1d;border:1px solid var(--line);border-radius:var(--radius-sm);overflow:auto;max-height:460px;margin-top:14px}
+.code-out pre{padding:16px;font-family:var(--fm);font-size:13px;line-height:1.6;tab-size:2}
+.code-out code{font-family:var(--fm)}
+.tk-kw{color:#c792ea}.tk-str{color:#c3e88d}.tk-com{color:#5c6a92;font-style:italic}.tk-num{color:#f78c6c}.tk-tag{color:#ff8a9d}.tk-attr{color:#ffcb6b}.tk-fn{color:#82aaff}
+.preview-frame{width:100%;height:340px;border:1px solid var(--line2);border-radius:var(--radius-sm);background:#fff;margin-top:12px}
+.out-head{display:flex;align-items:center;gap:10px;margin-top:16px;flex-wrap:wrap}
+.out-head h3{font-size:14.5px;flex:1;min-width:140px}
+
+/* ---------- writer ---------- */
+.tools-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
+.tool-opt{text-align:start;background:var(--bg2);border:1px solid var(--line2);border-radius:var(--radius-sm);padding:13px 14px;color:var(--text);transition:all .14s}
+.tool-opt:hover{border-color:var(--violet)}
+.tool-opt.on{border-color:var(--orange);background:rgba(255,122,26,.1)}
+.tool-opt b{display:block;font-size:13.5px;margin-bottom:2px}
+.tool-opt small{color:var(--muted2);font-size:11.5px;line-height:1.4;display:block}
+.writer-out{background:#0a0e1d;border:1px solid var(--line);border-radius:var(--radius-sm);padding:18px;margin-top:14px;white-space:pre-wrap;line-height:1.7;font-size:14.5px;max-height:520px;overflow:auto}
+
+/* ---------- history / projects ---------- */
+.hist-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:13px;margin-top:14px}
+.hist-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:15px;display:flex;flex-direction:column;gap:9px}
+.hist-card .thumb{border-radius:8px;overflow:hidden;background:var(--bg2);max-height:130px}
+.hist-card .thumb img{width:100%;height:130px;object-fit:cover}
+.hist-card .kind{font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--violet2)}
+.hist-card .kind.k-image{color:var(--orange2)}
+.hist-card .kind.k-code{color:#82aaff}
+.hist-card p{font-size:13px;color:var(--muted);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.hist-card time{font-size:11px;color:var(--muted2)}
+.proj-folders{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:13px;margin-top:14px}
+
+/* ---------- settings ---------- */
+.set-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
+.set-tile{background:var(--bg2);border:1px solid var(--line2);border-radius:var(--radius-sm);padding:16px}
+.set-tile b{display:block;margin-bottom:4px;font-size:14px}
+.set-tile p{color:var(--muted);font-size:12.5px;margin-bottom:10px;line-height:1.5}
+
+/* ---------- info pages ---------- */
+.aurix-page{max-width:840px;margin:0 auto}
+.aurix-page h1{font-size:clamp(24px,3.6vw,34px);font-weight:800;margin-bottom:18px}
+.aurix-page .content{color:var(--muted);line-height:1.75}
+.aurix-page .content h2{color:var(--text);font-size:19px;margin:26px 0 10px}
+.aurix-page .content h3{color:var(--text);font-size:16px;margin:20px 0 8px}
+.aurix-page .content p{margin-bottom:13px}
+.aurix-page .content ul{margin:0 0 13px;padding-inline-start:22px}
+.aurix-page .content li{margin-bottom:7px}
+.aurix-page .content b,.aurix-page .content strong{color:var(--text)}
+
+/* toast */
+.toasts{position:fixed;bottom:18px;inset-inline-end:18px;z-index:300;display:flex;flex-direction:column;gap:9px}
+.toast{background:var(--surface2);border:1px solid var(--line2);border-inline-start:4px solid var(--orange);color:var(--text);padding:12px 16px;border-radius:10px;font-size:13.5px;box-shadow:var(--shadow);max-width:340px;animation:tin .25s ease}
+.toast.ok{border-inline-start-color:var(--ok)}
+.toast.err{border-inline-start-color:var(--err)}
+@keyframes tin{from{transform:translateY(8px);opacity:0}to{transform:none;opacity:1}}
+
+/* footer */
+.aurix-foot{border-top:1px solid var(--line);padding:22px clamp(16px,4vw,44px);color:var(--muted2);font-size:12.5px;text-align:center}
+
+/* ads placeholders — hidden until an ad network approves the site */
+.ad-slot{display:none}
+
+/* ---------- responsive ---------- */
+@media (max-width:1023px){
+  .aurix-side{transform:translateX(-105%)}
+  [dir=rtl] .aurix-side{transform:translateX(105%)}
+  .aurix-side.open{transform:none}
+  .aurix-wrap{margin-inline-start:0}
+  .burger{display:inline-flex}
+  .backdrop.show{display:block}
+}
+@media (max-width:560px){
+  body{font-size:15px}
+  .aurix-main{padding:18px 14px 50px}
+  .card{padding:16px}
+  .hero .cta .btn{width:100%}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.01ms!important;transition-duration:.01ms!important}
+}
+
+/* ---------- AURIX welcome / Google sign-in (original brand identity) ---------- */
+body.auth-mode{background:#faf9f8;color:#17151a}
+body.auth-mode .aurix-side,body.auth-mode .aurix-top,body.auth-mode .aurix-foot,body.auth-mode .backdrop{display:none!important}
+body.auth-mode .aurix-wrap{margin-inline-start:0}
+body.auth-mode .aurix-main{padding:0;max-width:none;margin:0;width:100%;min-height:100svh}
+body.auth-mode .skip-link{background:#17151a;color:#fff}
+.auth-screen{min-height:100svh;background:radial-gradient(700px 470px at 95% -30%,rgba(139,92,246,.08),transparent),#faf9f8;padding:clamp(22px,4vw,42px) 24px max(28px,env(safe-area-inset-bottom));display:flex;align-items:center;justify-content:center}
+.auth-panel{width:min(100%,530px);min-height:min(780px,calc(100svh - 48px));display:flex;flex-direction:column}
+.auth-head{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:clamp(42px,8vh,92px)}
+.auth-brand{display:flex;align-items:center;gap:11px;color:#18151e;font-weight:900;letter-spacing:3px;font-size:22px}
+.auth-brand img{width:46px;height:46px;border-radius:12px;object-fit:cover;background:#0b1020}
+.auth-head .auth-langs{display:flex;gap:2px;background:#efebed;padding:3px;border-radius:12px}
+.auth-head .auth-langs button{border:0;background:transparent;color:#6a6470;font-size:12px;font-weight:800;border-radius:9px;padding:7px 9px}
+.auth-head .auth-langs button.active{background:#fff;color:#1d1822;box-shadow:0 1px 5px rgba(15,15,25,.12)}
+.auth-intro h1{font-size:clamp(34px,6vw,48px);line-height:1.15;letter-spacing:-1.5px;font-weight:800;color:#17151a;margin-bottom:16px}
+.auth-intro h1 em{font-style:normal;background:linear-gradient(115deg,#ef6b1c 10%,#8254e7 90%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.auth-intro>p{font-size:clamp(17px,2.2vw,20px);line-height:1.48;color:#4d4851;margin-bottom:32px;max-width:490px}
+.auth-facts{border-top:1px solid #e7e4e6}
+.auth-fact{display:grid;grid-template-columns:28px 1fr;gap:16px;padding:22px 0;border-bottom:1px solid #e7e4e6}
+[dir=rtl] .auth-fact{grid-template-columns:28px 1fr}
+.auth-fact svg{width:25px;height:25px;color:#605964;stroke-width:1.8;margin-top:3px}
+.auth-fact b{display:block;font-size:16px;line-height:1.3;margin-bottom:4px;color:#1f1b22}
+.auth-fact p{font-size:15px;line-height:1.45;color:#55505a}
+.auth-fact a,.auth-consent a{color:#30283d;text-decoration:underline;text-underline-offset:3px;font-weight:600}
+.auth-actions{margin-top:auto;padding-top:50px}
+.auth-consent{border:1px solid #ddd8de;border-radius:15px;background:#fff;padding:17px 19px;color:#4a434c;font-size:14px;line-height:1.55;margin-bottom:20px}
+.auth-google{width:100%;height:55px;display:flex;align-items:center;justify-content:center;gap:12px;border-radius:999px;font-size:16px;font-weight:800;transition:transform .15s,box-shadow .15s}
+.auth-google{background:#16131b;color:#fff;border:1px solid #16131b}
+.auth-google:hover{background:#30283b;transform:translateY(-1px);box-shadow:0 8px 18px rgba(28,23,35,.16)}
+.auth-google:disabled{opacity:.55;cursor:not-allowed;transform:none}
+.auth-google svg{width:23px;height:23px}
+.auth-status{color:#ae2d36;font-size:13px;line-height:1.5;min-height:20px;margin:10px 0 2px;text-align:center}
+.auth-hint{text-align:center;font-size:12px;color:#756e79;margin-top:18px;line-height:1.45}
+.auth-hint span{display:block}
+@media(max-width:560px){
+  .auth-screen{padding:22px 24px max(22px,env(safe-area-inset-bottom));align-items:stretch}
+  .auth-panel{min-height:calc(100svh - 44px)}
+  .auth-head{margin-bottom:clamp(35px,6vh,68px)}
+  .auth-intro h1{font-size:clamp(32px,8vw,39px)}
+  .auth-fact{padding:18px 0}
+  .auth-actions{padding-top:32px}
+}
+.auth-google-mark{font-family:Arial,sans-serif;font-weight:900;font-size:27px;line-height:1;background:conic-gradient(from 50deg,#4285f4 0 25%,#34a853 25% 50%,#fbbc05 50% 73%,#ea4335 73% 88%,#4285f4 88%);-webkit-background-clip:text;background-clip:text;color:transparent}
+/* AURIX conversation: real answers, local PDF reading */
+.sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.chat-box{max-width:830px;margin:0 auto;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow)}
+.chat-top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-bottom:16px;border-bottom:1px solid var(--line)}
+.chat-top b{font-size:18px;color:var(--text)}
+.chat-messages{min-height:260px;max-height:55svh;overflow:auto;display:flex;flex-direction:column;gap:16px;padding:22px 4px;scroll-behavior:smooth}
+.chat-empty{color:var(--muted);text-align:center;margin:auto;max-width:410px;line-height:1.65}
+.chat-empty b{display:block;color:var(--text);font-size:19px;margin-bottom:8px}
+.chat-line{max-width:min(92%,620px);padding:15px 18px;border:1px solid var(--line);border-radius:18px;background:var(--surface2);overflow-wrap:anywhere}
+.chat-line.user{align-self:flex-end;background:rgba(137,78,225,.18);border-color:rgba(148,95,223,.4)}
+.chat-line.assistant{align-self:flex-start}
+.chat-line b{display:block;font-size:12px;margin-bottom:6px;color:var(--muted)}
+.chat-line p{white-space:pre-wrap;line-height:1.65;color:var(--text)}
+.chat-attachment{padding:10px 12px;color:var(--muted);background:var(--surface2);border:1px solid var(--line);border-radius:12px;font-size:12px;line-height:1.6;margin-bottom:12px}
+.chat-attachment button{background:transparent;border:0;color:var(--accent);font-weight:700;text-decoration:underline;margin-inline-start:8px}
+.chat-actions{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:12px 0}
+.chat-attach{cursor:pointer}
+@media(max-width:600px){.chat-box{padding:15px}.chat-messages{min-height:240px;max-height:52svh}.chat-top .badge{font-size:10px}.chat-line{max-width:96%}}
+
+/* Public, crawlable guides remain accessible without bypassing Google-only tools. */
+.auth-public-links{margin-top:22px;padding-top:16px;border-top:1px solid #dedbe5;font-size:13px;line-height:1.7;color:#514c5f}.auth-public-links b{display:block;color:#17151a;font-size:14px}.auth-public-links p{margin:4px 0 9px}.auth-public-links a{display:inline-block;margin-inline-end:13px;color:#5e2fa8;text-decoration:underline}.seo-fallback{max-width:760px;margin:auto;padding:70px 24px;line-height:1.75}.seo-fallback a{color:var(--orange)}
+
+.public-page-nav{display:block;line-height:2;margin:0 0 20px;color:var(--muted)}.public-page-nav a,.public-page-footer a{color:var(--orange)}.public-page-footer{padding:20px 0;color:var(--muted);font-size:13px}.seo-fallback nav a{display:inline-block;margin-inline-end:8px}
+
+/* 2026 AURIX brand polish: consistent icon rhythm, mobile-first spacing */
+.aurix-side{background:linear-gradient(180deg,#11162a 0%,#0d1223 100%)}
+.brand{min-height:77px;gap:12px}
+.brand .logo{width:44px;height:44px;flex:0 0 44px;border-radius:12px;object-fit:cover}
+.nav{gap:3px;padding:14px 10px}
+.nav .grp{padding:17px 12px 7px}
+.nav a{min-height:44px;gap:12px;padding:9px 12px;line-height:1.3}
+.nav .nav-icon{width:20px;height:20px;flex:0 0 20px;opacity:.85;display:block}
+.nav a.active .nav-icon{color:var(--orange);opacity:1}
+.nav a .badge{flex:none}
+.hero{padding-block:clamp(30px,5vw,56px)}
+.hero-eyebrow{color:var(--violet2);font-size:11px;font-weight:800;letter-spacing:2.4px;margin-bottom:15px}
+.hero .skull{width:clamp(158px,23vw,220px);aspect-ratio:1;object-fit:contain;margin:0 auto 15px;border-radius:22px;filter:drop-shadow(0 10px 28px rgba(139,92,246,.18))}
+.hero .hero-title{font-size:clamp(26px,4vw,40px);line-height:1.15;font-weight:900;letter-spacing:2px;margin:0 0 9px;color:var(--text)}
+.hero .hero-title span{color:var(--orange2)}
+.tool-card{min-height:177px;display:flex;flex-direction:column;align-items:flex-start;padding:23px}
+.tool-card .ic{flex:0 0 48px;width:48px;height:48px;margin-bottom:16px}
+.tool-card .ic .nav-icon{width:24px;height:24px;display:block}
+.tool-card .flag{max-width:calc(100% - 100px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tool-card b,.tool-card p{max-width:100%}
+@media(max-width:560px){
+ .hero{padding:30px 18px}
+ .hero .skull{width:clamp(150px,45vw,192px)}
+ .hero-eyebrow{font-size:10px;letter-spacing:1.6px}
+ .tools-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+ .tool-card{min-height:170px;padding:14px}
+ .tool-card .ic{width:40px;height:40px;flex-basis:40px;margin-bottom:12px}
+ .tool-card .ic .nav-icon{width:21px;height:21px}
+ .tool-card .flag{position:static;order:4;margin-top:auto;max-width:100%;font-size:9px}
+ .tool-card b{font-size:14px}
+ .tool-card p{font-size:12px;line-height:1.4;margin-bottom:8px}
+ .aurix-top{padding:8px 12px;gap:8px}
+ .top-title{font-size:14px}
+ .langs button{padding:8px 8px}
+ .auth-brand{gap:9px;font-size:19px;letter-spacing:1.5px}
+ .auth-brand img{width:44px;height:44px}
+}
+@media(max-width:360px){.tools-grid{grid-template-columns:1fr}.top-actions{gap:4px}.langs button{padding:7px 6px}}
+
+.blogger-content{max-width:850px;margin:36px auto;padding:0 20px 70px}.blogger-content .post-outer{background:var(--surface);border:1px solid var(--line);padding:26px;border-radius:var(--radius)}.blogger-content .post-body{color:var(--muted);line-height:1.75}.blogger-content .post-body h2{color:var(--text);margin:20px 0 8px}.blogger-content .post-title{font-size:28px}.blogger-content .post-header,.blogger-content .post-footer{color:var(--muted2)}.blogger-back{display:inline-flex;margin-bottom:16px}</style></head><body><main class="blogger-content"><nav aria-label="AURIX public pages" class="public-page-nav"><a href="/">AURIX Studio</a> | <a href="/pages/image-guide.html">Images</a> | <a href="/pages/code-guide.html">Code</a> | <a href="/pages/writer-guide.html">Writing</a> | <a href="/pages/about.html">About</a> | <a href="/pages/contact.html">Contact</a> | <a href="/pages/privacy.html">Privacy</a> | <a href="/pages/terms.html">Terms</a></nav><article class="card aurix-page"><div class="content"><h1>A Practical Checklist for AI-Generated Website Code</h1>
+<p>AI can draft a website component in seconds, but working code is not the same as production-ready code. The <a href="https://skullaistudio.blogspot.com/#code">AURIX Code Studio</a> connects to a real text model for generating, explaining, fixing and improving code. This guide is a review workflow for the output, not a claim that a model can replace testing or a security audit.</p>
+<h2>Ask for a constrained deliverable</h2>
+<p>“Build a website” is too broad to verify. Instead try: “Create a standalone HTML file with a responsive three-card pricing section, inline CSS, keyboard-visible focus states, no external libraries and no placeholder purchase links.” The constraints tell the model what success looks like. Ask it to avoid external dependencies when you need a page that will work offline or inside a constrained environment.</p>
+<h2>Review the structure first</h2>
+<p>Scan for a document title, a meaningful heading hierarchy, semantic elements, descriptive button text and proper labels for inputs. A page can look polished while its keyboard navigation is broken. Make sure links have real destinations and actions are not decorative buttons. Test the page at narrow mobile widths, with zoom enabled and with the mouse disconnected.</p>
+<h2>Inspect dangerous patterns</h2>
+<p>Never paste production API keys or private credentials into an AI prompt. Do not place secret keys in frontend JavaScript: every visitor can inspect them. Look for code that uses <code>innerHTML</code> with untrusted input, evaluates strings as JavaScript, stores passwords locally or disables security checks. Be wary of examples that claim to implement account authentication entirely in the browser. Real authentication needs a trusted identity system and secure server-side validation.</p>
+<h2>Test behaviour, not just appearance</h2>
+<p>Open the component in a separate sandbox and test each interaction. Submit forms with empty fields, long strings, Unicode, right-to-left text and invalid values. Check error messages as carefully as success messages. Verify the code in at least one mobile viewport. Run your normal project tests and linting before merging a generated file into a live site. A green screenshot does not prove correctness.</p>
+<h2>Use the isolated preview carefully</h2>
+<p>AURIX can preview HTML output in a sandboxed frame after you opt in. The sandbox prevents direct same-origin access to the main application. A restrictive content-security policy also blocks network connections from that preview. These are useful controls, but no browser sandbox should be treated as a guarantee that unknown code is harmless. Never preview material that you know contains sensitive data or suspicious scripts.</p>
+<h2>Improve a result through targeted follow-ups</h2>
+<p>If a generated card overflows on mobile, do not merely ask “make it better.” Explain the failure: “At 360 px width, the second plan's price wraps awkwardly. Keep all buttons full width and avoid horizontal scrolling.” If a script crashes, include the actual error message and a minimal reproducible sample. Specific observations produce more useful repairs and make it easier to check the next response.</p>
+<h2>Save with context</h2>
+<p>When you keep a snippet, also keep the prompt and the assumptions behind it. AURIX stores saved code and project folders only in your browser's local storage. Export important work as JSON or download the text before clearing browser data. There is no cloud backup, cross-device account or guarantee that a provider response will be available again later.</p>
+<p>AI coding assistance is best used as a draft-and-review partner. <a href="https://skullaistudio.blogspot.com/#code">Try the Code Studio</a>, then validate every generated change against your real requirements.</p>
+</div></article><footer class="public-page-footer">© 2026 AURIX · Interactive AI tools require Google sign-in. Video generation is not available. <a href="/pages/contact.html">Contact</a></footer></main></body></html>

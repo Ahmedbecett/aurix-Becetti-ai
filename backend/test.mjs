@@ -1,0 +1,58 @@
+import assert from 'node:assert/strict';
+import { generateKeyPairSync, sign } from 'node:crypto';
+import worker from './src/index.mjs';
+const { privateKey, publicKey } = generateKeyPairSync('rsa', { modulusLength: 2048 });
+const jwk = publicKey.export({ format: 'jwk' });
+const now = Math.floor(Date.now() / 1000);
+const b64 = o => Buffer.from(JSON.stringify(o)).toString('base64url');
+const claims = { aud: 'aurix-ea09b', iss: 'https://securetoken.google.com/aurix-ea09b', sub: 'test-user', exp: now + 1800, iat: now - 60, auth_time: now - 120, firebase: { sign_in_provider: 'google.com' } };
+const token = (payload = claims) => {
+  const data = `${b64({ alg: 'RS256', kid: 'qa-key', typ: 'JWT' })}.${b64(payload)}`;
+  return `${data}.${sign('RSA-SHA256', Buffer.from(data), privateKey).toString('base64url')}`;
+};
+let upstreamCalls = [];
+const originalFetch = globalThis.fetch;
+globalThis.fetch = async (url, opts = {}) => {
+  if (String(url).includes('/jwk/')) return new Response(JSON.stringify({ keys: [{ ...jwk, kid: 'qa-key', alg: 'RS256' }] }), { status: 200, headers: { 'Cache-Control': 'public,max-age=300' } });
+  if (opts.redirect === 'error') throw new TypeError('Cloudflare Workers does not support redirect: error');
+  upstreamCalls.push({ url: String(url), opts });
+  if (String(url).includes('generativelanguage.googleapis.com')) return Response.json({ candidates: [{ content: { parts: [{ text: 'A real mocked Gemini answer' }] } }] });
+  if (String(url).startsWith('https://image.')) return new Response(new Uint8Array([255,216,255,1,1,1]), { status: 200, headers: { 'Content-Type': 'image/jpeg' } });
+  return new Response('test AI result', { status: 200, headers: { 'Content-Type': 'text/plain' } });
+};
+const keys = [];
+const imageCalls=[]; const fakeJPEG=Buffer.from([255,216,255,...new Array(4096).fill(9)]).toString('base64');
+const env = { USER_RATE_LIMITER: { async limit({ key }) { keys.push(key); return { success: true }; } }, AI: { async run(model, input) { imageCalls.push({model,input}); return {image:fakeJPEG}; } } };
+const req = (path, tok, data = { prompt: 'Write two lines.' }, extra = {}) => new Request('https://aurix-api-ea09b.example.test' + path, { method: 'POST', headers: { Origin: 'https://aurix-ea09b.web.app', 'Content-Type': 'application/json', ...(tok ? { Authorization: `Bearer ${tok}` } : {}), ...extra }, body: JSON.stringify(data) });
+try {
+  let r = await worker.fetch(new Request('https://api.example.test/health'), env); assert.equal(r.status, 200);
+  r = await worker.fetch(req('/api/text', null), env); assert.equal(r.status, 401); assert.equal(upstreamCalls.length, 0);
+  r = await worker.fetch(req('/api/text', token({ ...claims, aud: 'other-project' })), env); assert.equal(r.status, 401);
+  r = await worker.fetch(req('/api/text', token({ ...claims, exp: now - 5 })), env); assert.equal(r.status, 401);
+  r = await worker.fetch(req('/api/text', token({ ...claims, firebase: { sign_in_provider: 'anonymous' } })), env); assert.equal(r.status, 401);
+  const corrupt = token().split('.'); corrupt[2] = (corrupt[2][0] === 'A' ? 'B' : 'A') + corrupt[2].slice(1);
+  r = await worker.fetch(req('/api/text', corrupt.join('.')), env); assert.equal(r.status, 401);
+  r = await worker.fetch(req('/api/text', token(), { prompt: 'Write about AURIX' }), env); assert.equal(r.status, 200); assert.equal(await r.text(), 'test AI result');
+  assert.equal(upstreamCalls.length, 1); assert.equal(keys.at(-1), 'test-user:/api/text');
+  assert.ok(!upstreamCalls[0].opts.headers.Authorization);
+  assert.equal(upstreamCalls[0].opts.redirect, 'manual');
+  r = await worker.fetch(req('/api/image', token(), { prompt: 'a cat on a blue chair', ratio: '1:1', quality: 'fast' }), env); assert.equal(r.status, 200); assert.equal(r.headers.get('content-type'),'image/jpeg'); assert.equal((await r.arrayBuffer()).byteLength,4099); assert.equal(imageCalls.at(-1).model,'@cf/black-forest-labs/flux-1-schnell');assert.equal(imageCalls.at(-1).input.steps,4);assert.equal(upstreamCalls.length,1);
+  r = await worker.fetch(req('/api/image', token(), { prompt: 'a cat on a blue chair', ratio: '1:1', quality: 'detail' }), env); assert.equal(r.status, 200); assert.equal(imageCalls.at(-1).input.steps,8);
+  r = await worker.fetch(req('/api/image', token(), { prompt: 'a cat on a blue chair', ratio: '16:9', quality: 'fast' }), env);assert.equal(r.status,400);assert.equal(imageCalls.length,2);
+  r = await worker.fetch(req('/api/image', token(), { prompt: 'a cat on a blue chair', ratio: '1:1', quality: 'fast' }), {...env,AI:null});assert.equal(r.status,503);
+  r = await worker.fetch(req('/api/image', token(), { prompt: 'a cat on a blue chair', ratio: '1:1', quality: 'fast' }), {...env,AI:{async run(){throw Object.assign(new Error('3036'),{status:429})}}});assert.equal(r.status,429);
+  r = await worker.fetch(req('/api/image', token(), { prompt: 'a cat on a blue chair', ratio: '1:1', quality: 'fast' }), {...env,AI:{async run(){return {image:'not-an-image'}}}});assert.equal(r.status,502);
+  r = await worker.fetch(req('/api/image', token(), { prompt: 'cat', ratio: '1:1', quality: 'fast' }), env); assert.equal(r.status, 400);
+  r = await worker.fetch(req('/api/image', token(), { prompt: 'cat in chair', ratio: '9:9', quality: 'fast' }), env); assert.equal(r.status, 400);
+  r = await worker.fetch(req('/api/text', token(), { prompt: 'valid prompt here' }, { Origin: 'https://malicious.example' }), env); assert.equal(r.status, 403); assert.equal(r.headers.get('access-control-allow-origin'),null);
+  r = await worker.fetch(new Request('https://api.example.test/api/text', { method: 'OPTIONS', headers: { Origin: 'https://aurix-ea09b.web.app' } }), env); assert.equal(r.status,204); assert.equal(r.headers.get('access-control-allow-headers'), 'Authorization, Content-Type');
+  r = await worker.fetch(req('/api/text', token()), { USER_RATE_LIMITER: { async limit() { return { success: false }; } } }); assert.equal(r.status,429);
+  r = await worker.fetch(req('/api/text', token()), {}); assert.equal(r.status,503);
+  r = await worker.fetch(req('/api/chat', token(), { messages: [{ role: 'user', text: 'Summarize this PDF' }], documentText: 'This is extracted text from a local PDF.' }), env); assert.equal(r.status,503);
+  r=await worker.fetch(req('/api/chat',token(),{messages:[{role:'user',text:'Hello chat'}]}),{...env,GEMINI_API_KEY:'qa-only-not-real'});assert.equal(r.status,503);
+  const chatEnv={...env,GEMINI_API_KEY:'qa-only-not-real',GEMINI_FREE_TIER_CONFIRMED:'yes'};
+  r=await worker.fetch(req('/api/chat',token(),{messages:[{role:'user',text:'What is inside this PDF?'}],documentText:'A short test PDF about cats.'}),chatEnv);assert.equal(r.status,200);assert.equal(await r.text(),'A real mocked Gemini answer');assert.equal(upstreamCalls.at(-1).opts.headers['x-goog-api-key'],'qa-only-not-real');assert.equal(upstreamCalls.at(-1).opts.redirect,'manual');assert.match(upstreamCalls.at(-1).url,/models\/gemini-3\.5-flash-lite:generateContent/);
+  r=await worker.fetch(req('/api/chat',token(),{messages:[{role:'assistant',text:'fake'}]}),chatEnv);assert.equal(r.status,400);
+  assert.equal(upstreamCalls.length,2);
+  console.log('PASS: Firebase signature/claims, Google-only, CORS, Workers AI image/text, Gemini chat fail-closed and mocked real response, limits');
+} finally { globalThis.fetch = originalFetch; }

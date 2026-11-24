@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://aurix-ea09b.web.app/sitemap.xml

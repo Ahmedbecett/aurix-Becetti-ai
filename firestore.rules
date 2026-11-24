@@ -1,0 +1,23 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Only the signed-in owner can access items under their own UID.
+    // Restrict supported types and size to limit accidental large writes.
+    match /users/{userId}/items/{itemId} {
+      function owner() { return request.auth != null && request.auth.uid == userId; }
+      function valid() {
+        return request.resource.data.keys().hasOnly(['kind','prompt','result','at','folder','fav'])
+          && request.resource.data.keys().hasAll(['kind','prompt','result','at','folder','fav'])
+          && request.resource.data.kind in ['image','code','writer']
+          && request.resource.data.prompt is string && request.resource.data.prompt.size() <= 3500
+          && request.resource.data.result is string && request.resource.data.result.size() <= 30000
+          && request.resource.data.at is string && request.resource.data.at.size() <= 40
+          && request.resource.data.folder is string && request.resource.data.folder.size() <= 42
+          && request.resource.data.fav is bool;
+      }
+      allow read, delete: if owner();
+      allow create, update: if owner() && valid();
+    }
+    match /{document=**} { allow read, write: if false; }
+  }
+}

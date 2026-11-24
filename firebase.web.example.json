@@ -1,0 +1,6 @@
+{
+  "apiKey": "PUBLIC_FIREBASE_WEB_API_KEY",
+  "authDomain": "AURIX_FIREBASE_PROJECT.firebaseapp.com",
+  "projectId": "AURIX_FIREBASE_PROJECT",
+  "appId": "PUBLIC_FIREBASE_WEB_APP_ID"
+}
