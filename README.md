@@ -10,7 +10,7 @@
 
 Electron desktop packaging now includes the current dashboard, images, code, writing, chat/PDF, projects and settings from the same `src/` files. Run `npm ci`, then `npm run desktop` to develop or `npm run dist:win -- --publish never` on Windows to build an NSIS installer and a portable EXE. A Windows GitHub Actions workflow is in `.github/workflows/windows.yml`.
 
-**Release status:** source and mocked automated tests are prepared; no final EXE or Windows end-to-end validation has been completed in this session. Google login opens the system browser and requires deploying the included desktop auth bridge to the existing Firebase site first. AI services still require internet; unavailable features (including video) are not unlocked by packaging. See [Windows setup, prerequisites and acceptance checklist (Arabic)](WINDOWS-AR.md).
+**Build status:** real NSIS, Portable and MSIX candidates were built successfully on a GitHub-hosted Windows runner (run `45508613913`, source commit `9f69e21`). [Download candidates and read remaining gates](WINDOWS-DOWNLOADS-AR.md). Interactive Windows end-to-end testing and WACK have not been completed. Google login opens the system browser and requires deploying the included desktop auth bridge to the existing Firebase site first. AI services still require internet; unavailable features (including video) are not unlocked by packaging. See [Windows setup, prerequisites and acceptance checklist (Arabic)](WINDOWS-AR.md).
 
 The prior dashboard-only release improvements have been reconciled into `src/` so the standard build preserves them.
 
@@ -20,7 +20,7 @@ The Store channel is separate from NSIS/Portable. The owner-supplied public iden
 
 Package logos, listing drafts (English/Arabic/French), review notes and reporting procedures are in `store/`. A user-reviewed AI content report/email/copy control and a public Windows privacy page are included in the web build. Deploy the auth bridge and `/pages/windows-privacy.html` before distributing the candidate.
 
-**Not submitted or certified:** the exact reserved display name, an actual Windows MSIX build, Windows 10/11 tests, WACK, production service/safety checks and real screenshots are still required. An unsigned candidate is for Store submission after verification, not public sideload distribution. See [Microsoft Store preparation and release gates (Arabic)](STORE-AR.md).
+**Not submitted or certified:** the Windows MSIX candidate build has succeeded. The exact reserved display name, interactive Windows 10/11 tests, WACK, production service/safety checks and real screenshots are still required. An unsigned candidate is for Store submission after verification, not public sideload distribution. See [Microsoft Store preparation and release gates (Arabic)](STORE-AR.md).
 
 A standalone, no-server, responsive guest-mode app for the owner's `skullaistudio.blogspot.com` site. Built from the project owner's reference artwork (cropped icon in `src/brand-icon.webp`). Frontend source: `src/app.html`, `src/styles.css`, `src/app.js`; rebuild with `python build.py`. The application is **published on Firebase Hosting staging** at https://aurix-ea09b.web.app with noindex. It has **not been published to the owner's Blogger account**; Blogger admin access is required to install the theme and create pages. See `DEPLOYED-AR.md`.
 
