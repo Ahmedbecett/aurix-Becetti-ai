@@ -127,5 +127,4 @@ paths=['/']+[f'/pages/{slug}.html' for slug in ('about','contact','privacy','ter
 (out/'preview'/'sitemap.txt').write_text(''.join(f'{public_url}{path}\n' for path in paths), encoding='utf-8')
 # The owner-supplied PUBLIC AdSense publisher ID, used only to verify site ownership.
 # Do not activate ad scripts on the Google sign-in screen or insert ad units here.
-(out/'preview'/'ads.txt').write_text('google.com, pub-6858364141205978, DIRECT, f08c47fec0942fa0\n', encoding='utf-8')
 print('Built:', *(str(x.relative_to(root)) for x in sorted(out.iterdir())),sep='\n - ')
