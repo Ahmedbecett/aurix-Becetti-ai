@@ -1,0 +1,74 @@
+name: Microsoft Store MSIX candidate
+
+on:
+  workflow_dispatch:
+    inputs:
+      identity_name:
+        description: 'Partner Center: Package/Identity/Name (public value)'
+        required: true
+        type: string
+      publisher:
+        description: 'Partner Center: Package/Identity/Publisher, including CN= (public value)'
+        required: true
+        type: string
+      publisher_display_name:
+        description: 'Partner Center: Package/Properties/PublisherDisplayName'
+        required: true
+        type: string
+      display_name:
+        description: 'Exact reserved application name'
+        required: true
+        default: AURIX
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  msix:
+    runs-on: windows-latest
+    timeout-minutes: 30
+    env:
+      MSSTORE_IDENTITY_NAME: ${{ inputs.identity_name }}
+      MSSTORE_PUBLISHER: ${{ inputs.publisher }}
+      MSSTORE_PUBLISHER_DISPLAY_NAME: ${{ inputs.publisher_display_name }}
+      MSSTORE_DISPLAY_NAME: ${{ inputs.display_name }}
+      CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+      PYTHONUTF8: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate public Store identity and package assets
+        run: node scripts/store.cjs --check
+      - run: npm ci
+      - name: Test, build x64 runtime and pack with Windows SDK validation
+        shell: pwsh
+        run: ./scripts/build-store.ps1
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: AURIX-Microsoft-Store-x64-candidate
+          path: |
+            dist/store/*.msix
+            dist/store/SHA256SUMS.txt
+            dist/store/AppxManifest.xml
+            dist/store/store-build.json
+            dist/store/makeappx.log
+            dist/store/submission/**
+          if-no-files-found: error
+          retention-days: 30
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: AURIX-Store-build-diagnostics
+          path: |
+            dist/store/makeappx.log
+            dist/store/store-build.json
+          if-no-files-found: ignore
+          retention-days: 7

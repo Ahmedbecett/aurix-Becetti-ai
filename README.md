@@ -6,6 +6,22 @@
 
 **Preview:** `release/preview/index.html` · **Installable Blogger theme:** `release/aurix-blogger.xml`
 
+## Windows 10 / 11 desktop (x64)
+
+Electron desktop packaging now includes the current dashboard, images, code, writing, chat/PDF, projects and settings from the same `src/` files. Run `npm ci`, then `npm run desktop` to develop or `npm run dist:win -- --publish never` on Windows to build an NSIS installer and a portable EXE. A Windows GitHub Actions workflow is in `.github/workflows/windows.yml`.
+
+**Release status:** source and mocked automated tests are prepared; no final EXE or Windows end-to-end validation has been completed in this session. Google login opens the system browser and requires deploying the included desktop auth bridge to the existing Firebase site first. AI services still require internet; unavailable features (including video) are not unlocked by packaging. See [Windows setup, prerequisites and acceptance checklist (Arabic)](WINDOWS-AR.md).
+
+The prior dashboard-only release improvements have been reconciled into `src/` so the standard build preserves them.
+
+### Microsoft Store (MSIX candidate)
+
+The Store channel is separate from NSIS/Portable. The owner-supplied public identity is tracked in `store/identity.store.json` (`Ahmedbecetti.AURIXAI`, publisher `Ahmedbecetti`); PFN/SID and Store ID `9NLM756D1CZR` are in `store/product.json` and cross-checked. The existing display name AURIX remains provisional until confirmed against the reservation. An optional ignored `store/identity.json` can override the tracked profile. On Windows with the SDK installed, run `npm ci`, `npm run store:validate`, then `npm run dist:store`. The build stages the x64 runtime and uses MakeAppx with validation enabled; `.github/workflows/microsoft-store.yml` provides a manual Windows build with the same public inputs.
+
+Package logos, listing drafts (English/Arabic/French), review notes and reporting procedures are in `store/`. A user-reviewed AI content report/email/copy control and a public Windows privacy page are included in the web build. Deploy the auth bridge and `/pages/windows-privacy.html` before distributing the candidate.
+
+**Not submitted or certified:** the exact reserved display name, an actual Windows MSIX build, Windows 10/11 tests, WACK, production service/safety checks and real screenshots are still required. An unsigned candidate is for Store submission after verification, not public sideload distribution. See [Microsoft Store preparation and release gates (Arabic)](STORE-AR.md).
+
 A standalone, no-server, responsive guest-mode app for the owner's `skullaistudio.blogspot.com` site. Built from the project owner's reference artwork (cropped icon in `src/brand-icon.webp`). Frontend source: `src/app.html`, `src/styles.css`, `src/app.js`; rebuild with `python build.py`. The application is **published on Firebase Hosting staging** at https://aurix-ea09b.web.app with noindex. It has **not been published to the owner's Blogger account**; Blogger admin access is required to install the theme and create pages. See `DEPLOYED-AR.md`.
 
 ## Current feature matrix (tested 2026-10-24)
@@ -53,4 +69,4 @@ See [`QUALITY-FIX-AR.md`](QUALITY-FIX-AR.md) for the reproduced Arabic-prompt fa
 
 ## Quality checks
 
-`python build.py && node --check src/app.js && node test.mjs` (the local test uses temporary `happy-dom` from `/tmp/aurix-qa`; reinstall if necessary, or inspect the source). XML is parsed with `lxml` in the local validation. Real external GET image and POST text requests were made successfully on 2026-10-24. Live Playwright checks on the Firebase staging site passed desktop/mobile, OAuth redirect to Google, actual image/text generation and static legal page; real Google user login and Blogger theme installation remain pending.
+`npm ci && npm test` rebuilds the web output and runs UI checks with repository-local `happy-dom` / `fake-indexeddb`, backend checks, and desktop authentication/policy tests. Node.js 22+ and Python 3.10+ are required. The historical XML validation used `lxml`; it is not required by this npm test command. Real external GET image and POST text requests were made successfully on 2026-10-24. Live Playwright checks on the Firebase staging site passed desktop/mobile, OAuth redirect to Google, actual image/text generation and static legal page; real Google user login and Blogger theme installation remain pending.

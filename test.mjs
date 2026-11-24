@@ -1,23 +1,21 @@
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {createRequire} from 'node:module';
-const require=createRequire('/tmp/aurix-qa/package.json');
-const {Window}=require('happy-dom');
-const {indexedDB}=require('fake-indexeddb');
+import {Window} from 'happy-dom';
+import {indexedDB} from 'fake-indexeddb';
 const html=readFileSync(new URL('./release/preview/index.html',import.meta.url),'utf8');
 const script=readFileSync(new URL('./src/app.js',import.meta.url),'utf8');
 const w=new Window({url:'https://skullaistudio.blogspot.com/',settings:{disableCSSFileLoading:true,disableJavaScriptFileLoading:true}});
 const d=w.document;w.indexedDB=indexedDB;
 d.write(html.replace(/<script>[\s\S]*?<\/script>/,'') );
 let calls=[];
-w.fetch=async (url,opts={})=>{calls.push({url,opts});if(url.includes('/api/image'))return new w.Response(new w.Blob([Uint8Array.from([0xff,0xd8,0xff,...new Array(3500).fill(1)])],{type:'image/jpeg'}),{status:200,headers:{'content-type':'image/jpeg'}});return new w.Response('AURIX-REAL-MOCK-RESULT',{status:200,headers:{'content-type':'text/plain'}})};
+w.fetch=async (url,opts={})=>{if(url.endsWith('/health'))return new w.Response('ok',{status:200});calls.push({url,opts});if(url.includes('/api/image'))return new w.Response(new w.Blob([Uint8Array.from([0xff,0xd8,0xff,...new Array(3500).fill(1)])],{type:'image/jpeg'}),{status:200,headers:{'content-type':'image/jpeg'}});return new w.Response('AURIX-REAL-MOCK-RESULT',{status:200,headers:{'content-type':'text/plain'}})};
 w.URL.createObjectURL=()=> 'blob:mock';w.URL.revokeObjectURL=()=>{};
 w.eval(script);
 const go=async(r)=>{w.location.hash='#'+r;await tick()};
 const tick=()=>new Promise(r=>setTimeout(r,30));
 assert.match(d.title,/AURIX/);
-assert.equal(d.querySelectorAll('[data-route]').length,14);
-assert.ok(d.querySelector('#login-google'));assert.equal(d.querySelector('#login-guest'),null);assert.equal(d.querySelector('#login-google').disabled,true);assert.match(d.querySelector('.auth-intro h1').textContent,/AURIX/);assert.doesNotMatch(d.querySelector('#view').textContent,/ChatGPT/);assert.equal(d.querySelector('.auth-brand img').getAttribute('src').startsWith('data:image/webp;base64,'),true);assert.ok(d.querySelector('.auth-consent a[href="#terms"]'));await go('image');assert.ok(d.querySelector('.auth-screen'));await go('terms');assert.match(d.querySelector('#view').textContent,/Terms of Service/);await go('login');w.AurixCloud={user:null,getIdToken:async()=> 'mock-firebase-id-token',signIn:async()=>{throw Object.assign(Error('Closed'),{code:'auth/popup-closed-by-user'})},signOut:async()=>{w.AurixCloud.user=null;w.dispatchEvent(new w.Event('aurix-cloud'))},list:async()=>[]};w.dispatchEvent(new w.Event('aurix-cloud'));assert.equal(d.querySelector('#login-google').disabled,false);d.querySelector('#login-google').click();await tick();assert.match(d.querySelector('#login-status').textContent,/cancelled/i);w.AurixCloud.user={uid:'alpha',email:'alpha@example.test'};w.dispatchEvent(new w.Event('aurix-cloud'));await tick();assert.ok(d.querySelector('.hero'));assert.ok(d.querySelector('.hero .skull').getAttribute('src').startsWith('data:image/webp;base64,'));assert.match(d.querySelector('.hero .hero-title').textContent,/AURIX\s+AI/);assert.equal(d.querySelectorAll('.nav a .nav-icon').length,14);assert.equal(d.querySelectorAll('.tool-card .nav-icon').length,4);
+assert.equal(d.querySelectorAll('[data-route]').length,15);
+assert.ok(d.querySelector('#login-google'));assert.equal(d.querySelector('#login-guest'),null);assert.equal(d.querySelector('#login-google').disabled,true);assert.match(d.querySelector('.auth-intro h1').textContent,/AURIX/);assert.doesNotMatch(d.querySelector('#view').textContent,/ChatGPT/);assert.equal(d.querySelector('.auth-brand img').getAttribute('src').startsWith('data:image/webp;base64,'),true);assert.ok(d.querySelector('.auth-consent a[href="#terms"]'));await go('image');assert.ok(d.querySelector('.auth-screen'));await go('terms');assert.match(d.querySelector('#view').textContent,/Terms of Service/);await go('login');w.AurixCloud={user:null,getIdToken:async()=> 'mock-firebase-id-token',signIn:async()=>{throw Object.assign(Error('Closed'),{code:'auth/popup-closed-by-user'})},signOut:async()=>{w.AurixCloud.user=null;w.dispatchEvent(new w.Event('aurix-cloud'))},list:async()=>[]};w.dispatchEvent(new w.Event('aurix-cloud'));assert.equal(d.querySelector('#login-google').disabled,false);d.querySelector('#login-google').click();await tick();assert.match(d.querySelector('#login-status').textContent,/cancelled/i);w.AurixCloud.user={uid:'alpha',email:'alpha@example.test'};w.dispatchEvent(new w.Event('aurix-cloud'));await tick();assert.ok(d.querySelector('.dashboard'));assert.ok(d.querySelector('.live-skull').getAttribute('src').startsWith('data:image/webp;base64,'));assert.equal(d.querySelectorAll('.nav a .nav-icon').length,16);assert.deepEqual([...d.querySelectorAll('.dash-stat strong')].map(x=>x.textContent),['0','0','0','0']);assert.ok(d.querySelector('#workspace-search'));assert.equal(d.querySelectorAll('.dash-action:not(.off)').length,5);await go('billing');assert.match(d.querySelector('#view').textContent,/No paid AURIX subscription/);
 
 await go('image');
 assert.equal(d.querySelectorAll('#styles .chip').length,8);assert.equal(d.querySelectorAll('#qualities .chip').length,2);

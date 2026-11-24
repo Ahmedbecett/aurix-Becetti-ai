@@ -1,0 +1,113 @@
+name: Windows desktop
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'src/**'
+      - 'desktop/**'
+      - 'scripts/**'
+      - 'store/**'
+      - 'backend/**'
+      - 'build.py'
+      - 'test.mjs'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'firebase.web.json'
+      - 'release/*-page.html'
+      - '.github/workflows/windows.yml'
+  pull_request:
+    paths:
+      - 'src/**'
+      - 'desktop/**'
+      - 'scripts/**'
+      - 'store/**'
+      - 'backend/**'
+      - 'build.py'
+      - 'test.mjs'
+      - 'package*.json'
+      - 'firebase.web.json'
+      - 'release/*-page.html'
+      - '.github/workflows/windows.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: npm ci
+      - name: Test and build installer plus portable edition
+        run: npm run dist:win -- --publish never
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+          PYTHONUTF8: '1'
+      - name: Record SHA-256 checksums
+        shell: pwsh
+        run: |
+          Get-ChildItem dist/windows/*.exe | ForEach-Object {
+            $hash = Get-FileHash $_.FullName -Algorithm SHA256
+            "$($hash.Hash.ToLower())  $($_.Name)"
+          } | Set-Content -Encoding utf8 dist/windows/SHA256SUMS.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: AURIX-Windows-x64
+          path: |
+            dist/windows/*.exe
+            dist/windows/SHA256SUMS.txt
+          if-no-files-found: error
+          retention-days: 30
+
+  store-candidate:
+    name: MSIX candidate (public owner identity)
+    runs-on: windows-latest
+    timeout-minutes: 30
+    env:
+      CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+      PYTHONUTF8: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify owner identity, PFN, SID and assets
+        run: npm run store:validate
+      - run: npm ci
+      - name: Build unsigned Store candidate with Windows SDK validation
+        shell: pwsh
+        run: ./scripts/build-store.ps1
+      - uses: actions/upload-artifact@v4
+        with:
+          name: AURIX-Microsoft-Store-x64-candidate
+          path: |
+            dist/store/*.msix
+            dist/store/SHA256SUMS.txt
+            dist/store/AppxManifest.xml
+            dist/store/store-build.json
+            dist/store/makeappx.log
+            dist/store/submission/**
+          if-no-files-found: error
+          retention-days: 30
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: AURIX-Store-build-diagnostics
+          path: |
+            dist/store/makeappx.log
+            dist/store/store-build.json
+          if-no-files-found: ignore
+          retention-days: 7

@@ -448,6 +448,11 @@ body:not(.auth-mode){background:radial-gradient(900px 600px at 80% -10%,rgba(31,
 @media(max-width:560px){.aurix-top{min-height:57px;padding:8px 12px}.top-profile{padding:0;border:0}.top-avatar{width:28px;height:28px}.top-profile-name{display:none}.aurix-main{padding:16px 13px 50px}.dash-welcome{display:block;margin-bottom:18px}.dash-welcome h1{font-size:24px}.dash-welcome time{display:inline-block;margin-top:10px}.dash-stat{min-height:127px;padding:13px}.dash-stat strong{font-size:23px}.dash-feature{min-height:335px;padding:19px}.dash-feature h2{font-size:22px;max-width:240px}.dash-feature p{max-width:250px}.dash-brand-motion{top:-10px;inset-inline-end:-18px;width:126px;height:132px;opacity:.58}.live-skull{width:90px;height:90px}.dash-orbit{width:110px;height:48px}.dash-actions{grid-template-columns:repeat(2,minmax(0,1fr));margin-top:31px}.dash-action{min-height:51px;font-size:10px}.dash-rail{grid-template-columns:1fr}.dash-panel{padding:16px}.nav a{min-height:44px}}
 @media(max-width:360px){.dash-stats{gap:8px}.dash-stat-label{font-size:11px}.dash-actions{gap:7px}.dash-feature h2{font-size:19px}}
 @media(prefers-reduced-motion:reduce){.brand .logo,.live-skull,.dash-orbit{animation:none!important}}
+/* Always reachable, including the signed-out screen. Native dialog traps focus. */
+.aurix-support{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:14px;padding:16px 20px 24px;font-size:13px}
+.content-report{margin:auto;width:min(600px,calc(100vw - 32px));max-height:90vh;overflow:auto;padding:24px;border:1px solid var(--line2);border-radius:16px;background:var(--surface);color:var(--text)}
+.content-report::backdrop{background:rgba(0,0,0,.75)}
+.content-report h2{font-size:22px}.content-report p{font-size:14px;line-height:1.7;color:var(--muted);margin:14px 0}.content-report label{display:block;margin:14px 0 8px}.content-report textarea{width:100%;min-height:130px;margin-bottom:12px}.content-report .btn{margin:6px 4px 0 0}
 </style></head><body><a class="skip-link" href="#aurix-main">Skip to content</a>
 <div class="aurix-shell" id="aurix-app">
   <div class="backdrop" id="backdrop"></div>
@@ -798,6 +803,58 @@ document.addEventListener('change',e=>{let s=e.target.closest('[data-move]');if(
 $$('[data-lang]').forEach(b=>b.onclick=()=>{lang=b.dataset.lang;save('lang',lang);render()});$('#top-signin').onclick=async()=>{if(window.AurixCloud?.user){try{await signOutToLogin()}catch(e){toast(e.message||'Sign-out failed.','err')}}else location.hash='#login'};
 $('#burger').onclick=()=>{let open=$('#side').classList.toggle('open');$('#backdrop').classList.toggle('show',open);$('#burger').setAttribute('aria-expanded',String(open))};$('#backdrop').onclick=()=>{$('#side').classList.remove('open');$('#backdrop').classList.remove('show');$('#burger').setAttribute('aria-expanded','false')};window.addEventListener('hashchange',()=>{render();window.scrollTo(0,0)});window.addEventListener('aurix-cloud',()=>{const user=window.AurixCloud?.user;syncAccount();if(user&&route==='login'){location.hash='#home';render();return}if(!user&&route!=='login'&&!['privacy','terms'].includes(route)){location.hash='#login';render();return}render()});window.addEventListener('aurix-cloud-error',e=>toast(e.detail||'Account service is unavailable.','err'));render();setTimeout(()=>{if(route==='login'&&!window.AurixCloud){const b=$('#login-google');if(b){const label=b.querySelector('span:last-child');if(label)label.textContent=(authCopy[lang]||authCopy.en).unavailable}}},8000);
 })();
+</script><script>/* AURIX: user-controlled content reports. Nothing is sent automatically. */
+(function () {
+  'use strict';
+  const copy = {
+    en: { open: 'Report AI content', title: 'Report inappropriate AI content', note: 'Nothing is sent automatically. Describe the concern without passwords, account tokens or confidential PDF text. You choose what to include. We prepare an email for you to review and send.', label: 'What happened?', prepare: 'Prepare email', send: 'Open email app to review and send', copy: 'Copy report', close: 'Close', ready: 'Email draft prepared, not sent. If no email app is configured, copy the report and email it to ahmedbecetti41@gmail.com.', copied: 'Report copied. Send it to ahmedbecetti41@gmail.com.', failed: 'Clipboard unavailable. Select and copy your report manually.', privacy: 'Windows privacy policy' },
+    ar: { open: 'الإبلاغ عن محتوى الذكاء الاصطناعي', title: 'الإبلاغ عن محتوى غير مناسب', note: 'لن يُرسل شيء تلقائيًا. صف المشكلة دون كلمات مرور أو رموز دخول أو نص PDF سري. أنت تختار ما تشاركه؛ نجهّز رسالة بريد لتراجعها وترسلها بنفسك.', label: 'ما المشكلة؟', prepare: 'تجهيز رسالة البريد', send: 'فتح تطبيق البريد للمراجعة والإرسال', copy: 'نسخ البلاغ', close: 'إغلاق', ready: 'جُهّزت الرسالة ولم تُرسل. إن لم يكن لديك تطبيق بريد، انسخ البلاغ وأرسله إلى ahmedbecetti41@gmail.com.', copied: 'نُسخ البلاغ. أرسله إلى ahmedbecetti41@gmail.com.', failed: 'تعذّر النسخ. حدّد نص البلاغ وانسخه يدويًا.', privacy: 'خصوصية نسخة ويندوز' },
+    fr: { open: 'Signaler un contenu IA', title: 'Signaler un contenu IA inapproprié', note: 'Aucun envoi automatique. Décrivez le problème sans mot de passe, jeton de connexion ni texte PDF confidentiel. Vous choisissez les informations à partager et envoyez vous-même le courriel préparé.', label: 'Quel est le problème ?', prepare: 'Préparer le courriel', send: 'Ouvrir la messagerie pour vérifier et envoyer', copy: 'Copier le signalement', close: 'Fermer', ready: 'Brouillon préparé, non envoyé. Sans messagerie configurée, copiez le signalement et envoyez-le à ahmedbecetti41@gmail.com.', copied: 'Signalement copié. Envoyez-le à ahmedbecetti41@gmail.com.', failed: 'Presse-papiers indisponible. Sélectionnez et copiez le texte manuellement.', privacy: 'Confidentialité Windows' }
+  };
+  const root = document.createElement('div');
+  root.className = 'aurix-support';
+  const open = document.createElement('button');
+  open.id = 'report-content'; open.type = 'button'; open.className = 'btn sm ghost';
+  const policy = document.createElement('a');
+  policy.href = '/pages/windows-privacy.html'; policy.id = 'windows-privacy-link'; policy.hidden = !window.AurixDesktop;
+  root.append(open, policy); document.body.append(root);
+  const dialog = document.createElement('dialog');
+  dialog.id = 'content-report'; dialog.className = 'content-report';
+  dialog.setAttribute('aria-labelledby', 'report-title');
+  dialog.innerHTML = '<h2 id="report-title"></h2><p id="report-note"></p><form id="report-form"><label for="report-details" id="report-label"></label><textarea id="report-details" class="ta" required="required" minlength="5" maxlength="1600"></textarea><button class="btn" id="report-prepare" type="submit"></button></form><p id="report-status" role="status"></p><a class="btn sm ghost" id="report-email" hidden="hidden"></a><button class="btn sm ghost" id="report-copy" type="button" hidden="hidden"></button><button class="btn sm ghost" id="report-close" type="button"></button>';
+  document.body.append(dialog);
+  const get = id => dialog.querySelector('#' + id);
+  const labels = () => copy[document.documentElement.lang] || copy.en;
+  const update = () => { open.textContent = labels().open; policy.textContent = labels().privacy; };
+  update();
+  new MutationObserver(update).observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
+  let report = '';
+  open.addEventListener('click', () => {
+    const c = labels();
+    for (const [id, key] of Object.entries({ 'report-title': 'title', 'report-note': 'note', 'report-label': 'label', 'report-prepare': 'prepare', 'report-email': 'send', 'report-copy': 'copy', 'report-close': 'close' })) get(id).textContent = c[key];
+    get('report-form').reset(); get('report-status').textContent = ''; report = '';
+    get('report-email').hidden = true; get('report-email').removeAttribute('href'); get('report-copy').hidden = true;
+    dialog.showModal(); get('report-details').focus();
+  });
+  get('report-form').addEventListener('submit', event => {
+    event.preventDefault();
+    const details = get('report-details').value.trim();
+    if (details.length < 5 || details.length > 1600) return;
+    // Deliberately exclude prompts, outputs, account IDs, PDF contents and tokens.
+    const requestedRoute = location.hash.slice(1).split('?')[0];
+    const route = ['home', 'image', 'code', 'writer', 'chat', 'projects', 'history', 'favorites', 'settings', 'login', 'video', 'billing'].includes(requestedRoute) ? requestedRoute : 'home';
+    report = `AURIX AI content report\nArea: ${route}\nDate: ${new Date().toISOString()}\n\n${details}`;
+    get('report-email').href = 'mailto:ahmedbecetti41@gmail.com?subject=' + encodeURIComponent('AURIX AI content report') + '&body=' + encodeURIComponent(report);
+    get('report-email').hidden = false; get('report-copy').hidden = false;
+    get('report-status').textContent = labels().ready;
+  });
+  get('report-copy').addEventListener('click', async () => {
+    if (!report) return;
+    try { await navigator.clipboard.writeText(report); get('report-status').textContent = labels().copied; }
+    catch { get('report-status').textContent = labels().failed; }
+  });
+  get('report-close').addEventListener('click', () => dialog.close());
+})();
 </script><script>window.AURIX_FIREBASE_CONFIG={"apiKey":"AIzaSyC1zSm5cLXvAh52qqGgek7yiYyXjSMhY4Q","authDomain":"aurix-ea09b.firebaseapp.com","projectId":"aurix-ea09b","appId":"1:72543340803:web:3d2b925ea38e6b7e6fc136"};</script><script type="module">/* Optional Firebase adapter. Loaded only when the owner supplies a PUBLIC Firebase web config.
    No Admin SDK, service-account credentials, or provider secrets belong here. */
 const cfg = window.AURIX_FIREBASE_CONFIG;
@@ -815,13 +872,20 @@ if (cfg && cfg.apiKey && cfg.authDomain && cfg.projectId && cfg.appId) {
     const db = fs.getFirestore(app);
     const provider = new auth.GoogleAuthProvider();
     provider.setCustomParameters({ prompt: 'select_account' });
+    const desktopCredential = async () => {
+      const result = await window.AurixDesktop.signIn();
+      return auth.GoogleAuthProvider.credential(result.idToken, result.accessToken);
+    };
     const path = () => {
       if (!a.currentUser) throw Error('Sign in to save projects to the cloud.');
       return fs.collection(db, 'users', a.currentUser.uid, 'items');
     };
     const cloud = {
       get user() { return a.currentUser; },
-      async signIn() { return auth.signInWithPopup(a, provider); },
+      async signIn() {
+        if (window.AurixDesktop) return auth.signInWithCredential(a, await desktopCredential());
+        return auth.signInWithPopup(a, provider);
+      },
       async getIdToken() { if (!a.currentUser) throw Error('Sign in with Google first.'); return a.currentUser.getIdToken(); },
       async signOut() { return auth.signOut(a); },
       async list() { const snapshot = await fs.getDocs(path()); return snapshot.docs.map(d => ({ id: d.id, ...d.data() })); },
@@ -838,7 +902,8 @@ if (cfg && cfg.apiKey && cfg.authDomain && cfg.projectId && cfg.appId) {
       async deleteAccount() {
         if (!a.currentUser) throw Error('Not signed in.');
         // Reauthenticate first. If this fails, no saved projects are deleted.
-        await auth.reauthenticateWithPopup(a.currentUser, provider);
+        if (window.AurixDesktop) await auth.reauthenticateWithCredential(a.currentUser, await desktopCredential());
+        else await auth.reauthenticateWithPopup(a.currentUser, provider);
         while (true) {
           const docs = await fs.getDocs(fs.query(path(), fs.limit(100)));
           if (docs.empty) break;

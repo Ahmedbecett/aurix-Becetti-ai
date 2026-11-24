@@ -15,10 +15,14 @@ out=root/'release'
 for asset in ('pdf.mjs','pdf.worker.mjs','pdfjs-LICENSE.txt'):
     shutil.copyfile(src/'assets'/asset,out/'preview'/'assets'/asset)
 shutil.copyfile(src/'pdf-init.mjs',out/'preview'/'pdf-init.mjs')
+# Desktop's system-browser Google sign-in bridge must be deployed to Hosting too.
+for asset in ('desktop-auth.html', 'desktop-auth.mjs'):
+    shutil.copyfile(src/asset, out/'preview'/asset)
 # Public Google Search Console HTML-file verification. Keep it on Hosting across rebuilds.
 shutil.copyfile(src/'verification'/'google16fac1570d0d10bd.html',out/'preview'/'google16fac1570d0d10bd.html')
 css=(src/'styles.css').read_text()
 js=(src/'app.js').read_text()
+support_js=(src/'support.js').read_text()
 cloud_js=(src/'firebase-cloud.js').read_text()
 config_file=root/'firebase.web.json'
 config=json.loads(config_file.read_text()) if config_file.exists() else None
@@ -26,10 +30,12 @@ if config:
     assert all(config.get(k) for k in ('apiKey','authDomain','projectId','appId'))
     assert not any(str(v).startswith(('PUBLIC_', 'AURIX_')) for v in config.values())
     # Firebase web config is public by design; never use an Admin service-account key here.
+    (out/'preview'/'desktop-firebase.json').write_text(json.dumps(config), encoding='utf-8')
     cfg_json=json.dumps(config,separators=(',',':')).replace('<','\\u003c')
     cloud_html='<script>window.AURIX_FIREBASE_CONFIG='+cfg_json+';</script><script type="module">'+cloud_js+'</script>'
     cloud_xml='<script type="text/javascript"><![CDATA[window.AURIX_FIREBASE_CONFIG='+cfg_json+';]]></script><script type="module"><![CDATA['+cloud_js+']]></script>'
 else:
+    (out/'preview'/'desktop-firebase.json').unlink(missing_ok=True)
     cloud_html=cloud_xml=''
 
 app=(src/'app.html').read_text()
@@ -49,7 +55,7 @@ def xml_escape_content(text):
 preview_app=app
 for name in ('about','contact','privacy','terms'):
     preview_app=preview_app.replace(f'href="#{name}"',f'href="/pages/{name}.html"')
-preview='''<!doctype html><html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><meta name="aurix-release" content="seo-ready-20261024"/><meta name="description" content="AURIX is an independent creative workspace for AI images, writing, code and text-based PDF questions. Read public guides or sign in with Google for interactive tools."/><link rel="canonical" href="https://aurix-ea09b.web.app/"/><meta name="robots" content="index,follow"/><meta name="theme-color" content="#0b1020"/><title>AURIX — Imagine. Create. Build.</title><style>'''+css+'''</style></head><body>'''+preview_app+'<script>'+js+'</script>'+cloud_html+'<script type="module" src="/pdf-init.mjs"></script></body></html>'
+preview='''<!doctype html><html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><meta name="aurix-release" content="dashboard-real-20261024"/><meta name="description" content="AURIX is an independent creative workspace for AI images, writing, code and text-based PDF questions. Read public guides or sign in with Google for interactive tools."/><link rel="canonical" href="https://aurix-ea09b.web.app/"/><meta name="robots" content="index,follow"/><meta name="theme-color" content="#0b1020"/><title>AURIX — Imagine. Create. Build.</title><style>'''+css+'''</style></head><body>'''+preview_app+'<script>'+js+'</script><script>'+support_js+'</script>'+cloud_html+'<script type="module" src="/pdf-init.mjs"></script></body></html>'
 (out/'preview'/'index.html').write_text(preview)
 # Blogger requires one b:skin and at least one b:section. The widget displays
 # original indexable pages/posts. Interactive app is shown on homepage only.
@@ -64,7 +70,7 @@ head='''<meta charset="utf-8"/>
 <meta expr:content="data:blog.canonicalUrl" property="og:url"/>
 <title><data:blog.pageTitle/></title>'''
 # CDATA blocks cannot include their own closing token.
-assert ']]>' not in css and ']]>' not in js
+assert ']]>' not in css and ']]>' not in js and ']]>' not in support_js
 blog=blog_app.replace('href="#home"',f'href="{site}#home"').replace('href="#image"',f'href="{site}#image"').replace('href="#code"',f'href="{site}#code"').replace('href="#writer"',f'href="{site}#writer"').replace('href="#video"',f'href="{site}#video"').replace('href="#projects"',f'href="{site}#projects"').replace('href="#history"',f'href="{site}#history"').replace('href="#favorites"',f'href="{site}#favorites"').replace('href="#settings"',f'href="{site}#settings"')
 # Hash links inside JS templates point to the homepage, because in the published
 # theme the app is never mounted on non-home pages.
@@ -80,6 +86,7 @@ xml=f'''<?xml version="1.0" encoding="UTF-8" ?>
 <b:if cond="data:view.isHomepage">
 {blog}
 <script type="text/javascript"><![CDATA[{js}]]></script>
+<script type="text/javascript"><![CDATA[{support_js}]]></script>
 {cloud_xml}
 <b:else/>
 <div class="blogger-content"><a class="btn ghost blogger-back" href="{site}">← Back to AURIX</a><b:section id="main" class="main" showaddelement="yes"><b:widget id="Blog1" locked="true" title="Blog Posts" type="Blog" version="2"/></b:section></div>
@@ -100,6 +107,7 @@ for slug,(title,body) in pages.items():
 # Public informational pages for the Firebase web.app free domain. Interactive tools remain Google-only.
 static_pages=out/'preview'/'pages'
 static_pages.mkdir(parents=True,exist_ok=True)
+shutil.copyfile(src/'windows-privacy.html', static_pages/'windows-privacy.html')
 for slug,(title,body) in pages.items():
     saved=(out/f'{slug}-page.html').read_text()
     content=saved.split('\n',1)[1].replace('https://skullaistudio.blogspot.com/p/privacy.html','/pages/privacy.html')

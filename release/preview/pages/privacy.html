@@ -344,5 +344,115 @@ body.auth-mode .skip-link{background:#17151a;color:#fff}
 }
 @media(max-width:360px){.tools-grid{grid-template-columns:1fr}.top-actions{gap:4px}.langs button{padding:7px 6px}}
 
+/* AURIX dashboard — reference-inspired layout, real local data only */
+:root{--bg:#080e1e;--bg2:#0b1327;--surface:#101a31;--surface2:#14203b;--line:#243451;--line2:#344565;--orange:#ff8b3d;--violet:#8052ff;--violet2:#b7a3ff;--text:#f4f7ff;--muted:#a9b6d1;--muted2:#8494b5;--side-w:254px;--shadow:0 16px 38px rgba(1,6,20,.23)}
+body:not(.auth-mode){background:radial-gradient(900px 600px at 80% -10%,rgba(31,69,175,.13),transparent),#080e1e}
+.aurix-side{background:#091124;border-inline-end:1px solid #1c2a45}
+.brand{height:79px;min-height:79px;padding:14px 19px;gap:11px}
+.brand .logo{animation:aurix-drift 5.6s ease-in-out infinite;filter:drop-shadow(0 0 10px rgba(110,94,255,.42))}
+.brand b{font-size:18px;letter-spacing:3px}
+.brand small{font-size:9px;letter-spacing:1.2px}
+.nav{padding:13px 12px 26px;gap:3px}
+.nav .grp{padding:18px 12px 6px;font-size:10px;color:#95a6ce;letter-spacing:1.1px}
+.nav a{min-height:40px;font-size:13px;gap:11px;color:#aab9d4;border-radius:9px}
+.nav a.active{background:linear-gradient(90deg,#172e80,#1a2364);box-shadow:none;color:#fff}
+[dir=rtl] .nav a.active{box-shadow:none}
+.nav a.active .nav-icon{color:#f9faff}
+.nav a .nav-icon{width:18px;height:18px;flex:0 0 18px}
+.side-foot{padding:18px;color:#9caac5}
+.aurix-top{min-height:78px;padding:13px clamp(16px,2.5vw,32px);gap:18px;background:rgba(8,14,30,.93);border-color:#1c2a45}
+.top-title{flex:0 0 auto;max-width:200px;font-size:14px;color:#d2ddf8}
+.top-search{display:flex;align-items:center;gap:10px;width:clamp(190px,29vw,420px);height:41px;border:1px solid #26385c;background:#101c36;border-radius:999px;padding:0 15px;margin-inline-end:auto;color:#8597b9}
+.top-search svg{width:18px;height:18px;flex:none}
+.top-search input{border:0;outline:0;background:transparent;color:#f4f7ff;width:100%;min-width:0;font-size:13px}
+.top-search input::placeholder{color:#8c9dbb}
+.top-profile{display:flex;align-items:center;gap:9px;max-width:180px;color:#dbe5fb;font-size:12px;font-weight:700;border:1px solid #26385c;border-radius:24px;padding:4px 10px 4px 4px;min-width:0}
+.top-avatar{width:29px;height:29px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(145deg,#a16cff,#437ff7);color:#fff;font-size:13px;flex:none}
+.top-profile-name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.top-actions{margin-inline-start:auto}
+.aurix-main{max-width:1700px;padding:24px clamp(17px,2vw,32px) 50px}
+.dashboard{display:grid;grid-template-columns:minmax(0,1fr) 286px;gap:20px}
+.dash-content,.dash-rail{min-width:0}
+.dash-rail{display:flex;flex-direction:column;gap:18px}
+.dash-welcome{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 22px;padding:9px 2px 0}
+.dash-overline{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#9c8cff;font-weight:900;margin-bottom:5px}
+.dash-welcome h1{font-size:clamp(23px,2.6vw,34px);line-height:1.2;letter-spacing:-.5px}
+.dash-welcome h1 span{color:#ffaf65}
+.dash-welcome p:not(.dash-overline){color:var(--muted);font-size:13px;margin-top:7px}
+.dash-welcome time{white-space:nowrap;color:#bac9e6;font-size:12px}
+.dash-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:18px}
+.dash-stat,.dash-panel{border:1px solid #233653;background:linear-gradient(160deg,#111d35,#0d162b);border-radius:17px;box-shadow:0 12px 25px rgba(1,6,20,.16)}
+.dash-stat{min-height:147px;display:flex;flex-direction:column;padding:16px;color:var(--text);transition:transform .18s,border-color .18s}
+.dash-stat:hover,.dash-action:hover{transform:translateY(-3px);border-color:#6a7dda}
+.dash-stat-icon,.dash-action-icon,.dash-row-icon{display:grid;place-items:center;flex:none;border-radius:11px;color:#fff;background:linear-gradient(135deg,#7240f7,#3749a3)}
+.dash-stat-icon{width:37px;height:37px;margin-bottom:11px}
+.dash-stat-icon svg,.dash-action-icon svg,.dash-row-icon svg{width:19px;height:19px}
+.ds-chat .dash-stat-icon{background:linear-gradient(135deg,#ff923f,#d84d52)}
+.ds-code .dash-stat-icon{background:linear-gradient(135deg,#29ae95,#0d707c)}
+.ds-projects .dash-stat-icon{background:linear-gradient(135deg,#347aff,#3639a8)}
+.dash-stat-label{font-size:12px;color:#c3cde1}
+.dash-stat strong{font-size:26px;line-height:1.15;margin-top:3px}
+.dash-stat small{font-size:10px;color:#8799bb;margin-top:4px}
+.dash-feature{position:relative;isolation:isolate;min-height:265px;overflow:hidden;padding:26px;border:1px solid #5643c9;border-radius:19px;background:radial-gradient(460px 240px at 82% 24%,rgba(64,116,255,.39),transparent 80%),radial-gradient(390px 280px at 4% 105%,rgba(178,60,194,.38),transparent 77%),linear-gradient(125deg,#18124a,#102866 62%,#141452);box-shadow:0 18px 35px rgba(16,26,100,.2)}
+.dash-feature:before{content:"";position:absolute;inset:0;z-index:-1;background-image:radial-gradient(#c8ceff 1px,transparent 1px);background-size:33px 31px;opacity:.07}
+.dash-feature-copy{position:relative;z-index:2}
+.dash-feature-kicker{font-size:10px;font-weight:900;letter-spacing:1.2px;color:#c6bcff;text-transform:uppercase}
+.dash-feature h2{font-size:clamp(21px,2.3vw,29px);margin:11px 0 3px;max-width:510px;line-height:1.25}
+.dash-feature p{font-size:12.5px;color:#d5ddf5}
+.dash-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;max-width:680px;margin-top:34px}
+.dash-action{display:flex;align-items:center;gap:8px;min-height:56px;padding:8px;border:1px solid rgba(180,178,255,.28);border-radius:12px;color:#fff;background:rgba(16,35,108,.55);backdrop-filter:blur(4px);font-size:11px;font-weight:700;transition:transform .18s,border-color .18s;min-width:0}
+.dash-action .dash-action-icon{width:31px;height:31px;border-radius:8px}
+.dash-action .dash-action-icon svg{width:16px;height:16px}
+.dash-action>span:nth-child(2){overflow:hidden;text-overflow:ellipsis}
+.dash-action .action-arrow{margin-inline-start:auto;font-size:14px;color:#b7c9ff}
+.dash-action.off{opacity:.6;cursor:not-allowed;background:rgba(5,13,46,.45)}
+.dash-action.off .dash-action-icon{background:#344262}
+.tone-1 .dash-action-icon{background:linear-gradient(135deg,#fb8a4a,#de4c6b)}
+.tone-2 .dash-action-icon{background:linear-gradient(135deg,#974bf7,#5d3ed5)}
+.tone-3 .dash-action-icon{background:linear-gradient(135deg,#27b6a3,#027b7c)}
+.dash-brand-motion{position:absolute;inset-inline-end:22px;top:-9px;width:193px;height:185px;display:grid;place-items:center;pointer-events:none;opacity:.9}
+.dash-orbit{position:absolute;width:173px;height:72px;border:1px solid #6c93ff;border-radius:50%;transform:rotate(-20deg);box-shadow:0 0 18px #8a56ff;animation:orbit-breathe 6s ease-in-out infinite}
+.live-skull{position:relative;width:137px;height:137px;object-fit:contain;border-radius:28px;animation:aurix-drift 5.6s ease-in-out infinite;filter:drop-shadow(0 0 24px rgba(132,112,255,.48))}
+@keyframes aurix-drift{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-9px) rotate(1deg)}}
+@keyframes orbit-breathe{0%,100%{opacity:.65;transform:rotate(-20deg) scale(.94)}50%{opacity:1;transform:rotate(-15deg) scale(1.08)}}
+.dash-panel{padding:19px;margin-top:18px}
+.dash-rail .dash-panel{margin-top:0}
+.dash-panel-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:13px}
+.dash-panel h2{font-size:15px;font-weight:800;margin:0}
+.dash-panel-head a,.dash-usage a,.dash-doc a{font-size:11px;color:#c3bcff;white-space:nowrap}
+.dash-list-row{display:flex;align-items:center;gap:11px;padding:10px 1px;border-bottom:1px solid #26334c;color:var(--text)}
+.dash-list-row:last-of-type{border-bottom:0}
+.dash-row-icon{width:38px;height:38px}
+.dash-row-text{min-width:0;flex:1}
+.dash-row-text b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:12px}
+.dash-row-text small{display:block;font-size:10px;color:#95a5c1}
+.dash-empty,.dash-footnote{font-size:11px;color:#9eacc7;line-height:1.55}
+.dash-empty{padding:12px 0}
+.dash-footnote{margin-top:14px}
+.dash-status-row{display:flex;align-items:center;gap:9px;padding:14px 0;border-bottom:1px solid #26334c;font-size:11px}
+.dash-status-row b{font-size:10px;margin-inline-start:auto;color:#bdcae2;white-space:nowrap}
+.status-led{height:8px;width:8px;flex:none;border-radius:50%;background:#8695ae;box-shadow:0 0 0 4px rgba(134,149,174,.1)}
+.status-led.good{background:#27d5a1;box-shadow:0 0 0 4px rgba(39,213,161,.13)}
+.dash-feed-item{display:flex;gap:10px;padding:12px 0;border-bottom:1px solid #25334c}
+.dash-feed-item:last-child{border:0}
+.dash-feed-dot{width:9px;height:9px;border-radius:50%;background:linear-gradient(135deg,#8c58ff,#ff8e4e);flex:none;margin-top:5px}
+.dash-feed-item b{font-size:11px;font-weight:650;display:block;line-height:1.4;overflow-wrap:anywhere}
+.dash-feed-item small{font-size:10px;color:#9aabc8}
+.dash-usage{background:linear-gradient(125deg,#292053,#102d72)}
+.dash-usage p,.dash-doc p{font-size:11px;color:#c9d2e9;line-height:1.6;margin:9px 0}
+/* Existing workspaces keep the same real forms but gain consistent spacing */
+.page-head{padding:6px 0 4px}.page-head h1{font-size:clamp(24px,3vw,34px)}
+.card,.chat-box,.hist-card,.set-tile{border-color:#263752;border-radius:16px}
+@media(max-width:1260px){.dashboard{grid-template-columns:1fr}.dash-rail{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.dash-feature{min-height:250px}}
+@media(max-width:800px){.top-search{display:none}.dash-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.dash-rail{grid-template-columns:1fr 1fr}.dash-brand-motion{opacity:.38}.dash-feature-copy{position:relative;z-index:2}}
+@media(max-width:560px){.aurix-top{min-height:57px;padding:8px 12px}.top-profile{padding:0;border:0}.top-avatar{width:28px;height:28px}.top-profile-name{display:none}.aurix-main{padding:16px 13px 50px}.dash-welcome{display:block;margin-bottom:18px}.dash-welcome h1{font-size:24px}.dash-welcome time{display:inline-block;margin-top:10px}.dash-stat{min-height:127px;padding:13px}.dash-stat strong{font-size:23px}.dash-feature{min-height:335px;padding:19px}.dash-feature h2{font-size:22px;max-width:240px}.dash-feature p{max-width:250px}.dash-brand-motion{top:-10px;inset-inline-end:-18px;width:126px;height:132px;opacity:.58}.live-skull{width:90px;height:90px}.dash-orbit{width:110px;height:48px}.dash-actions{grid-template-columns:repeat(2,minmax(0,1fr));margin-top:31px}.dash-action{min-height:51px;font-size:10px}.dash-rail{grid-template-columns:1fr}.dash-panel{padding:16px}.nav a{min-height:44px}}
+@media(max-width:360px){.dash-stats{gap:8px}.dash-stat-label{font-size:11px}.dash-actions{gap:7px}.dash-feature h2{font-size:19px}}
+@media(prefers-reduced-motion:reduce){.brand .logo,.live-skull,.dash-orbit{animation:none!important}}
+/* Always reachable, including the signed-out screen. Native dialog traps focus. */
+.aurix-support{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:14px;padding:16px 20px 24px;font-size:13px}
+.content-report{margin:auto;width:min(600px,calc(100vw - 32px));max-height:90vh;overflow:auto;padding:24px;border:1px solid var(--line2);border-radius:16px;background:var(--surface);color:var(--text)}
+.content-report::backdrop{background:rgba(0,0,0,.75)}
+.content-report h2{font-size:22px}.content-report p{font-size:14px;line-height:1.7;color:var(--muted);margin:14px 0}.content-report label{display:block;margin:14px 0 8px}.content-report textarea{width:100%;min-height:130px;margin-bottom:12px}.content-report .btn{margin:6px 4px 0 0}
+
 .blogger-content{max-width:850px;margin:36px auto;padding:0 20px 70px}.blogger-content .post-outer{background:var(--surface);border:1px solid var(--line);padding:26px;border-radius:var(--radius)}.blogger-content .post-body{color:var(--muted);line-height:1.75}.blogger-content .post-body h2{color:var(--text);margin:20px 0 8px}.blogger-content .post-title{font-size:28px}.blogger-content .post-header,.blogger-content .post-footer{color:var(--muted2)}.blogger-back{display:inline-flex;margin-bottom:16px}</style></head><body><main class="blogger-content"><nav aria-label="AURIX public pages" class="public-page-nav"><a href="/">AURIX Studio</a> | <a href="/pages/image-guide.html">Images</a> | <a href="/pages/code-guide.html">Code</a> | <a href="/pages/writer-guide.html">Writing</a> | <a href="/pages/about.html">About</a> | <a href="/pages/contact.html">Contact</a> | <a href="/pages/privacy.html">Privacy</a> | <a href="/pages/terms.html">Terms</a></nav><article class="card aurix-page"><h1>Privacy Policy</h1><div class="content"><p><strong>Last updated: October 24, 2026.</strong> AURIX requires Google sign-in for its interactive studio on Firebase Hosting; its static informational pages remain public. This policy describes the current implementation only.</p><h2>Generations</h2><p>Your signed-in browser sends generation requests to the AURIX Cloudflare Worker. Image prompts are processed by Cloudflare Workers AI using FLUX.1 Schnell (Black Forest Labs); text and code prompts go to Pollinations.ai Classic endpoints. For chat, only messages and locally extracted text from a user-selected PDF are forwarded by the Worker to Google Gemini when a verified free-tier Gemini key is configured. The original PDF file stays on the device. Free-tier Gemini data may be used to improve Google products; these providers may log requests. Do not enter confidential information or credentials. Its own privacy policy governs its processing.</p><h2>Local storage</h2><p>Prompts, recent chat messages, generated text, legacy image links, favorites, folders and language preference are stored in your browser. Newly generated image bytes are saved locally in IndexedDB under the signed-in account and are not included in JSON export or cloud Firestore. Clear or export the data from the application's Settings. Local projects are scoped to your Google account on this browser and are not automatically synced to other devices.</p><h2>Hosting and other services</h2><p>Firebase Hosting (Google) hosts this staging site and may use cookies or collect technical data under its own terms. Cloudflare processes signed-in API requests and image generation through Workers AI; Google Gemini processes chat messages and extracted PDF text when chat is configured. This version does not enable an independent ad network or analytics service. Google sign-in uses Firebase Authentication and text and code projects you explicitly save to cloud are stored in Firestore under your user ID; new image bytes are local only. Refer to <a href="https://policies.google.com/privacy">Google Privacy Policy</a> and <a href="https://pollinations.ai/privacy">Pollinations.ai privacy information</a> for provider practices.</p><h2>Data requests</h2><p>Google sign-in is processed by Firebase Authentication. Explicit cloud project copies are stored in Cloud Firestore; delete your account and cloud items in Settings. Clearing the browser's local data removes locally saved projects here; it does not remove provider logs. Contact the provider about its own data retention and deletion. Contact the site owner at <a href="mailto:ahmedbecetti41@gmail.com">ahmedbecetti41@gmail.com</a>.</p>
 </div></article><footer class="public-page-footer">© 2026 AURIX · Interactive AI tools require Google sign-in. Video generation is not available. <a href="/pages/contact.html">Contact</a></footer></main></body></html>
