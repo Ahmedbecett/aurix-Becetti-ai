@@ -2,7 +2,18 @@
    No service-account key or AI provider credential is required. */
 const PROJECT = 'aurix-ea09b';
 const JWKS_URL = 'https://www.googleapis.com/service_accounts/v1/jwk/securetoken@system.gserviceaccount.com';
-const ORIGINS = new Set(['https://aurix-ea09b.web.app', 'https://aurix-ea09b.firebaseapp.com']);
+const ORIGINS = new Set([
+  'https://aurix-ea09b.web.app',
+  'https://aurix-ea09b.firebaseapp.com',
+  'https://aurix-gules.vercel.app',
+  'https://aurix-ahmed-d33b.vercel.app',
+  'https://aurix-git-main-ahmed-d33b.vercel.app',
+]);
+// Vercel preview/production aliases for this project (aurix-<hash>-<team>.vercel.app).
+const ORIGIN_PATTERNS = [/^https:\/\/aurix-[a-z0-9-]+\.vercel\.app$/];
+function originAllowed(origin) {
+  return ORIGINS.has(origin) || ORIGIN_PATTERNS.some(r => r.test(origin || ''));
+}
 const ALGO = { name: 'RSASSA-PKCS1-v1_5', hash: 'SHA-256' };
 let keysCache = null;
 let keysExpiry = 0;
@@ -10,7 +21,7 @@ let keysPending = null;
 
 function cors(origin) {
   const h = new Headers({ 'Cache-Control': 'no-store', 'Vary': 'Origin' });
-  if (ORIGINS.has(origin)) {
+  if (originAllowed(origin)) {
     h.set('Access-Control-Allow-Origin', origin);
     h.set('Access-Control-Allow-Methods', 'POST, OPTIONS');
     h.set('Access-Control-Allow-Headers', 'Authorization, Content-Type');

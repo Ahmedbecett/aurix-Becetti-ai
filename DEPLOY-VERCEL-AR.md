@@ -12,12 +12,23 @@
 - Deploy.
 
 ## 3) خطوتان إلزاميتان حتى يعمل التطبيق بالكامل على نطاق Vercel
-1. **Firebase Authentication → Settings → Authorized domains**: أضف نطاق Vercel
-   (مثلاً `aurix.vercel.app` و`aurix-<team>.vercel.app`). بدون ذلك يفشل
-   Google Sign-In بالخطأ `auth/unauthorized-domain`.
-2. **Cloudflare Worker `aurix-api-ea09b`**: عدّل `backend/src/index.mjs` وأضف
-   نطاق Vercel إلى مجموعة `ORIGINS`، ثم أعد نشر الـWorker. بدون ذلك سترفض
-   المتصفحات طلبات `/api/image` و`/api/chat` و`/api/text` بسبب CORS.
+1. **Firebase Authentication → Settings → Authorized domains**: أضف النطاقات:
+   - `aurix-gules.vercel.app`
+   - `aurix-ahmed-d33b.vercel.app`
+   - `aurix-git-main-ahmed-d33b.vercel.app`
+
+   بدون ذلك يفشل Google Sign-In بالخطأ `auth/unauthorized-domain`.
+2. **Cloudflare Worker `aurix-api-ea09b`**: ملف `backend/src/index.mjs` في هذا المستودع
+   مُحدَّث ليشمل نطاقات Vercel في `ORIGINS` (ومنطق `aurix-*.vercel.app`). أعد نشر الـWorker:
+   ```sh
+   cd backend && npx wrangler deploy
+   ```
+   بدون ذلك سترفض المتصفحات طلبات `/api/image` و`/api/chat` و`/api/text` بسبب CORS.
+
+## 3.1) النطاقات الحالية بعد النشر
+- الإنتاج: https://aurix-gules.vercel.app
+- Alias: https://aurix-ahmed-d33b.vercel.app (محمي بـSSO)
+- Git branch: https://aurix-git-main-ahmed-d33b.vercel.app
 
 ## 4) ملاحظات
 - `release/preview` هو الإصدار المنشور حالياً على `aurix-ea09b.web.app`
