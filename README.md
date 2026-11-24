@@ -1,5 +1,9 @@
 # AURIX — AI Creative Studio for Blogger
 
+> **الموقع الحي الوحيد:** https://aurix-ea09b.web.app (Firebase Hosting).
+> هذا المستودع هو مصدر المشروع ونسخته الاحتياطية. لا توجد نسخة Vercel بعد اليوم.
+
+
 **Preview:** `release/preview/index.html` · **Installable Blogger theme:** `release/aurix-blogger.xml`
 
 A standalone, no-server, responsive guest-mode app for the owner's `skullaistudio.blogspot.com` site. Built from the project owner's reference artwork (cropped icon in `src/brand-icon.webp`). Frontend source: `src/app.html`, `src/styles.css`, `src/app.js`; rebuild with `python build.py`. The application is **published on Firebase Hosting staging** at https://aurix-ea09b.web.app with noindex. It has **not been published to the owner's Blogger account**; Blogger admin access is required to install the theme and create pages. See `DEPLOYED-AR.md`.
