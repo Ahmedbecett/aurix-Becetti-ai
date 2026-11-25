@@ -80,6 +80,9 @@ test('no runtime means no staged or fake MSIX output', () => {
 test('Store automation keeps SDK validation, checks process errors and never submits or sideload-signs', () => {
   const ps = fs.readFileSync(path.join(root, 'scripts/build-store.ps1'), 'utf8');
   assert.match(ps, /\$MakeAppx pack \/d/);
+  assert.match(ps, /\$MakeAppx unpack \/p/);
+  assert.match(ps, /verify-msix\.py/);
+  assert.match(ps, /--staged/);
   assert.match(ps, /if \(\$LASTEXITCODE -ne 0\)/);
   assert.doesNotMatch(ps, /^\s*&.*\/nv/m);
   assert.doesNotMatch(ps, /New-SelfSignedCertificate|Import-Certificate|msstore publish|Add-AppxPackage/);

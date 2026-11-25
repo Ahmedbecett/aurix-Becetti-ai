@@ -1,6 +1,6 @@
 {
   "name": "aurix-desktop",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "description": "AURIX creative studio for Windows 10 and 11",
   "author": "AURIX / Ahmed Becetti",
@@ -10,7 +10,7 @@
   "scripts": {
     "build:web": "python -X utf8 build.py",
     "desktop": "npm run build:web && electron .",
-    "test": "npm run build:web && node --check src/app.js && node --check src/desktop-auth.mjs && node --check src/support.js && node --check scripts/store.cjs && node --check desktop/main.cjs && node --check desktop/preload.cjs && node test.mjs && node backend/test.mjs && node --test desktop/test/auth.test.cjs desktop/test/bridge.test.cjs desktop/test/cloud.test.cjs desktop/test/policy.test.cjs desktop/test/store.test.cjs desktop/test/support.test.cjs",
+    "test": "npm run build:web && node --check src/app.js && node --check src/desktop-auth.mjs && node --check src/support.js && node --check scripts/store.cjs && node --check desktop/main.cjs && node --check desktop/preload.cjs && node test.mjs && node backend/test.mjs && python -X utf8 scripts/tests/test_verify_msix.py && node --test desktop/test/auth.test.cjs desktop/test/bridge.test.cjs desktop/test/cloud.test.cjs desktop/test/policy.test.cjs desktop/test/store.test.cjs desktop/test/support.test.cjs",
     "store:validate": "node scripts/store.cjs --check",
     "store:stage": "node scripts/store.cjs",
     "dist:store": "powershell.exe -NoProfile -File scripts/build-store.ps1",

@@ -39,6 +39,15 @@ $package = Join-Path $Root ('dist\store\' + $report.packageFile)
 & $MakeAppx pack /d (Join-Path $Root 'dist\store\staging') /p $package /o 2>&1 | Tee-Object -FilePath 'dist/store/makeappx.log'
 if ($LASTEXITCODE -ne 0) { throw "MakeAppx validation/pack failed with exit code $LASTEXITCODE" }
 if (!(Test-Path $package)) { throw 'MakeAppx returned without producing the expected MSIX.' }
+# Validate the emitted package itself, not only the input manifest/staging tree.
+Invoke-Checked 'python' @('-X', 'utf8', 'scripts/verify-msix.py', $package, '--manifest', 'dist/store/staging/AppxManifest.xml', '--staged', 'dist/store/staging', '--report', 'dist/store/msix-integrity.json')
+$Unpacked = Join-Path $Root 'dist\store\sdk-unpacked'
+& $MakeAppx unpack /p $package /d $Unpacked /o 2>&1 | Tee-Object -FilePath 'dist/store/makeappx-unpack.log'
+if ($LASTEXITCODE -ne 0) { throw "MakeAppx round-trip unpack validation failed with exit code $LASTEXITCODE" }
+$integrity = Get-Content 'dist/store/msix-integrity.json' -Raw | ConvertFrom-Json
+$integrity | Add-Member -NotePropertyName sdkUnpackVerified -NotePropertyValue $true
+$integrity | ConvertTo-Json -Depth 8 | Set-Content -Encoding utf8 'dist/store/msix-integrity.json'
+Write-Host "Verified package size: $($integrity.bytes) bytes; SHA256: $($integrity.sha256)"
 $hash = Get-FileHash $package -Algorithm SHA256
 "$($hash.Hash.ToLower())  $($report.packageFile)" | Set-Content -Encoding utf8 'dist/store/SHA256SUMS.txt'
 Copy-Item 'dist/store/staging/AppxManifest.xml' 'dist/store/AppxManifest.xml' -Force

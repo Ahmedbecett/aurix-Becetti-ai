@@ -60,6 +60,8 @@ jobs:
             dist/store/AppxManifest.xml
             dist/store/store-build.json
             dist/store/makeappx.log
+            dist/store/makeappx-unpack.log
+            dist/store/msix-integrity.json
             dist/store/submission/**
           if-no-files-found: error
           retention-days: 30
@@ -69,6 +71,8 @@ jobs:
           name: AURIX-Store-build-diagnostics
           path: |
             dist/store/makeappx.log
+            dist/store/makeappx-unpack.log
+            dist/store/msix-integrity.json
             dist/store/store-build.json
           if-no-files-found: ignore
           retention-days: 7
