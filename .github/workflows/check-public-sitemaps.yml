@@ -1,0 +1,43 @@
+name: Diagnose public sitemap HTTP
+on:
+  push:
+    branches: [arena/1f56f634-aurix-becetti-ai]
+    paths:
+      - '.github/workflows/check-public-sitemaps.yml'
+      - '.github/diagnostics/check_sitemaps.py'
+  workflow_dispatch:
+permissions:
+  contents: read
+  checks: write
+jobs:
+  inspect-public-site:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - name: Read public HTTP responses and validate real sitemap bytes
+        run: python .github/diagnostics/check_sitemaps.py
+      - name: Make diagnostic result readable through GitHub Checks
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const result = JSON.parse(fs.readFileSync('sitemap-live-diagnostics.json', 'utf8'));
+            await github.rest.checks.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              name: 'Public sitemap HTTP diagnostics',
+              head_sha: context.sha,
+              status: 'completed',
+              conclusion: result.allChecksPass ? 'success' : 'neutral',
+              output: {
+                title: 'Read-only public sitemap/TLS diagnostics',
+                summary: 'Independent current HTTP checks; not evidence of Google indexing or access from Google crawler IPs.',
+                text: '```json\n' + JSON.stringify(result, null, 2) + '\n```'
+              }
+            });
+      - uses: actions/upload-artifact@v4
+        with:
+          name: public-sitemap-live-diagnostics
+          path: sitemap-live-diagnostics.json
+          retention-days: 7
