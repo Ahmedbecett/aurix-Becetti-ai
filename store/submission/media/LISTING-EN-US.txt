@@ -1,0 +1,65 @@
+PRODUCT NAME
+AURIX AI
+
+SHORT DESCRIPTION
+AI creative workspace for images, writing, code and PDF questions. Internet and Google sign-in required.
+
+DESCRIPTION
+Bring your ideas into one AI creative workspace on Windows 10 and Windows 11.
+
+AURIX AI combines image generation, writing assistance, code assistance and text-based PDF questions. Internet access, a Google account and access to third-party AI services are required. Google sign-in opens your default browser. Service availability, quotas and regional access may vary.
+
+CREATE AND REFINE
+Describe an image idea, draft or edit text, or ask for coding help. Generative AI can make mistakes: review writing, inspect image details, and test code before relying on any output.
+
+ASK ABOUT PDF TEXT
+PDF text is extracted on your device. When chat is configured and you ask a question, only the selected text excerpt used as context is sent to the chat service, not the original PDF. Scanned PDFs require OCR, which is not included.
+
+ORGANIZE YOUR WORK
+Keep local projects, folders, favorites and history. Copy or download supported outputs and optionally save supported text/code projects to your account. Download important images separately: JSON exports do not include image bytes.
+
+KNOW THE LIMITS
+- AI generation requires an internet connection; models do not run offline on your device.
+- Video generation is not available.
+- Image generation currently uses a square-image model; exact details and counts are not guaranteed.
+- Chat depends on the operator's configured service. Provider free-tier quotas and availability apply.
+- English is the primary tool language. French and Arabic/RTL interface controls are partially localized.
+- Local data is separate from your regular browser profile and may be lost when the app is reset or uninstalled.
+- No paid AURIX subscription or payment form is included. Unlimited or permanently free generation is not guaranteed.
+
+Use Report AI content in the app to prepare an email report or copy a report for the developer. Nothing is sent until you choose to send it.
+
+Privacy and support: ahmedbecetti41@gmail.com
+
+PRODUCT FEATURES (add individually)
+AI image generation from text prompts
+Writing and code assistance with reviewable outputs
+Text-based PDF questions when chat is configured
+Local projects, folders, favorites and history
+Copy and download supported outputs
+Optional cloud saves for supported text and code projects
+User-reviewed AI content reporting
+
+WHAT'S NEW
+Leave this field blank for Submission 1. The package version is 1.0.2.0; this is not a claim of a previously published Store release.
+
+KEYWORDS (7 entries; 14 words total)
+AI workspace
+image prompts
+AI writing
+code assistant
+PDF questions
+creative tools
+local projects
+
+DEVELOPED BY
+Ahmedbecetti
+
+COPYRIGHT AND TRADEMARK INFO (owner review required)
+Copyright 2026 Ahmedbecetti. AURIX AI branding and application assets are provided by the publisher. Third-party services and components remain subject to their respective terms and licenses.
+
+ADDITIONAL LICENSE TERMS
+Leave blank unless you intend to add terms to Microsoft's Standard Application License Terms. Do not add rights guarantees for AI outputs.
+
+SHORT TITLE / VOICE TITLE
+Optional for this Windows desktop listing. Leave blank unless needed.

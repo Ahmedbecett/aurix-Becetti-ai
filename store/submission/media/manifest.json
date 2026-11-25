@@ -1,0 +1,65 @@
+[
+  {
+    "file": "upload-artwork/poster-720x1080.png",
+    "width": 720,
+    "height": 1080,
+    "role": "Poster art (use one resolution)",
+    "bytes": 144924
+  },
+  {
+    "file": "upload-artwork/poster-1440x2160.png",
+    "width": 1440,
+    "height": 2160,
+    "role": "Poster art (use one resolution)",
+    "bytes": 384492
+  },
+  {
+    "file": "upload-artwork/box-art-1080x1080.png",
+    "width": 1080,
+    "height": 1080,
+    "role": "1:1 Box art (use one resolution)",
+    "bytes": 196138
+  },
+  {
+    "file": "upload-artwork/box-art-2160x2160.png",
+    "width": 2160,
+    "height": 2160,
+    "role": "1:1 Box art (use one resolution)",
+    "bytes": 525785
+  },
+  {
+    "file": "upload-artwork/super-hero-no-title-1920x1080.png",
+    "width": 1920,
+    "height": 1080,
+    "role": "16:9 Super hero art, no product title",
+    "bytes": 288170
+  },
+  {
+    "file": "upload-artwork/super-hero-no-title-3840x2160.png",
+    "width": 3840,
+    "height": 2160,
+    "role": "16:9 Super hero art, no product title",
+    "bytes": 783849
+  },
+  {
+    "file": "upload-artwork/app-tile-300x300.png",
+    "width": 300,
+    "height": 300,
+    "role": "Store display app tile",
+    "bytes": 69215
+  },
+  {
+    "file": "upload-artwork/app-tile-150x150.png",
+    "width": 150,
+    "height": 150,
+    "role": "Store display app tile",
+    "bytes": 24498
+  },
+  {
+    "file": "upload-artwork/app-tile-71x71.png",
+    "width": 71,
+    "height": 71,
+    "role": "Store display app tile",
+    "bytes": 8105
+  }
+]

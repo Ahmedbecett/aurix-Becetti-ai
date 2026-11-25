@@ -1,0 +1,112 @@
+{
+  "artwork": [
+    {
+      "file": "upload-artwork/poster-720x1080.png",
+      "width": 720,
+      "height": 1080,
+      "role": "Poster art (use one resolution)",
+      "bytes": 144924,
+      "sha256": "3cc44a95137e98a2075461a0317be95825a5919b974d28ce4e489481a9c27769",
+      "result": "PASS"
+    },
+    {
+      "file": "upload-artwork/poster-1440x2160.png",
+      "width": 1440,
+      "height": 2160,
+      "role": "Poster art (use one resolution)",
+      "bytes": 384492,
+      "sha256": "6fe9a39e358659fca0bcd657e095e0d8c4ad0a763edd9c6daa93509a52a729ad",
+      "result": "PASS"
+    },
+    {
+      "file": "upload-artwork/box-art-1080x1080.png",
+      "width": 1080,
+      "height": 1080,
+      "role": "1:1 Box art (use one resolution)",
+      "bytes": 196138,
+      "sha256": "70dabae65c127882122f55c67c98e26d890f08ac33c7d9d363c3f4ebe971b864",
+      "result": "PASS"
+    },
+    {
+      "file": "upload-artwork/box-art-2160x2160.png",
+      "width": 2160,
+      "height": 2160,
+      "role": "1:1 Box art (use one resolution)",
+      "bytes": 525785,
+      "sha256": "302664c7f3e5d146a3b5c3526f30cc99e4d6eb4b9578aefd04750356bfd1b948",
+      "result": "PASS"
+    },
+    {
+      "file": "upload-artwork/super-hero-no-title-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "role": "16:9 Super hero art, no product title",
+      "bytes": 288170,
+      "sha256": "e4a6f07462f1eb439acf81802304256565e0103860871c8df6345f8e9eceaa3a",
+      "result": "PASS"
+    },
+    {
+      "file": "upload-artwork/super-hero-no-title-3840x2160.png",
+      "width": 3840,
+      "height": 2160,
+      "role": "16:9 Super hero art, no product title",
+      "bytes": 783849,
+      "sha256": "b30a95939c500bc2ba1aa4ae66437c89b8304cefeb287f0046450d06a8ab01eb",
+      "result": "PASS"
+    },
+    {
+      "file": "upload-artwork/app-tile-300x300.png",
+      "width": 300,
+      "height": 300,
+      "role": "Store display app tile",
+      "bytes": 69215,
+      "sha256": "454a3066855bc43f3babe0fb5a43b130c047b967bfa95aa59f31986d3ac20642",
+      "result": "PASS"
+    },
+    {
+      "file": "upload-artwork/app-tile-150x150.png",
+      "width": 150,
+      "height": 150,
+      "role": "Store display app tile",
+      "bytes": 24498,
+      "sha256": "014bd09605b6adaafc995a12624b5180032c74524ac9176ff2c61b09bffc2ca1",
+      "result": "PASS"
+    },
+    {
+      "file": "upload-artwork/app-tile-71x71.png",
+      "width": 71,
+      "height": 71,
+      "role": "Store display app tile",
+      "bytes": 8105,
+      "sha256": "a9c684c427735380bab840910ead2a6efdebdfd532c4a08b4d40b82062963834",
+      "result": "PASS"
+    }
+  ],
+  "trailer": {
+    "file": "trailer/AURIX-AI-Trailer-1080p.mp4",
+    "result": "PASS",
+    "durationSeconds": 30,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "videoCodec": "H.264",
+    "pixelFormat": "yuv420p",
+    "audio": "AAC stereo, 48kHz",
+    "fullDecode": "PASS",
+    "bytes": 3502944,
+    "sha256": "6178fc97329f973762f1e0f7c387a390716c574920666658b40a80583b755d99"
+  },
+  "captions": {
+    "format": "WebVTT",
+    "cues": 5,
+    "endsAtSeconds": 30,
+    "platformUploadCompatibility": "not tested"
+  },
+  "manualReview": {
+    "posterAndHero": "visually inspected",
+    "heroProductTitle": "absent by design; symbol crop excludes logo lettering",
+    "windowsScreenshotRequirement": "NOT COMPLETE: only bundled web UI reference captures, not Windows/MSIX",
+    "storeUpload": "NOT PERFORMED",
+    "xboxAssets": "not applicable; Windows.Desktop package only"
+  }
+}

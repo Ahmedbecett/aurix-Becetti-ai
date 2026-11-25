@@ -1,0 +1,42 @@
+[
+  {
+    "file": "01-welcome-en.png",
+    "route": "/#login",
+    "language": "en",
+    "width": 1920,
+    "height": 1080,
+    "authenticated": false,
+    "runtime": "headless Chromium, bundled web UI; not Windows/MSIX",
+    "externalNetwork": "blocked; sign-in unavailable as actually rendered"
+  },
+  {
+    "file": "02-welcome-fr.png",
+    "route": "/#login",
+    "language": "fr",
+    "width": 1920,
+    "height": 1080,
+    "authenticated": false,
+    "runtime": "headless Chromium, bundled web UI; not Windows/MSIX",
+    "externalNetwork": "blocked; sign-in unavailable as actually rendered"
+  },
+  {
+    "file": "03-welcome-ar.png",
+    "route": "/#login",
+    "language": "ar",
+    "width": 1920,
+    "height": 1080,
+    "authenticated": false,
+    "runtime": "headless Chromium, bundled web UI; not Windows/MSIX",
+    "externalNetwork": "blocked; sign-in unavailable as actually rendered"
+  },
+  {
+    "file": "04-windows-privacy-en.png",
+    "route": "/pages/windows-privacy.html",
+    "language": "en",
+    "width": 1920,
+    "height": 1080,
+    "authenticated": false,
+    "runtime": "headless Chromium, bundled web UI; not Windows/MSIX",
+    "externalNetwork": "blocked; sign-in unavailable as actually rendered"
+  }
+]

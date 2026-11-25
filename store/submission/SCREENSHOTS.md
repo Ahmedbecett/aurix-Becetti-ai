@@ -1,6 +1,6 @@
 # Real Windows screenshots required before submission
 
-No product screenshots have been generated or captured in this session. Do not upload the repository's HTML design mockups, empty test-account previews or AI-generated illustrations as screenshots of a working Windows product.
+The media kit in `media/` now contains nine listing-artwork PNGs, a 30-second brand trailer, and four **reference-only bundled web UI captures** in `media/review-ui-not-windows/`. Those reference captures use headless Chromium with external networking blocked, without Google sign-in; they are **not Windows/MSIX product screenshots** and must not be used to imply successful authentication or AI generation. The final Windows screenshot gate remains open. See `media/UPLOAD-GUIDE-AR.md` and `scripts/capture-windows-store-screenshots.ps1` for the owner-assisted capture procedure. Do not upload HTML design mockups, empty test-account previews or AI-generated illustrations as screenshots of a working Windows product.
 
 Capture the final MSIX candidate actually running on Windows (a properly signed local test copy or a Store flight). Recommended captures at 1920x1080, without added fake data or unsupported claims:
 

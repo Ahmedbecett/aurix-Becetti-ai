@@ -1,0 +1,36 @@
+name: Publish Store media
+on:
+  workflow_dispatch:
+  push:
+    branches: [arena/1f56f634-aurix-becetti-ai]
+    paths:
+      - 'store/submission/media/**'
+      - '.github/workflows/store-media.yml'
+permissions:
+  contents: write
+jobs:
+  publish-media:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Package media kit
+        shell: python
+        run: |
+          from pathlib import Path
+          import hashlib, zipfile
+          root = Path('store/submission/media')
+          archive = Path('AURIX-AI-Microsoft-Store-Media.zip')
+          assert (root / 'trailer/AURIX-AI-Trailer-1080p.mp4').is_file()
+          with zipfile.ZipFile(archive, 'w', zipfile.ZIP_DEFLATED, compresslevel=6) as z:
+              for p in sorted(root.rglob('*')):
+                  if p.is_file():
+                      z.write(p, Path('AURIX-AI-Store-Media') / p.relative_to(root))
+          with zipfile.ZipFile(archive) as z:
+              assert z.testzip() is None
+          Path('AURIX-AI-Microsoft-Store-Media.sha256').write_text(hashlib.sha256(archive.read_bytes()).hexdigest() + '  ' + archive.name + '\n')
+      - name: Upload media to existing candidate release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release view aurix-store-candidate-1.0.2
+          gh release upload aurix-store-candidate-1.0.2 AURIX-AI-Microsoft-Store-Media.zip AURIX-AI-Microsoft-Store-Media.sha256 store/submission/media/trailer/AURIX-AI-Trailer-1080p.mp4 --clobber
