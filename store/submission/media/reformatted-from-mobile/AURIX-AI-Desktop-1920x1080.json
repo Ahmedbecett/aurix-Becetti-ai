@@ -1,0 +1,19 @@
+{
+  "dimensions": [
+    1920,
+    1080
+  ],
+  "type": "edited/reflowed reference image, not a native Windows/MSIX screenshot",
+  "sources": [
+    "Screenshot_20261125-152657.png",
+    "Screenshot_20261125-152746.png",
+    "Screenshot_20261125-152647.png"
+  ],
+  "edits": [
+    "removed mobile browser/status/navigation bars",
+    "combined existing side navigation",
+    "reflowed visible dashboard actions and project into desktop columns",
+    "retained only supplied visible content",
+    "no Windows chrome or new AI outputs added"
+  ]
+}
