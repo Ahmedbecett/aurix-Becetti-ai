@@ -101,7 +101,10 @@ def verify(package, expected_manifest=None, staged=None):
                     raise ValueError('Packaged bytes differ from staging: ' + filename)
     digest = file_sha256(package)
     return {'file': package.name, 'bytes': package.stat().st_size, 'sha256': digest,
-            'identity': identity.attrib, 'payloadFiles': len(files),
+            'identity': identity.attrib,
+            'displayName': manifest.findtext(FOUNDATION + 'Properties/' + FOUNDATION + 'DisplayName'),
+            'applicationDisplayNames': [element.attrib.get('DisplayName') for element in manifest.iter() if element.tag == '{http://schemas.microsoft.com/appx/manifest/uap/windows10}VisualElements'],
+            'payloadFiles': len(files),
             'zipCrcVerified': True, 'sha256BlockMapVerified': True,
             'stagingCompared': bool(staged), 'signaturePresent': 'AppxSignature.p7x' in entries,
             'storeAcceptance': 'NOT_VERIFIED_BY_PARTNER_CENTER'}

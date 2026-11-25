@@ -18,7 +18,7 @@ on:
       display_name:
         description: 'Exact reserved application name'
         required: true
-        default: AURIX
+        default: AURIX AI
         type: string
 
 permissions:

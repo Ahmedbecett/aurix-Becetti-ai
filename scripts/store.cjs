@@ -45,6 +45,7 @@ function packageSid(familyName) {
 function validateProduct(identity, product) {
   const family = packageFamilyName(identity);
   if (product.identityName !== identity.identityName || product.packageFamilyName !== family || product.packageSid !== packageSid(family)) throw Error('Partner Center identity, Publisher, PFN and SID do not match. Do not build a package with mismatched product identity.');
+  if (product.displayNameConfirmed && (!product.reservedDisplayName || identity.displayName !== product.reservedDisplayName)) throw Error('Manifest display name must exactly match the reserved Partner Center name: ' + product.reservedDisplayName);
   if (!/^[A-Z0-9]{12}$/.test(product.storeId)) throw Error('Invalid public Microsoft Store product ID.');
   return product;
 }
@@ -115,7 +116,7 @@ function stage(identity, version, appDir) {
     storeId: product?.storeId || null, displayNameConfirmed: product?.displayNameConfirmed === true,
     manifestSHA256: crypto.createHash('sha256').update(content).digest('hex'),
     submissionStatus: 'NOT_SUBMITTED', signing: 'Unsigned candidate for Partner Center only; not a sideload installer',
-    requiredManualGates: ['Confirm the exact reserved display name in Partner Center before final submission', 'Deploy and verify desktop Google auth bridge and Windows privacy page', 'Run real Windows 10/11 Google login and every advertised AI feature', 'Run Windows App Certification Kit on a signed test copy', 'Capture actual Windows screenshots', 'Complete IARC, AI disclosure, privacy declarations and runFullTrust justification', 'Confirm provider rights, content safeguards and monitored reporting inbox']
+    requiredManualGates: [...(product?.displayNameConfirmed ? [] : ['Confirm the exact reserved display name in Partner Center before final submission']), 'Deploy and verify desktop Google auth bridge and Windows privacy page', 'Run real Windows 10/11 Google login and every advertised AI feature', 'Run Windows App Certification Kit on a signed test copy', 'Capture actual Windows screenshots', 'Complete IARC, AI disclosure, privacy declarations and runFullTrust justification', 'Confirm provider rights, content safeguards and monitored reporting inbox']
   };
   fs.writeFileSync(path.join(output, 'store-build.json'), JSON.stringify(report, null, 2) + '\n');
   return { staging, packagePath: path.join(output, name), report };
@@ -131,7 +132,7 @@ function main(args) {
   const version = JSON.parse(fs.readFileSync(path.join(ROOT, 'package.json'), 'utf8')).version;
   manifest(identity, version); validateAssets();
   const product = productFor(identity);
-  if (product && !product.displayNameConfirmed) console.warn('Reserved display name is not yet confirmed. AURIX remains a provisional candidate display name, not a submission approval.');
+  if (product && !product.displayNameConfirmed) console.warn('Reserved display name is not yet confirmed. The configured display name is provisional, not a submission approval.');
   if (options.check) console.log(`Store identity and assets valid: ${identity.identityName} ${packageVersion(version)} (not built, tested or submitted).`);
   else { const result = stage(identity, version, options['app-dir']); console.log(`Staged ${result.staging}\nCandidate package: ${result.packagePath}`); }
 }

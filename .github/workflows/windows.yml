@@ -141,7 +141,7 @@ jobs:
           $info = Get-Content dist/store/msix-integrity.json -Raw | ConvertFrom-Json
           $package = Join-Path 'dist/store' $info.file
           Copy-Item store/submission/REPAIR-NOTES.md dist/store/release-notes.md
-          "`n## Verified download`nFile: $($info.file)`n`nExact bytes: $($info.bytes)`n`nSHA-256: $($info.sha256)`n`nSource commit: $env:GITHUB_SHA" | Add-Content -Encoding utf8 dist/store/release-notes.md
+          "`n## Verified download`nFile: $($info.file)`n`nPackage display name: $($info.displayName)`n`nApplication display names: $($info.applicationDisplayNames -join ", ")`n`nExact bytes: $($info.bytes)`n`nSHA-256: $($info.sha256)`n`nSource commit: $env:GITHUB_SHA" | Add-Content -Encoding utf8 dist/store/release-notes.md
           if (Test-Path dist/previous-msix-integrity.json) {
             $old = Get-Content dist/previous-msix-integrity.json -Raw | ConvertFrom-Json
             "`n## Previous artifact inspection`nFile: $($old.file)`n`nExact bytes: $($old.bytes)`n`nSHA-256: $($old.sha256)`n`nZIP CRC and SHA-256 block-map checks passed for the original artifact downloaded by the runner. This does not verify the bytes that reached Partner Center." | Add-Content -Encoding utf8 dist/store/release-notes.md

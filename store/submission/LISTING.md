@@ -1,10 +1,10 @@
 # Microsoft Store listing drafts — owner review required
 
-These are drafts, not a published listing. Use the exact reserved product name from Partner Center instead of assuming “AURIX” is available. Do not advertise a language as fully supported until its complete UI has been reviewed; the package currently declares en-US, with partial Arabic/French interface controls. These translated marketing drafts do not change that declaration.
+These are drafts, not a published listing. Use the reserved product name **AURIX AI**, as shown in the owner-supplied Partner Center submission; AURIX alone was rejected as unreserved. Do not advertise a language as fully supported until its complete UI has been reviewed; the package currently declares en-US, with partial Arabic/French interface controls. These translated marketing drafts do not change that declaration.
 
 ## English (en-US)
 
-**Product name:** AURIX (subject to reservation)
+**Product name:** AURIX AI (reserved name supplied through Partner Center)
 
 **Short description:** AI creative workspace for images, writing, code and PDF questions. Internet and Google sign-in required.
 

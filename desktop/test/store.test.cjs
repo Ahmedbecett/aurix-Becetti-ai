@@ -35,14 +35,21 @@ test('Store identity can be supplied by public environment values without a cred
   assert.deepEqual(readIdentity('store/does-not-exist.json', env), identity);
   assert.throws(() => readIdentity('store/does-not-exist.json', {}), /identityName/);
 });
-test('owner-provided publisher, PFN and package SID agree and the reserved display name remains unconfirmed', () => {
+test('owner identity remains stable and both manifest display names match the reserved AURIX AI name', () => {
   const owner = JSON.parse(fs.readFileSync(path.join(root, 'store/identity.store.json'), 'utf8'));
   const product = JSON.parse(fs.readFileSync(path.join(root, 'store/product.json'), 'utf8'));
   assert.equal(packageFamilyName(owner), 'Ahmedbecetti.AURIXAI_y0zvy3a8v70hm');
   assert.equal(packageSid(packageFamilyName(owner)), product.packageSid);
   assert.equal(packageSid(product.packageFamilyName.toUpperCase()), product.packageSid);
   assert.equal(validateProduct(owner, product).storeId, '9NLM756D1CZR');
-  assert.equal(product.displayNameConfirmed, false);
+  assert.equal(product.displayNameConfirmed, true);
+  assert.equal(owner.displayName, 'AURIX AI');
+  assert.equal(product.reservedDisplayName, owner.displayName);
+  assert.throws(() => validateProduct({ ...owner, displayName: 'AURIX' }, product), /reserved Partner Center name/);
+  const ownerManifest = manifest(owner, '1.0.2');
+  assert.match(ownerManifest, /<DisplayName>AURIX AI<\/DisplayName>/);
+  assert.match(ownerManifest, /VisualElements DisplayName="AURIX AI"/);
+  assert.doesNotMatch(ownerManifest, /<DisplayName>AURIX<\/DisplayName>|DisplayName="AURIX"/);
   assert.equal(readIdentity('store/identity.store.json', {}).identityName, owner.identityName);
   assert.throws(() => validateProduct({ ...owner, publisher: 'CN=Wrong publisher' }, product), /do not match/);
   assert.throws(() => validateProduct(owner, { ...product, packageSid: 'S-1-15-2-wrong' }), /do not match/);
