@@ -1,0 +1,10 @@
+{
+  "type": "edited desktop-layout illustrations; not Windows/MSIX runtime screenshots",
+  "dimensions": [
+    1920,
+    1080
+  ],
+  "login": "matching dark desktop styling using actual login wording from src/app.js; not a successful sign-in capture",
+  "otherImages": "the three separate existing desktop reformats of the owner-supplied mobile captures",
+  "privateAccountDataAdded": false
+}
