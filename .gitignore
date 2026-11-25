@@ -17,3 +17,6 @@ store/identity.json
 *.appxbundle
 *.pfx
 *.p12
+
+__pycache__/
+*.py[cod]
