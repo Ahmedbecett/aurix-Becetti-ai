@@ -1,0 +1,24 @@
+{
+  "type": "three separate desktop-layout reconstructions; NOT native Windows/MSIX captures",
+  "dimensions": [
+    1920,
+    1080
+  ],
+  "images": [
+    {
+      "source": "Screenshot_20261125-152746.png",
+      "output": "01-Settings-Desktop-1920x1080.png",
+      "scene": "Settings selected; content reconstructed using real app labels, no private account identity"
+    },
+    {
+      "source": "Screenshot_20261125-152657.png",
+      "output": "02-Navigation-Desktop-1920x1080.png",
+      "scene": "Home with expanded navigation and the supplied dashboard content"
+    },
+    {
+      "source": "Screenshot_20261125-152647.png",
+      "output": "03-Home-Desktop-1920x1080.png",
+      "scene": "Home dashboard with compact desktop navigation"
+    }
+  ]
+}
