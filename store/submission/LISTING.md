@@ -1,6 +1,8 @@
-# Microsoft Store listing drafts — owner review required
+# Microsoft Store listing copy
 
-These are drafts, not a published listing. Use the reserved product name **AURIX AI**, as shown in the owner-supplied Partner Center submission; AURIX alone was rejected as unreserved. Do not advertise a language as fully supported until its complete UI has been reviewed; the package currently declares en-US, with partial Arabic/French interface controls. These translated marketing drafts do not change that declaration.
+> **Current public English copy lives in [`LISTING-EN.md`](../../LISTING-EN.md)** — description, feature bullets, links, version and the media kit. The Arabic and French sections below are kept as reference drafts.
+
+Use the product name **AURIX AI**, as shown in the owner-supplied Partner Center submission; AURIX alone was rejected as unreserved. Do not advertise a language as fully supported until its complete UI has been reviewed; the package currently declares en-US, with partial Arabic/French interface controls. These translated marketing drafts do not change that declaration.
 
 ## English (en-US)
 

@@ -6,5 +6,8 @@
   "reservedDisplayName": "AURIX AI",
   "displayNameConfirmed": true,
   "displayNameNote": "Owner supplied Partner Center submission for product AURIX AI, with explicit rejection of the unreserved manifest display name AURIX. Use AURIX AI for package and visual-element display names.",
-  "publicationStatus": "NOT_CONFIRMED_LIVE"
+  "publicationStatus": "LIVE_OWNER_REPORTED",
+  "storeUrl": "https://apps.microsoft.com/detail/9nlm756d1czr?ocid=webpdpshare",
+  "liveVersion": "1.0.2.0",
+  "publicationNote": "The owner reports that AURIX AI 1.0.2.0 is now live on the Microsoft Store at storeUrl. This repository cannot verify the listing itself; see LISTING-EN.md for the public English copy and screenshots remain an owner-side capture task."
 }

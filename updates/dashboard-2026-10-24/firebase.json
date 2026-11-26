@@ -1,7 +1,0 @@
-{
-  "hosting": {
-    "public": "release/preview",
-    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
-    "headers": []
-  }
-}

@@ -1,6 +1,6 @@
 # AURIX Worker
 
-**الإصدار المحلي الأحدث:** Gemini chat/PDF deployed سابقًا؛ تحديث الصور عبر Cloudflare Workers AI جاهز محليًا ولم يُنشر بعد. راجع `AURIX-free-images-update.zip` ودليل `image-update/README-AR.md`.
+**مصدر Worker الحالي:** يغطي `/api/chat` (Google Gemini free tier) و`/api/text` (Pollinations) و`/api/image` (Cloudflare Workers AI · FLUX.1 Schnell) كما يستخدمها تطبيق Windows 1.0.2.0 المنشور على Microsoft Store. حالة النشر الحقيقية لكل مسار تُتحقق بالاختبار المباشر ولا يفترضها هذا الملف. حزم التحديث المؤقتة القديمة (`image-update/`, `one-upload/` وغيرها) أُزيلت من المستودع لأنها كانت نسخًا مكرّرة غير مستخدمة.
 
 المسارات `/api/chat` (Google Gemini Free tier) و`/api/text` (Pollinations) و`/api/image` (Cloudflare Workers AI FLUX.1 Schnell في الإصدار الجديد) كلها تتطلب Firebase Google ID token صحيحًا، وتستخدم محدد معدل لكل مستخدم. الملف الأصلي PDF محلي ولا يُرفع. الصور تُحفظ محليًا في متصفح المستخدم. الفيديو متوقف.
 
