@@ -246,23 +246,32 @@ test('localized labels follow the document language', () => {
   assert.equal(env.document.querySelector('.ad-tag').textContent, 'Advertisement');
 });
 
-test('credentials are read only from the environment, validated, and never exposed to the page', () => {
-  // Throw-away key generated for this test only; never a real MG Ads credential.
-  const secret = 'MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgud/tAUtU6eq4u69lakVeqq/yH9Dz2ZdOQFTdpfFVOiyhRANCAATp0N0vPiiB4l+GXHxpbpIRQaZiamuVaDO3ZlJqk1BmE8Aljo0kSCAYSbuN89/Dv7QZ0vBzJCRsX6nVWMeuOVrj';
-  assert.equal(ads.readCredentials({}), null);
-  assert.equal(ads.credentialsInstalled({ AURIX_MGADS_APP_ID: '692e5d6a207c9dd383ba56f7' }), false, 'partial pair');
-  assert.equal(ads.credentialsInstalled({ AURIX_MGADS_APP_ID: 'not-an-id', AURIX_MGADS_SECRET_KEY: secret }), false, 'bad app id');
-  assert.equal(ads.credentialsInstalled({ AURIX_MGADS_APP_ID: '692e5d6a207c9dd383ba56f7', AURIX_MGADS_SECRET_KEY: 'short' }), false, 'bad key shape');
-  const env = { MGADS_APP_ID: '692e5d6a207c9dd383ba56f7', MGADS_SECRET_KEY: secret };
-  const found = ads.readCredentials(env);
-  assert.equal(found.appId, '692e5d6a207c9dd383ba56f7');
-  assert.equal(found.secretKey, secret);
-  assert.equal(Object.isFrozen(found), true);
-  // Nothing in the shipped renderer or preload can carry the secret.
-  assert.doesNotMatch(SRC, /secretKey|appId|MIGT[0-9A-Za-z+/=]{60,}/);
-  assert.doesNotMatch(PRELOAD, /secretKey|appId|mgExchange/i);
+test('the MG Ads client credential ships in the package and never reaches the page', () => {
+  const shipped = ads.readCredentials({});
+  assert.ok(shipped, 'the packaged build must carry the owner-supplied client credential');
+  assert.equal(shipped.source, 'package');
+  assert.match(shipped.appId, /^[a-f0-9]{16,64}$/i);
+  // The owner's key: MG issues one client key per app; it is embedded, not a server secret.
+  assert.match(shipped.secretKey, /^MIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQggSW3Y6T33c7eJPZD/);
+  assert.equal(shipped.secretKey.length, 200);
+  assert.equal(ads.credentialsInstalled({}), true);
+  assert.equal(Object.isFrozen(shipped), true);
+  // The page-side module and the preload bridge can never carry it.
+  assert.doesNotMatch(SRC, /MIGT[0-9A-Za-z+/=]{60,}|secretKey/);
+  assert.doesNotMatch(PRELOAD, /MIGT[0-9A-Za-z+/=]{60,}|secretKey|appId/i);
   assert.match(PRELOAD, /credentialsInstalled: \(\) => ipcRenderer\.sendSync\('aurix:ads-credentials'\)/);
   assert.doesNotMatch(INDEX, /MIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQg/);
+});
+
+test('a rotated key can override the packaged credential, but a malformed one cannot', () => {
+  const throwaway = 'MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgud/tAUtU6eq4u69lakVeqq/yH9Dz2ZdOQFTdpfFVOiyhRANCAATp0N0vPiiB4l+GXHxpbpIRQaZiamuVaDO3ZlJqk1BmE8Aljo0kSCAYSbuN89/Dv7QZ0vBzJCRsX6nVWMeuOVrj';
+  const override = ads.readCredentials({ AURIX_MGADS_APP_ID: 'abc123def456abc123def456', AURIX_MGADS_SECRET_KEY: throwaway });
+  assert.equal(override.source, 'environment');
+  assert.equal(override.secretKey, throwaway);
+  // A half-filled or malformed override is ignored, so the package value stays.
+  assert.equal(ads.readCredentials({ AURIX_MGADS_APP_ID: 'abc123def456abc123def456' }).source, 'package');
+  assert.equal(ads.readCredentials({ AURIX_MGADS_APP_ID: 'not-an-id', AURIX_MGADS_SECRET_KEY: throwaway }).source, 'package');
+  assert.equal(ads.readCredentials({ AURIX_MGADS_APP_ID: 'abc123def456abc123def456', AURIX_MGADS_SECRET_KEY: 'short' }).source, 'package');
 });
 
 test('ads are suppressed on the sign-in screen and below the banner width', () => {
