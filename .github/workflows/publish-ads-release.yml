@@ -1,0 +1,62 @@
+name: Publish ads package to a release
+
+# Publishes the artifacts of an ALREADY successful Windows build run to a GitHub
+# Release. It never rebuilds, never changes the app version, never touches
+# Partner Center and never uploads anything to the Microsoft Store.
+on:
+  workflow_dispatch:
+    inputs:
+      run_id:
+        description: 'Actions run ID that produced AURIX-Windows-x64 and the MSIX candidate'
+        required: true
+        type: string
+      tag:
+        description: 'Existing release tag to attach the files to'
+        required: true
+        default: windows-ads-1.0.2.0
+        type: string
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      RUN_ID: ${{ inputs.run_id }}
+      TAG: ${{ inputs.tag }}
+    steps:
+      - name: Verify the release exists and is a pre-release
+        run: |
+          gh release view "$TAG" --json tagName,isPrerelease,url --jq '"\(.tagName) prerelease=\(.isPrerelease) \(.url)"'
+          test "$(gh release view "$TAG" --json isPrerelease --jq .isPrerelease)" = "true"
+      - name: Download the built Windows files
+        run: |
+          mkdir -p out/win out/store
+          gh run download "$RUN_ID" --name AURIX-Windows-x64 --dir out/win
+          gh run download "$RUN_ID" --name AURIX-Microsoft-Store-x64-candidate --dir out/store
+          ls -l out/win out/store
+      - name: Recompute checksums for what will be published
+        run: |
+          cd out/store && sha256sum *.msix > SHA256-SUMS-verified.txt && cat SHA256-SUMS-verified.txt
+          test -s out/store/SHA256SUMS.txt
+      - name: Zip the Electron setup/portable edition
+        run: |
+          cd out/win && zip -q -r ../AURIX-Windows-x64-ads.zip . && cd .. && ls -l AURIX-Windows-x64-ads.zip
+      - name: Attach everything to the release
+        run: |
+          gh release upload "$TAG" \
+            out/store/*.msix \
+            out/store/SHA256SUMS.txt \
+            out/store/SHA256-SUMS-verified.txt \
+            out/store/AppxManifest.xml \
+            out/store/store-build.json \
+            out/store/msix-integrity.json \
+            out/AURIX-Windows-x64-ads.zip \
+            --clobber
+      - name: Show the public download list
+        run: gh release view "$TAG" --json url,assets --jq '.url, (.assets[] | "\(.name) | \(.size) bytes | \(.url)")'
