@@ -34,19 +34,27 @@ jobs:
         run: |
           gh release view "$TAG" --json tagName,isPrerelease,url --jq '"\(.tagName) prerelease=\(.isPrerelease) \(.url)"'
           test "$(gh release view "$TAG" --json isPrerelease --jq .isPrerelease)" = "true"
-      - name: Download the built Windows files
+      - name: Download the built Windows files with retries
         run: |
           mkdir -p out/win out/store
-          gh run download "$RUN_ID" --name AURIX-Windows-x64 --dir out/win
-          gh run download "$RUN_ID" --name AURIX-Microsoft-Store-x64-candidate --dir out/store
+          fetch() {
+            for attempt in 1 2 3 4 5; do
+              if gh run download "$RUN_ID" --name "$1" --dir "$2"; then return 0; fi
+              echo "attempt $attempt failed for $1; retrying in 20s"
+              sleep 20
+            done
+            return 1
+          }
+          fetch AURIX-Windows-x64 out/win
+          fetch AURIX-Microsoft-Store-x64-candidate out/store
           ls -l out/win out/store
-      - name: Recompute checksums for what will be published
+      - name: Recompute checksums and zip the Electron edition
         run: |
-          cd out/store && sha256sum *.msix > SHA256-SUMS-verified.txt && cat SHA256-SUMS-verified.txt
+          test -n "$(ls out/store/*.msix)"
+          ( cd out/store && sha256sum ./*.msix > SHA256-SUMS-verified.txt && cat SHA256-SUMS-verified.txt )
           test -s out/store/SHA256SUMS.txt
-      - name: Zip the Electron setup/portable edition
-        run: |
-          cd out/win && zip -q -r ../AURIX-Windows-x64-ads.zip . && cd .. && ls -l AURIX-Windows-x64-ads.zip
+          ( cd out/win && zip -q -r ../AURIX-Windows-x64-ads.zip . )
+          ls -l out/AURIX-Windows-x64-ads.zip
       - name: Attach everything to the release
         run: |
           gh release upload "$TAG" \
