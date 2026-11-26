@@ -149,3 +149,43 @@ jobs:
           $assets = @($package, 'dist/store/SHA256SUMS.txt', 'dist/store/msix-integrity.json')
           gh release create "aurix-store-candidate-$version" @assets --target $env:GITHUB_SHA --prerelease --title "AURIX $version - Store validation candidate" --notes-file dist/store/release-notes.md
           if ($LASTEXITCODE -ne 0) { throw 'Could not publish the downloadable candidate assets.' }
+      # Publish the ads build so the owner has a real download link. This only
+      # attaches files to a pre-release; it never rebuilds with a new version and
+      # never uploads anything to the Microsoft Store.
+      - name: Publish the ads package to a release
+        if: github.event_name == 'push' && github.ref == 'refs/heads/arena/ec5ef43a-aurix-becetti-ai'
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          $tag = 'windows-ads-1.0.2.0'
+          $version = (Get-Content package.json -Raw | ConvertFrom-Json).version
+          $info = Get-Content dist/store/msix-integrity.json -Raw | ConvertFrom-Json
+          $package = Join-Path 'dist/store' $info.file
+          if (Test-Path dist/previous-msix-integrity.json) { Copy-Item dist/previous-msix-integrity.json dist/store/previous-msix-integrity.json }
+          $notes = @(
+            "AURIX AI $version for Windows x64 - package with the MG Ads banner integration.",
+            "",
+            "Not submitted to the Microsoft Store. Unsigned test candidate: install only after enabling Developer Mode or trusting the certificate.",
+            "",
+            "Package: $($info.file)",
+            "Display name: $($info.displayName)",
+            "Exact bytes: $($info.bytes)",
+            "SHA-256: $($info.sha256)",
+            "Source commit: $env:GITHUB_SHA",
+            "",
+            "Ad placements: f97e5aa93a22438f8ef1d3e549d7a245 and fc1e2f0faa8343d889687c5fc9ba19a3",
+            "",
+            "AURIX-Windows-x64-ads.zip contains the Electron setup and portable editions of the same commit."
+          ) -join "`n"
+          $notes | Set-Content -Encoding utf8 dist/store/release-notes-ads.md
+          $existing = gh release view $tag --json tagName --jq .tagName 2>$null
+          if ($LASTEXITCODE -ne 0) {
+            gh release create $tag --target $env:GITHUB_SHA --prerelease --title "AURIX AI $version - Windows ads build" --notes-file dist/store/release-notes-ads.md
+            if ($LASTEXITCODE -ne 0) { throw 'Could not create the ads release.' }
+          }
+          Compress-Archive -Path 'dist/windows/*' -DestinationPath 'dist/windows/AURIX-Windows-x64-ads.zip' -Force
+          gh release upload $tag $package 'dist/store/SHA256SUMS.txt' 'dist/store/msix-integrity.json' 'dist/store/AppxManifest.xml' 'dist/store/store-build.json' 'dist/windows/AURIX-Windows-x64-ads.zip' --clobber
+          if ($LASTEXITCODE -ne 0) { throw 'Could not upload the ads package.' }
+          gh release view $tag --json url,assets --jq '.url, (.assets[] | "\(.name) | \(.size)")'
