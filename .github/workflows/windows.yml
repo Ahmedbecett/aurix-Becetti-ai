@@ -1,0 +1,151 @@
+name: Windows desktop
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'src/**'
+      - 'desktop/**'
+      - 'scripts/**'
+      - 'store/**'
+      - 'backend/**'
+      - 'build.py'
+      - 'test.mjs'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'firebase.web.json'
+      - 'release/*-page.html'
+      - '.github/workflows/windows.yml'
+  pull_request:
+    paths:
+      - 'src/**'
+      - 'desktop/**'
+      - 'scripts/**'
+      - 'store/**'
+      - 'backend/**'
+      - 'build.py'
+      - 'test.mjs'
+      - 'package*.json'
+      - 'firebase.web.json'
+      - 'release/*-page.html'
+      - '.github/workflows/windows.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: npm ci
+      - name: Test and build installer plus portable edition
+        run: npm run dist:win -- --publish never
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+          PYTHONUTF8: '1'
+      - name: Record SHA-256 checksums
+        shell: pwsh
+        run: |
+          Get-ChildItem dist/windows/*.exe | ForEach-Object {
+            $hash = Get-FileHash $_.FullName -Algorithm SHA256
+            "$($hash.Hash.ToLower())  $($_.Name)"
+          } | Set-Content -Encoding utf8 dist/windows/SHA256SUMS.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: AURIX-Windows-x64
+          path: |
+            dist/windows/*.exe
+            dist/windows/SHA256SUMS.txt
+          if-no-files-found: error
+          retention-days: 30
+
+  store-candidate:
+    name: MSIX candidate (public owner identity)
+    runs-on: windows-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write
+      actions: read
+    env:
+      CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+      PYTHONUTF8: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify owner identity, PFN, SID and assets
+        run: npm run store:validate
+      - name: Inspect the previous candidate without modifying it
+        continue-on-error: true
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          gh run download 45508613913 --name AURIX-Microsoft-Store-x64-candidate --dir dist/previous-store
+          if ($LASTEXITCODE -ne 0) { throw 'Previous candidate could not be downloaded for diagnosis.' }
+          $old = Get-ChildItem dist/previous-store/*.msix | Select-Object -First 1
+          if (!$old) { throw 'Previous artifact contains no MSIX.' }
+          python -X utf8 scripts/verify-msix.py $old.FullName --report dist/previous-msix-integrity.json
+          if ($LASTEXITCODE -ne 0) { throw 'Previous candidate failed independent archive checks; inspect this step log.' }
+      - run: npm ci
+      - name: Build unsigned Store candidate with Windows SDK validation
+        shell: pwsh
+        run: ./scripts/build-store.ps1
+      - uses: actions/upload-artifact@v4
+        with:
+          name: AURIX-Microsoft-Store-x64-candidate
+          path: |
+            dist/store/*.msix
+            dist/store/SHA256SUMS.txt
+            dist/store/AppxManifest.xml
+            dist/store/store-build.json
+            dist/store/makeappx.log
+            dist/store/makeappx-unpack.log
+            dist/store/msix-integrity.json
+            dist/previous-msix-integrity.json
+            dist/store/submission/**
+          if-no-files-found: error
+          retention-days: 30
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: AURIX-Store-build-diagnostics
+          path: |
+            dist/store/makeappx.log
+            dist/store/store-build.json
+          if-no-files-found: ignore
+          retention-days: 7
+      - name: Publish directly downloadable validation candidate (not Store publication)
+        if: github.event_name == 'push' && github.ref == 'refs/heads/arena/1f56f634-aurix-becetti-ai'
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          $version = (Get-Content package.json -Raw | ConvertFrom-Json).version
+          $info = Get-Content dist/store/msix-integrity.json -Raw | ConvertFrom-Json
+          $package = Join-Path 'dist/store' $info.file
+          Copy-Item store/submission/REPAIR-NOTES.md dist/store/release-notes.md
+          "`n## Verified download`nFile: $($info.file)`n`nPackage display name: $($info.displayName)`n`nApplication display names: $($info.applicationDisplayNames -join ", ")`n`nExact bytes: $($info.bytes)`n`nSHA-256: $($info.sha256)`n`nSource commit: $env:GITHUB_SHA" | Add-Content -Encoding utf8 dist/store/release-notes.md
+          if (Test-Path dist/previous-msix-integrity.json) {
+            $old = Get-Content dist/previous-msix-integrity.json -Raw | ConvertFrom-Json
+            "`n## Previous artifact inspection`nFile: $($old.file)`n`nExact bytes: $($old.bytes)`n`nSHA-256: $($old.sha256)`n`nZIP CRC and SHA-256 block-map checks passed for the original artifact downloaded by the runner. This does not verify the bytes that reached Partner Center." | Add-Content -Encoding utf8 dist/store/release-notes.md
+          }
+          $assets = @($package, 'dist/store/SHA256SUMS.txt', 'dist/store/msix-integrity.json')
+          gh release create "aurix-store-candidate-$version" @assets --target $env:GITHUB_SHA --prerelease --title "AURIX $version - Store validation candidate" --notes-file dist/store/release-notes.md
+          if ($LASTEXITCODE -ne 0) { throw 'Could not publish the downloadable candidate assets.' }

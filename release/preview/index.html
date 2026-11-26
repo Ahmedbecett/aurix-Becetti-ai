@@ -448,6 +448,11 @@ body:not(.auth-mode){background:radial-gradient(900px 600px at 80% -10%,rgba(31,
 @media(max-width:560px){.aurix-top{min-height:57px;padding:8px 12px}.top-profile{padding:0;border:0}.top-avatar{width:28px;height:28px}.top-profile-name{display:none}.aurix-main{padding:16px 13px 50px}.dash-welcome{display:block;margin-bottom:18px}.dash-welcome h1{font-size:24px}.dash-welcome time{display:inline-block;margin-top:10px}.dash-stat{min-height:127px;padding:13px}.dash-stat strong{font-size:23px}.dash-feature{min-height:335px;padding:19px}.dash-feature h2{font-size:22px;max-width:240px}.dash-feature p{max-width:250px}.dash-brand-motion{top:-10px;inset-inline-end:-18px;width:126px;height:132px;opacity:.58}.live-skull{width:90px;height:90px}.dash-orbit{width:110px;height:48px}.dash-actions{grid-template-columns:repeat(2,minmax(0,1fr));margin-top:31px}.dash-action{min-height:51px;font-size:10px}.dash-rail{grid-template-columns:1fr}.dash-panel{padding:16px}.nav a{min-height:44px}}
 @media(max-width:360px){.dash-stats{gap:8px}.dash-stat-label{font-size:11px}.dash-actions{gap:7px}.dash-feature h2{font-size:19px}}
 @media(prefers-reduced-motion:reduce){.brand .logo,.live-skull,.dash-orbit{animation:none!important}}
+/* Always reachable, including the signed-out screen. Native dialog traps focus. */
+.aurix-support{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:14px;padding:16px 20px 24px;font-size:13px}
+.content-report{margin:auto;width:min(600px,calc(100vw - 32px));max-height:90vh;overflow:auto;padding:24px;border:1px solid var(--line2);border-radius:16px;background:var(--surface);color:var(--text)}
+.content-report::backdrop{background:rgba(0,0,0,.75)}
+.content-report h2{font-size:22px}.content-report p{font-size:14px;line-height:1.7;color:var(--muted);margin:14px 0}.content-report label{display:block;margin:14px 0 8px}.content-report textarea{width:100%;min-height:130px;margin-bottom:12px}.content-report .btn{margin:6px 4px 0 0}
 </style></head><body><a class="skip-link" href="#aurix-main">Skip to content</a>
 <div class="aurix-shell" id="aurix-app">
   <div class="backdrop" id="backdrop"></div>
@@ -621,7 +626,7 @@ function settingsBase(){return `${head(t('settings'),'Your AURIX account is acti
 function info(title,content){return `<div class="aurix-page"><h1>${title}</h1><div class="card content">${content}</div></div>`}
 function about(){return info('About AURIX',`<p><strong>AURIX — Imagine. Create. Build.</strong> is an independent creative workspace for images, coding help and writing. It is currently an early-stage site hosted on Firebase Hosting for staging, with a separate Blogger theme available.</p><h2>What works today</h2><p>Signed-in requests pass through the AURIX Cloudflare Worker, which calls Cloudflare Workers AI for images and Pollinations.ai for text. Video generation is not active. ${window.AurixCloud?'Google sign-in is required to use the interactive studio; explicit cloud saves are available.':'User accounts and cloud sync are not active.'} There are no ads at launch.</p><h2>How we build trust</h2><p>We do not simulate model responses, fake quota balances or show pretend generation progress. Free provider availability can change. Always check the results before use, especially code and factual writing.</p><h2>Brand</h2><p>The AURIX skull artwork is based on the project owner’s supplied reference image. AURIX is not affiliated with Pollinations.ai.</p>`)}
 function contact(){return info('Contact',`<p>For questions, feedback or privacy requests, email <a href="mailto:ahmedbecetti41@gmail.com">ahmedbecetti41@gmail.com</a>. Your email application will open; this website does not submit your message itself.</p><p><strong>Site address:</strong> <a href="https://skullaistudio.blogspot.com/">skullaistudio.blogspot.com</a></p><p class="note info">Please allow time for a reply. Do not include passwords or API keys in email.</p>`)}
-function privacy(){return info('Privacy Policy',`<p><strong>Last updated: October 24, 2026.</strong> This policy describes the current AURIX application, including Google sign-in, on its staging domain. It will be updated when features change.</p><h2>Information you provide</h2><p>When you generate images, your prompt is processed through the authenticated Cloudflare Worker by Cloudflare Workers AI using FLUX.1 Schnell (Black Forest Labs). Text/code requests are sent by the Worker to Pollinations.ai. Do not submit private information; each provider's terms and privacy practices apply. For chat, typed messages and text extracted locally from an attached PDF are sent to the AURIX Worker and then to Google Gemini when the free-tier model is configured; the original PDF is not uploaded. Do not submit passwords, secrets, confidential documents or personal data.</p><h2>Local browser data</h2><p>History, recent chat messages, saved text, prompts, favorites, folders and your language preference are saved in this browser’s storage. New image bytes are stored in this browser’s IndexedDB under your account, not in exported JSON or Firestore. Older entries may contain external provider links. You can export or erase this data under Settings. Locally saved projects are stored by account on this browser. Clearing browser data deletes them.</p><h2>Third-party services</h2><p>Firebase Hosting (Google) hosts this staging site and may set cookies and collect technical information under its own privacy terms. Cloudflare processes authenticated API requests; Cloudflare Workers AI processes image prompts, Pollinations.ai receives text/code generation prompts, and Gemini receives chat messages plus extracted PDF text from the Worker and may log request data. Existing older image links may contact Pollinations.ai directly. This site does not currently enable advertising or a separate analytics service.</p><h2>Security and retention</h2><p>${window.AurixCloud?'Google sign-in is required for the studio; Firebase Authentication processes your account identity and Google email; projects you explicitly save to cloud are stored in Cloud Firestore under your user ID. You can delete your account and its saved cloud projects in Settings.':'We do not operate an account database in this version.'} Browser storage is not encrypted or suitable for confidential information. Firebase Authentication checks Google sign-in; the staging website’s static files remain publicly accessible. The owner's control over third-party provider retention is limited. See the provider’s policy for its own deletion requests.</p><h2>Questions</h2><p>See <a href="#contact">Contact</a>. Email <a href="mailto:ahmedbecetti41@gmail.com">ahmedbecetti41@gmail.com</a> for site questions and privacy requests.</p>`)}
+function privacy(){return info('Privacy Policy',`<p><strong>Last updated: October 24, 2026.</strong> This policy describes the current AURIX application, including Google sign-in, on its staging domain. It will be updated when features change.</p><h2>Information you provide</h2><p>When you generate images, your prompt is processed through the authenticated Cloudflare Worker by Cloudflare Workers AI using FLUX.1 Schnell (Black Forest Labs). Text/code requests are sent by the Worker to Pollinations.ai. Do not submit private information; each provider's terms and privacy practices apply. For chat, typed messages and text extracted locally from an attached PDF are sent to the AURIX Worker and then to Google Gemini when the free-tier model is configured; the original PDF is not uploaded. Do not submit passwords, secrets, confidential documents or personal data.</p><h2>Local browser data</h2><p>History, recent chat messages, saved text, prompts, favorites, folders and your language preference are saved in this browser’s storage. New image bytes are stored in this browser’s IndexedDB under your account, not in exported JSON or Firestore. Older entries may contain external provider links. You can export or erase this data under Settings. Locally saved projects are stored by account on this browser. Clearing browser data deletes them.</p><h2>Third-party services</h2><p>Firebase Hosting (Google) hosts this staging site and may set cookies and collect technical information under its own privacy terms. Cloudflare processes authenticated API requests; Cloudflare Workers AI processes image prompts, Pollinations.ai receives text/code generation prompts, and Gemini receives chat messages plus extracted PDF text from the Worker and may log request data. Existing older image links may contact Pollinations.ai directly. The Windows desktop build shows two banner placements supplied by MG Ads (Miracle Games) on signed-in app screens only; those banners load from ad.mguwp.net and the provider may collect standard ad data under its own policy. This website and the sign-in screen show no advertising, and no separate analytics service is enabled.</p><h2>Security and retention</h2><p>${window.AurixCloud?'Google sign-in is required for the studio; Firebase Authentication processes your account identity and Google email; projects you explicitly save to cloud are stored in Cloud Firestore under your user ID. You can delete your account and its saved cloud projects in Settings.':'We do not operate an account database in this version.'} Browser storage is not encrypted or suitable for confidential information. Firebase Authentication checks Google sign-in; the staging website’s static files remain publicly accessible. The owner's control over third-party provider retention is limited. See the provider’s policy for its own deletion requests.</p><h2>Questions</h2><p>See <a href="#contact">Contact</a>. Email <a href="mailto:ahmedbecetti41@gmail.com">ahmedbecetti41@gmail.com</a> for site questions and privacy requests.</p>`)}
 function terms(){return info('Terms of Service',`<p><strong>Last updated: October 24, 2026.</strong> By using AURIX you agree to use it lawfully and responsibly. This early-stage service is provided as available, without a guaranteed uptime or free quota.</p><h2>AI-generated material</h2><p>Outputs may be inaccurate, unsafe, infringing or unsuitable for your purpose. You are responsible for reviewing them. Generated code must be tested and audited before production. AURIX does not guarantee output originality, ownership or commercial-use rights.</p><h2>Provider availability</h2><p>Active features depend on Cloudflare Workers AI for images, Pollinations.ai for text, and applicable provider and model terms. Access, limits and supported features may change or stop at any time. Video generation is not offered in this version. ${window.AurixCloud?'Google sign-in and optional cloud saving are governed by Google/Firebase terms; account deletion is in Settings.':'Account features are not offered.'}</p><h2>Acceptable use</h2><p>Do not submit harmful, illegal or unauthorized content, third-party secrets or personal information without permission. Do not attempt automated abuse or bypass provider limits.</p><h2>Local data</h2><p>Local project data is stored by account in your browser. You are responsible for exporting it if needed. AURIX cannot restore cleared local storage.</p><h2>External terms</h2><p>Your use of Cloudflare Workers AI and Black Forest Labs FLUX models for images and Pollinations.ai for text is subject to applicable terms and policies. The staging site is hosted by Firebase Hosting; a Blogger theme is available separately. Google hosting terms apply. See <a href="#privacy">Privacy Policy</a>.</p>`)}
 function toggleChips(selector,attr){$$(selector+' [data-'+attr+']').forEach(b=>b.addEventListener('click',()=>{$$(selector+' [data-'+attr+']').forEach(c=>{c.classList.remove('on');c.setAttribute('aria-pressed','false')});b.classList.add('on');b.setAttribute('aria-pressed','true')}))}
 function downloadBlob(blob,name){const a=document.createElement('a'),url=URL.createObjectURL(blob);a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),60000)}
@@ -798,6 +803,336 @@ document.addEventListener('change',e=>{let s=e.target.closest('[data-move]');if(
 $$('[data-lang]').forEach(b=>b.onclick=()=>{lang=b.dataset.lang;save('lang',lang);render()});$('#top-signin').onclick=async()=>{if(window.AurixCloud?.user){try{await signOutToLogin()}catch(e){toast(e.message||'Sign-out failed.','err')}}else location.hash='#login'};
 $('#burger').onclick=()=>{let open=$('#side').classList.toggle('open');$('#backdrop').classList.toggle('show',open);$('#burger').setAttribute('aria-expanded',String(open))};$('#backdrop').onclick=()=>{$('#side').classList.remove('open');$('#backdrop').classList.remove('show');$('#burger').setAttribute('aria-expanded','false')};window.addEventListener('hashchange',()=>{render();window.scrollTo(0,0)});window.addEventListener('aurix-cloud',()=>{const user=window.AurixCloud?.user;syncAccount();if(user&&route==='login'){location.hash='#home';render();return}if(!user&&route!=='login'&&!['privacy','terms'].includes(route)){location.hash='#login';render();return}render()});window.addEventListener('aurix-cloud-error',e=>toast(e.detail||'Account service is unavailable.','err'));render();setTimeout(()=>{if(route==='login'&&!window.AurixCloud){const b=$('#login-google');if(b){const label=b.querySelector('span:last-child');if(label)label.textContent=(authCopy[lang]||authCopy.en).unavailable}}},8000);
 })();
+</script><script>/* AURIX: user-controlled content reports. Nothing is sent automatically. */
+(function () {
+  'use strict';
+  const copy = {
+    en: { open: 'Report AI content', title: 'Report inappropriate AI content', note: 'Nothing is sent automatically. Describe the concern without passwords, account tokens or confidential PDF text. You choose what to include. We prepare an email for you to review and send.', label: 'What happened?', prepare: 'Prepare email', send: 'Open email app to review and send', copy: 'Copy report', close: 'Close', ready: 'Email draft prepared, not sent. If no email app is configured, copy the report and email it to ahmedbecetti41@gmail.com.', copied: 'Report copied. Send it to ahmedbecetti41@gmail.com.', failed: 'Clipboard unavailable. Select and copy your report manually.', privacy: 'Windows privacy policy' },
+    ar: { open: 'الإبلاغ عن محتوى الذكاء الاصطناعي', title: 'الإبلاغ عن محتوى غير مناسب', note: 'لن يُرسل شيء تلقائيًا. صف المشكلة دون كلمات مرور أو رموز دخول أو نص PDF سري. أنت تختار ما تشاركه؛ نجهّز رسالة بريد لتراجعها وترسلها بنفسك.', label: 'ما المشكلة؟', prepare: 'تجهيز رسالة البريد', send: 'فتح تطبيق البريد للمراجعة والإرسال', copy: 'نسخ البلاغ', close: 'إغلاق', ready: 'جُهّزت الرسالة ولم تُرسل. إن لم يكن لديك تطبيق بريد، انسخ البلاغ وأرسله إلى ahmedbecetti41@gmail.com.', copied: 'نُسخ البلاغ. أرسله إلى ahmedbecetti41@gmail.com.', failed: 'تعذّر النسخ. حدّد نص البلاغ وانسخه يدويًا.', privacy: 'خصوصية نسخة ويندوز' },
+    fr: { open: 'Signaler un contenu IA', title: 'Signaler un contenu IA inapproprié', note: 'Aucun envoi automatique. Décrivez le problème sans mot de passe, jeton de connexion ni texte PDF confidentiel. Vous choisissez les informations à partager et envoyez vous-même le courriel préparé.', label: 'Quel est le problème ?', prepare: 'Préparer le courriel', send: 'Ouvrir la messagerie pour vérifier et envoyer', copy: 'Copier le signalement', close: 'Fermer', ready: 'Brouillon préparé, non envoyé. Sans messagerie configurée, copiez le signalement et envoyez-le à ahmedbecetti41@gmail.com.', copied: 'Signalement copié. Envoyez-le à ahmedbecetti41@gmail.com.', failed: 'Presse-papiers indisponible. Sélectionnez et copiez le texte manuellement.', privacy: 'Confidentialité Windows' }
+  };
+  const root = document.createElement('div');
+  root.className = 'aurix-support';
+  const open = document.createElement('button');
+  open.id = 'report-content'; open.type = 'button'; open.className = 'btn sm ghost';
+  const policy = document.createElement('a');
+  policy.href = '/pages/windows-privacy.html'; policy.id = 'windows-privacy-link'; policy.hidden = !window.AurixDesktop;
+  root.append(open, policy); document.body.append(root);
+  const dialog = document.createElement('dialog');
+  dialog.id = 'content-report'; dialog.className = 'content-report';
+  dialog.setAttribute('aria-labelledby', 'report-title');
+  dialog.innerHTML = '<h2 id="report-title"></h2><p id="report-note"></p><form id="report-form"><label for="report-details" id="report-label"></label><textarea id="report-details" class="ta" required="required" minlength="5" maxlength="1600"></textarea><button class="btn" id="report-prepare" type="submit"></button></form><p id="report-status" role="status"></p><a class="btn sm ghost" id="report-email" hidden="hidden"></a><button class="btn sm ghost" id="report-copy" type="button" hidden="hidden"></button><button class="btn sm ghost" id="report-close" type="button"></button>';
+  document.body.append(dialog);
+  const get = id => dialog.querySelector('#' + id);
+  const labels = () => copy[document.documentElement.lang] || copy.en;
+  const update = () => { open.textContent = labels().open; policy.textContent = labels().privacy; };
+  update();
+  new MutationObserver(update).observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
+  let report = '';
+  open.addEventListener('click', () => {
+    const c = labels();
+    for (const [id, key] of Object.entries({ 'report-title': 'title', 'report-note': 'note', 'report-label': 'label', 'report-prepare': 'prepare', 'report-email': 'send', 'report-copy': 'copy', 'report-close': 'close' })) get(id).textContent = c[key];
+    get('report-form').reset(); get('report-status').textContent = ''; report = '';
+    get('report-email').hidden = true; get('report-email').removeAttribute('href'); get('report-copy').hidden = true;
+    dialog.showModal(); get('report-details').focus();
+  });
+  get('report-form').addEventListener('submit', event => {
+    event.preventDefault();
+    const details = get('report-details').value.trim();
+    if (details.length < 5 || details.length > 1600) return;
+    // Deliberately exclude prompts, outputs, account IDs, PDF contents and tokens.
+    const requestedRoute = location.hash.slice(1).split('?')[0];
+    const route = ['home', 'image', 'code', 'writer', 'chat', 'projects', 'history', 'favorites', 'settings', 'login', 'video', 'billing'].includes(requestedRoute) ? requestedRoute : 'home';
+    report = `AURIX AI content report\nArea: ${route}\nDate: ${new Date().toISOString()}\n\n${details}`;
+    get('report-email').href = 'mailto:ahmedbecetti41@gmail.com?subject=' + encodeURIComponent('AURIX AI content report') + '&body=' + encodeURIComponent(report);
+    get('report-email').hidden = false; get('report-copy').hidden = false;
+    get('report-status').textContent = labels().ready;
+  });
+  get('report-copy').addEventListener('click', async () => {
+    if (!report) return;
+    try { await navigator.clipboard.writeText(report); get('report-status').textContent = labels().copied; }
+    catch { get('report-status').textContent = labels().failed; }
+  });
+  get('report-close').addEventListener('click', () => dialog.close());
+})();
+</script><script>/* AURIX — MG Ads (Miracle Games) banners, Windows desktop build only.
+   * AdUnitIds are the public placement identifiers supplied by the owner and are
+     the same values MG Ads publishes in its SDK documentation.
+   * The App ID + Secret Key that authorize the SDK are NOT here: they stay in the
+     Electron main process (desktop/ads.cjs, environment variables) so they are
+     never shipped to renderer code, never written to Git and never logged.
+   * In a normal browser this file does nothing: the mount gate requires the
+     desktop preload bridge (window.AurixDesktop.ads.enabled), so the Firebase
+     website neither loads the SDK nor renders an ad region. */
+(function () {
+  'use strict';
+  const SLOTS = Object.freeze([
+    Object.freeze({ key: 'banner-1', unitId: 'f97e5aa93a22438f8ef1d3e549d7a245' }),
+    Object.freeze({ key: 'banner-2', unitId: 'fc1e2f0faa8343d889687c5fc9ba19a3' })
+  ]);
+  const SDK_URL = 'https://ad.mguwp.net/js/h5adsdk.js';
+  const SDK_TIMEOUT_MS = 8000;
+  const MIN_APP_WIDTH = 800;
+
+  const copy = {
+    en: {
+      region: 'Sponsored messages', tag: 'Advertisement',
+      waiting: 'Reserving banner slot…',
+      connecting: 'Connecting to MG Ads…',
+      credentials: 'This build has no MG Ads credentials installed, so no banner can be requested. The slot stays reserved.',
+      requested: 'Banner requested from MG Ads.',
+      noMaterial: 'MG Ads reported no banner material for this slot right now.',
+      placementOff: 'This placement is switched off in the MG Ads dashboard.',
+      closed: 'Banner closed.',
+      failed: 'The banner could not be loaded.',
+      sdkMissing: 'The MG Ads SDK did not load in this build.',
+      clicked: 'Banner opened.',
+      narrow: 'Banner hidden because the window is too narrow.'
+    },
+    fr: {
+      region: 'Messages sponsorisés', tag: 'Publicité',
+      waiting: 'Réservation de l’emplacement…',
+      connecting: 'Connexion à MG Ads…',
+      credentials: 'Cette version n’a aucune information d’accès MG Ads, donc aucune bannière ne peut être demandée. L’emplacement reste réservé.',
+      requested: 'Bannière demandée à MG Ads.',
+      noMaterial: 'MG Ads ne propose aucun visuel de bannière pour cet emplacement pour le moment.',
+      placementOff: 'Cet emplacement est désactivé dans le tableau de bord MG Ads.',
+      closed: 'Bannière fermée.',
+      failed: 'La bannière n’a pas pu être chargée.',
+      sdkMissing: 'Le SDK MG Ads ne s’est pas chargé dans cette version.',
+      clicked: 'Bannière ouverte.',
+      narrow: 'Bannière masquée : fenêtre trop étroite.'
+    },
+    ar: {
+      region: 'رسائل دعائية', tag: 'إعلان',
+      waiting: 'جارٍ حجز مساحة البانر…',
+      connecting: 'جارٍ الاتصال بـMG Ads…',
+      credentials: 'هذه النسخة لا تحتوي بيانات اعتماد MG Ads، لذلك لا يمكن طلب بانر. تبقى المساحة محجوزة.',
+      requested: 'تم طلب البانر من MG Ads.',
+      noMaterial: 'أبلغت MG Ads بعدم توفر مادة إعلانية لهذه المساحة الآن.',
+      placementOff: 'هذه المساحة الإعلانية موقوفة من لوحة MG Ads.',
+      closed: 'أُغلق البانر.',
+      failed: 'تعذّر تحميل البانر.',
+      sdkMissing: 'لم يُحمّل MG Ads SDK في هذه النسخة.',
+      clicked: 'تم فتح البانر.',
+      narrow: 'أُخفي البانر لأن عرض النافذة ضيّق.'
+    }
+  };
+  const state = { mounted: false, region: null, sdk: 'idle', shown: new Set(), status: new Map() };
+  const lang = () => String(document.documentElement.lang || 'en').slice(0, 2);
+  const t = key => (copy[lang()] || copy.en)[key] || copy.en[key];
+  const bridge = () => {
+    const ads = window.AurixDesktop && window.AurixDesktop.ads;
+    return ads && ads.enabled === true ? ads : null;
+  };
+
+  const CSS = [
+    '.aurix-ads{margin:26px auto 0;padding:0 0 10px;max-width:1180px;display:flex;flex-wrap:wrap;gap:14px;justify-content:center}',
+    '.aurix-ads[hidden]{display:none!important}',
+    '.ad-slot{background:var(--surface,#141a2e);border:1px dashed var(--line2,#2d3757);border-radius:var(--radius,14px);padding:10px 12px 12px;min-width:0}',
+    '.ad-slot-head{display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted2,#6b7492)}',
+    '.ad-slot-head .ad-tag{border:1px solid var(--line2,#2d3757);border-radius:999px;padding:1px 8px;color:var(--muted,#9aa3bd)}',
+    '.ad-frame{width:728px;max-width:100%;min-height:90px;display:flex;align-items:center;justify-content:center;text-align:center;background:var(--bg2,#0d1226);border:1px solid var(--line,#232c48);border-radius:10px;padding:10px 14px;color:var(--muted2,#6b7492);font-size:13px;line-height:1.5}',
+    '.ad-frame[data-state="ready"]{border-style:solid}',
+    '.ad-frame[data-state="error"]{border-color:var(--warn,#fbbf24);color:var(--warn,#fbbf24)}',
+    '@media (max-width:900px){.ad-slot{flex:1 1 100%}}'
+  ].join('');
+
+  function ensureStyle() {
+    if (document.getElementById('aurix-ads-style')) return;
+    const style = document.createElement('style');
+    style.id = 'aurix-ads-style';
+    style.textContent = CSS;
+    document.head.append(style);
+  }
+
+  // Messages are stored by key, so switching EN/FR/AR re-renders them locally.
+  function setStatus(key, msgKey, kind) {
+    state.status.set(key, { msgKey, kind: kind || 'waiting' });
+    paint(key);
+  }
+  function paint(key) {
+    const frame = document.getElementById('ad-frame-' + key);
+    const slot = state.status.get(key);
+    if (!frame || !slot) return;
+    frame.dataset.state = slot.kind;
+    frame.textContent = t(slot.msgKey);
+  }
+
+  function buildRegion() {
+    const region = document.createElement('section');
+    region.id = 'aurix-ads';
+    region.className = 'aurix-ads';
+    region.hidden = true;
+    region.setAttribute('aria-label', t('region'));
+    for (const slot of SLOTS) {
+      const box = document.createElement('div');
+      box.className = 'ad-slot';
+      box.dataset.adSlot = slot.key;
+      box.dataset.adUnit = slot.unitId;
+      const head = document.createElement('div');
+      head.className = 'ad-slot-head';
+      const tag = document.createElement('span');
+      tag.className = 'ad-tag';
+      tag.textContent = t('tag');
+      const name = document.createElement('span');
+      name.textContent = slot.key === 'banner-1' ? 'Banner 1' : 'Banner 2';
+      head.append(tag, name);
+      const frame = document.createElement('div');
+      frame.className = 'ad-frame';
+      frame.id = 'ad-frame-' + slot.key;
+      frame.dataset.state = 'waiting';
+      frame.setAttribute('role', 'status');
+      frame.setAttribute('aria-live', 'polite');
+      frame.textContent = t('waiting');
+      state.status.set(slot.key, { msgKey: 'waiting', kind: 'waiting' });
+      box.append(head, frame);
+      region.append(box);
+    }
+    const wrap = document.querySelector('.aurix-wrap');
+    const footer = wrap && wrap.querySelector('.aurix-foot');
+    if (wrap && footer) wrap.insertBefore(region, footer);
+    else document.body.append(region);
+    // The provider calls these globals after it renders or the user interacts.
+    window.AdCloseEvent = function (param) {
+      let detail = {};
+      try { detail = JSON.parse(param) || {}; } catch { detail = {}; }
+      const key = String(detail.unitId || '');
+      const slot = SLOTS.find(s => s.unitId.toLowerCase() === key.toLowerCase());
+      if (!slot) return;
+      if (detail.advertStatus === 2) return setStatus(slot.key, 'placementOff', 'error');
+      if (detail.advertStatus === 3) return setStatus(slot.key, 'noMaterial', 'error');
+      setStatus(slot.key, 'closed', 'waiting');
+    };
+    window.AdClickEvent = function (param) {
+      let detail = {};
+      try { detail = JSON.parse(param) || {}; } catch { detail = {}; }
+      const slot = SLOTS.find(s => s.unitId.toLowerCase() === String(detail.unitId || '').toLowerCase());
+      if (slot) setStatus(slot.key, 'clicked', 'ready');
+    };
+    return region;
+  }
+
+  function sdkPresent() {
+    // h5adsdk.js delivers ShowAd and needs the packaged WebView2 host object.
+    return typeof window.ShowAd === 'function' &&
+      !!(window.chrome && window.chrome.webview && window.chrome.webview.hostObjects);
+  }
+
+  function loadSdk(done) {
+    if (state.sdk === 'ready') return done(true);
+    if (state.sdk === 'loading') return;
+    state.sdk = 'loading';
+    const script = document.createElement('script');
+    script.src = SDK_URL;
+    script.async = true;
+    script.onerror = () => { state.sdk = 'error'; done(false); };
+    script.onload = () => { state.sdk = sdkPresent() ? 'ready' : 'error'; done(state.sdk === 'ready'); };
+    document.head.append(script);
+    setTimeout(() => {
+      if (state.sdk === 'loading') { state.sdk = sdkPresent() ? 'ready' : 'error'; done(state.sdk === 'ready'); }
+    }, SDK_TIMEOUT_MS);
+  }
+
+  function show(slot) {
+    if (state.shown.has(slot.key)) return;
+    state.shown.add(slot.key);
+    setStatus(slot.key, 'requested', 'ready');
+    try {
+      window.ShowAd(JSON.stringify({ unitId: slot.unitId, adType: 3, media: 'image' }));
+    } catch {
+      state.shown.delete(slot.key);
+      setStatus(slot.key, 'failed', 'error');
+    }
+  }
+
+  function credentialsNote(bridgeApi) {
+    // Only a boolean crosses the IPC boundary; the secret never reaches the page.
+    if (typeof bridgeApi.credentialsInstalled !== 'function') return null;
+    return Promise.resolve(bridgeApi.credentialsInstalled())
+      .then(result => (result && result.installed === true ? null : 'credentials'))
+      .catch(() => null);
+  }
+
+  function start(region) {
+    const each = [...region.querySelectorAll('.ad-slot')];
+    each.forEach(box => setStatus(box.dataset.adSlot, 'connecting', 'waiting'));
+    loadSdk(ok => {
+      if (!ok) {
+        each.forEach(box => setStatus(box.dataset.adSlot, 'sdkMissing', 'error'));
+        return;
+      }
+      credentialsNote(bridge()).then(note => {
+        if (note) {
+          each.forEach(box => setStatus(box.dataset.adSlot, note, 'error'));
+          return;
+        }
+        SLOTS.forEach(show);
+      });
+    });
+  }
+
+  function retranslate() {
+    const region = state.region;
+    if (!region) return;
+    region.setAttribute('aria-label', t('region'));
+    region.querySelectorAll('.ad-slot').forEach(box => {
+      const tag = box.querySelector('.ad-tag');
+      if (tag) tag.textContent = t('tag');
+      paint(box.dataset.adSlot);
+    });
+  }
+
+  function sync() {
+    const region = state.region;
+    if (!region) return;
+    retranslate();
+    const signedOut = document.body.classList.contains('auth-mode');
+    const tooNarrow = window.innerWidth < MIN_APP_WIDTH;
+    const visible = !!bridge() && !signedOut && !tooNarrow;
+    // A sign-in screen and a too-narrow window keep the region out of the layout
+    // entirely, so no ad request is made and no empty box is left behind.
+    if (visible === region.hidden) region.hidden = !visible;
+    if (!visible) return;
+    if (!region.dataset.started) {
+      region.dataset.started = '1';
+      start(region);
+    }
+  }
+
+  function mount() {
+    if (state.mounted) return state.region;
+    if (!bridge()) return null; // normal browser: inert, no DOM, no network
+    state.mounted = true;
+    ensureStyle();
+    state.region = buildRegion();
+    window.addEventListener('hashchange', sync);
+    window.addEventListener('resize', sync);
+    if (window.MutationObserver) {
+      new MutationObserver(sync).observe(document.body, { attributes: true, attributeFilter: ['class'] });
+      new MutationObserver(retranslate).observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
+    }
+    sync();
+    return state.region;
+  }
+
+  // Minimal, dependency-free status surface for tests and for support reports.
+  window.AurixAds = Object.freeze({
+    slots: SLOTS,
+    mount,
+    sync,
+    state: () => ({
+      mounted: state.mounted,
+      sdk: state.sdk,
+      visible: !!(state.region && !state.region.hidden),
+      shown: [...state.shown],
+      status: Object.fromEntries([...state.status].map(([k, v]) => [k, v.kind + ':' + v.msgKey]))
+    })
+  });
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', mount);
+  else mount();
+})();
 </script><script>window.AURIX_FIREBASE_CONFIG={"apiKey":"AIzaSyC1zSm5cLXvAh52qqGgek7yiYyXjSMhY4Q","authDomain":"aurix-ea09b.firebaseapp.com","projectId":"aurix-ea09b","appId":"1:72543340803:web:3d2b925ea38e6b7e6fc136"};</script><script type="module">/* Optional Firebase adapter. Loaded only when the owner supplies a PUBLIC Firebase web config.
    No Admin SDK, service-account credentials, or provider secrets belong here. */
 const cfg = window.AURIX_FIREBASE_CONFIG;
@@ -815,13 +1150,20 @@ if (cfg && cfg.apiKey && cfg.authDomain && cfg.projectId && cfg.appId) {
     const db = fs.getFirestore(app);
     const provider = new auth.GoogleAuthProvider();
     provider.setCustomParameters({ prompt: 'select_account' });
+    const desktopCredential = async () => {
+      const result = await window.AurixDesktop.signIn();
+      return auth.GoogleAuthProvider.credential(result.idToken, result.accessToken);
+    };
     const path = () => {
       if (!a.currentUser) throw Error('Sign in to save projects to the cloud.');
       return fs.collection(db, 'users', a.currentUser.uid, 'items');
     };
     const cloud = {
       get user() { return a.currentUser; },
-      async signIn() { return auth.signInWithPopup(a, provider); },
+      async signIn() {
+        if (window.AurixDesktop) return auth.signInWithCredential(a, await desktopCredential());
+        return auth.signInWithPopup(a, provider);
+      },
       async getIdToken() { if (!a.currentUser) throw Error('Sign in with Google first.'); return a.currentUser.getIdToken(); },
       async signOut() { return auth.signOut(a); },
       async list() { const snapshot = await fs.getDocs(path()); return snapshot.docs.map(d => ({ id: d.id, ...d.data() })); },
@@ -838,7 +1180,8 @@ if (cfg && cfg.apiKey && cfg.authDomain && cfg.projectId && cfg.appId) {
       async deleteAccount() {
         if (!a.currentUser) throw Error('Not signed in.');
         // Reauthenticate first. If this fails, no saved projects are deleted.
-        await auth.reauthenticateWithPopup(a.currentUser, provider);
+        if (window.AurixDesktop) await auth.reauthenticateWithCredential(a.currentUser, await desktopCredential());
+        else await auth.reauthenticateWithPopup(a.currentUser, provider);
         while (true) {
           const docs = await fs.getDocs(fs.query(path(), fs.limit(100)));
           if (docs.empty) break;

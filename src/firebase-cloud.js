@@ -15,13 +15,20 @@ if (cfg && cfg.apiKey && cfg.authDomain && cfg.projectId && cfg.appId) {
     const db = fs.getFirestore(app);
     const provider = new auth.GoogleAuthProvider();
     provider.setCustomParameters({ prompt: 'select_account' });
+    const desktopCredential = async () => {
+      const result = await window.AurixDesktop.signIn();
+      return auth.GoogleAuthProvider.credential(result.idToken, result.accessToken);
+    };
     const path = () => {
       if (!a.currentUser) throw Error('Sign in to save projects to the cloud.');
       return fs.collection(db, 'users', a.currentUser.uid, 'items');
     };
     const cloud = {
       get user() { return a.currentUser; },
-      async signIn() { return auth.signInWithPopup(a, provider); },
+      async signIn() {
+        if (window.AurixDesktop) return auth.signInWithCredential(a, await desktopCredential());
+        return auth.signInWithPopup(a, provider);
+      },
       async getIdToken() { if (!a.currentUser) throw Error('Sign in with Google first.'); return a.currentUser.getIdToken(); },
       async signOut() { return auth.signOut(a); },
       async list() { const snapshot = await fs.getDocs(path()); return snapshot.docs.map(d => ({ id: d.id, ...d.data() })); },
@@ -38,7 +45,8 @@ if (cfg && cfg.apiKey && cfg.authDomain && cfg.projectId && cfg.appId) {
       async deleteAccount() {
         if (!a.currentUser) throw Error('Not signed in.');
         // Reauthenticate first. If this fails, no saved projects are deleted.
-        await auth.reauthenticateWithPopup(a.currentUser, provider);
+        if (window.AurixDesktop) await auth.reauthenticateWithCredential(a.currentUser, await desktopCredential());
+        else await auth.reauthenticateWithPopup(a.currentUser, provider);
         while (true) {
           const docs = await fs.getDocs(fs.query(path(), fs.limit(100)));
           if (docs.empty) break;

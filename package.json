@@ -1,0 +1,53 @@
+{
+  "name": "aurix-desktop",
+  "version": "1.0.2",
+  "private": true,
+  "description": "AURIX creative studio for Windows 10 and 11",
+  "author": "AURIX / Ahmed Becetti",
+  "license": "UNLICENSED",
+  "main": "desktop/main.cjs",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "build:web": "python -X utf8 build.py",
+    "desktop": "npm run build:web && electron .",
+    "test": "npm run build:web && node --check src/app.js && node --check src/desktop-auth.mjs && node --check src/support.js && node --check src/ads.js && node --check scripts/store.cjs && node --check desktop/main.cjs && node --check desktop/preload.cjs && node --check desktop/ads.cjs && node test.mjs && node backend/test.mjs && python -X utf8 scripts/tests/test_verify_msix.py && node --test desktop/test/auth.test.cjs desktop/test/bridge.test.cjs desktop/test/cloud.test.cjs desktop/test/policy.test.cjs desktop/test/store.test.cjs desktop/test/support.test.cjs desktop/test/ads.test.cjs",
+    "store:validate": "node scripts/store.cjs --check",
+    "ads:verify": "node --test desktop/test/ads.test.cjs",
+    "store:stage": "node scripts/store.cjs",
+    "dist:store": "powershell.exe -NoProfile -File scripts/build-store.ps1",
+    "dist:win": "npm run test && electron-builder --win --x64",
+    "pack:win": "npm run build:web && electron-builder --win --x64 --dir"
+  },
+  "devDependencies": {
+    "electron": "45.5.0",
+    "electron-builder": "26.18.0",
+    "fake-indexeddb": "6.2.8",
+    "happy-dom": "21.0.4"
+  },
+  "build": {
+    "appId": "com.aurix.studio",
+    "productName": "AURIX",
+    "asar": true,
+    "directories": { "output": "dist/windows" },
+    "files": ["desktop/*.cjs", "desktop/icon.png", "release/preview/**/*", "package.json"],
+    "win": {
+      "icon": "desktop/icon.ico",
+      "target": ["nsis", "portable"],
+      "requestedExecutionLevel": "asInvoker"
+    },
+    "portable": {
+      "artifactName": "AURIX-${version}-${arch}-Portable.${ext}"
+    },
+    "nsis": {
+      "artifactName": "AURIX-${version}-${arch}-Setup.${ext}",
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "deleteAppDataOnUninstall": false,
+      "installerLanguages": ["en_US", "fr_FR", "ar_SA"],
+      "language": "1033"
+    }
+  }
+}
