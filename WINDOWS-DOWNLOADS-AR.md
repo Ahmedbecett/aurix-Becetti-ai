@@ -83,3 +83,20 @@ SHA-256 block-map checks: passed
 - بعد نجاح `MSIX candidate (public owner identity)` تُنشر الحزمة في صفحة الإصدار `windows-ads-1.0.2.0`
   مع `SHA256SUMS.txt` و`AppxManifest.xml` و`store-build.json` و`msix-integrity.json`.
 - ملف `AURIX-Windows-x64-ads` = نسخة Electron المحمولة/NSIS التي تُظهر البانر فعليًا في Chromium.
+
+### رابط مباشر — نسخة الإعلانات (1.0.2.0)
+
+https://github.com/Ahmedbecett/aurix-Becetti-ai/releases/tag/windows-ads-1.0.2.0
+
+| الملف | الرابط |
+|---|---|
+| MSIX | https://github.com/Ahmedbecett/aurix-Becetti-ai/releases/download/windows-ads-1.0.2.0/Ahmedbecetti.AURIXAI_1.0.2.0_x64.msix |
+| SHA-256 | https://github.com/Ahmedbecett/aurix-Becetti-ai/releases/download/windows-ads-1.0.2.0/SHA256SUMS.txt |
+| بيانات التحقق | https://github.com/Ahmedbecett/aurix-Becetti-ai/releases/download/windows-ads-1.0.2.0/msix-integrity.json |
+| بيان الحزمة | https://github.com/Ahmedbecett/aurix-Becetti-ai/releases/download/windows-ads-1.0.2.0/AppxManifest.xml |
+| بيانات البناء | https://github.com/Ahmedbecett/aurix-Becetti-ai/releases/download/windows-ads-1.0.2.0/store-build.json |
+
+- الحجم الظاهر في صفحة الإصدار: 164,084,658 بايت · بُنيت من الالتزام `6a79608` على GitHub Actions.
+- **غير موقّعة:** يلزم تفعيل وضع المطوّر أو تثبيت الشهادة قبل التثبيت.
+- لم تُرفع إلى Microsoft Store، ولم يتغيّر رقم الإصدار.
+- قيد الظهور (مضيف WebView2) موثّق في [ADS-INTEGRATION-AR.md](ADS-INTEGRATION-AR.md) القسم 5.
