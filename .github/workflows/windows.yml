@@ -180,12 +180,21 @@ jobs:
             "AURIX-Windows-x64-ads.zip contains the Electron setup and portable editions of the same commit."
           ) -join "`n"
           $notes | Set-Content -Encoding utf8 dist/store/release-notes-ads.md
-          $existing = gh release view $tag --json tagName --jq .tagName 2>$null
-          if ($LASTEXITCODE -ne 0) {
-            gh release create $tag --target $env:GITHUB_SHA --prerelease --title "AURIX AI $version - Windows ads build" --notes-file dist/store/release-notes-ads.md
-            if ($LASTEXITCODE -ne 0) { throw 'Could not create the ads release.' }
-          }
-          Compress-Archive -Path 'dist/windows/*' -DestinationPath 'dist/windows/AURIX-Windows-x64-ads.zip' -Force
-          gh release upload $tag $package 'dist/store/SHA256SUMS.txt' 'dist/store/msix-integrity.json' 'dist/store/AppxManifest.xml' 'dist/store/store-build.json' 'dist/windows/AURIX-Windows-x64-ads.zip' --clobber
+          # The release already exists; a missing release is an error, not a reason to create one.
+          gh release view $tag --json tagName,isPrerelease --jq '"release: \(.tagName) prerelease=\(.isPrerelease)"'
+          if ($LASTEXITCODE -ne 0) { throw "Release $tag is missing; create the pre-release first." }
+          $stamp = $env:GITHUB_SHA.Substring(0, 7)
+          $assets = @($package, 'dist/store/SHA256SUMS.txt', 'dist/store/msix-integrity.json', 'dist/store/AppxManifest.xml', 'dist/store/store-build.json')
+          gh release upload $tag @assets --clobber
           if ($LASTEXITCODE -ne 0) { throw 'Could not upload the ads package.' }
+          if (Test-Path 'dist/windows') {
+            $exes = Get-ChildItem 'dist/windows' -Filter *.exe
+            if ($exes.Count -gt 0) {
+              Compress-Archive -Path 'dist/windows/*' -DestinationPath "dist/AURIX-Windows-x64-ads-$stamp.zip" -Force
+              gh release upload $tag "dist/AURIX-Windows-x64-ads-$stamp.zip" --clobber
+              if ($LASTEXITCODE -ne 0) { throw 'Could not upload the Electron edition zip.' }
+            }
+          } else {
+            Write-Host 'This job does not build the Electron setup; the windows job does. Skipping its zip.'
+          }
           gh release view $tag --json url,assets --jq '.url, (.assets[] | "\(.name) | \(.size)")'
