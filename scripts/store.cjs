@@ -49,6 +49,32 @@ function validateProduct(identity, product) {
   if (!/^[A-Z0-9]{12}$/.test(product.storeId)) throw Error('Invalid public Microsoft Store product ID.');
   return product;
 }
+// Partner Center identifies a package by its full name <IdentityName>_<Version>_<Arch>. Uploading a
+// second package with an existing full name but different contents is rejected, so once a version is
+// published that exact version can never be reused for a new build.
+function fullName(identity, version) {
+  return `${identity.identityName}_${packageVersion(version)}_x64`;
+}
+function validateStoreVersion(identity, version, product) {
+  const name = fullName(identity, version);
+  if (!product) return name;
+  const taken = Array.isArray(product.publishedFullNames) ? product.publishedFullNames : [];
+  const clash = taken.find(t => String(t).toLowerCase() === name.toLowerCase());
+  if (clash) {
+    throw Error(`Package full name ${clash} is already used by a published build. Raise the version in package.json (next: ${product.nextVersion || 'bump the patch number'}) - Partner Center rejects a new payload under an existing full name.`);
+  }
+  const live = product.liveVersion;
+  if (live && /^\d+\.\d+\.\d+\.0$/.test(live)) {
+    const parts = v => v.split('.').map(Number);
+    const a = parts(packageVersion(version)), b = parts(live);
+    for (let i = 0; i < 4; i++) {
+      if (a[i] > b[i]) break;
+      if (a[i] === b[i]) { if (i === 3) throw Error(`Version ${packageVersion(version)} equals the published version ${live}; a new build needs a higher version.`); continue; }
+      throw Error(`Version ${packageVersion(version)} is lower than the published version ${live}; the Store requires a newer package version.`);
+    }
+  }
+  return name;
+}
 function productFor(identity) {
   const filename = path.join(ROOT, 'store/product.json');
   if (!fs.existsSync(filename)) return null;
@@ -95,6 +121,8 @@ function validateRuntime(app) {
 }
 function stage(identity, version, appDir) {
   const app = path.resolve(ROOT, appDir || 'dist/store-runtime/win-unpacked');
+  const productGuard = productFor(identity);
+  validateStoreVersion(identity, version, productGuard);
   const output = path.join(ROOT, 'dist/store');
   const staging = path.join(output, 'staging');
   if (app === output || app.startsWith(output + path.sep)) throw Error('Runtime directory must be outside dist/store.');
@@ -109,7 +137,7 @@ function stage(identity, version, appDir) {
   fs.cpSync(path.join(ROOT, 'store/assets'), path.join(staging, 'Assets'), { recursive: true });
   fs.writeFileSync(path.join(staging, 'AppxManifest.xml'), content, 'utf8');
   fs.cpSync(path.join(ROOT, 'store/submission'), path.join(output, 'submission'), { recursive: true });
-  const name = `${identity.identityName}_${packageVersion(version)}_x64.msix`;
+  const name = fullName(identity, version) + '.msix';
   const report = {
     ...identity, packageVersion: packageVersion(version), architecture: 'x64', packageFile: name,
     packageFamilyName: packageFamilyName(identity), packageSid: packageSid(packageFamilyName(identity)),
@@ -133,8 +161,12 @@ function main(args) {
   manifest(identity, version); validateAssets();
   const product = productFor(identity);
   if (product && !product.displayNameConfirmed) console.warn('Reserved display name is not yet confirmed. The configured display name is provisional, not a submission approval.');
-  if (options.check) console.log(`Store identity and assets valid: ${identity.identityName} ${packageVersion(version)} (not built, tested or submitted).`);
+  if (options.check) {
+    const name = validateStoreVersion(identity, version, product);
+    console.log(`Store identity and assets valid: ${identity.identityName} ${packageVersion(version)} (not built, tested or submitted).`);
+    console.log(`Package full name: ${name}${product && product.liveVersion ? ` - newer than the published ${product.liveVersion}` : ''}`);
+  }
   else { const result = stage(identity, version, options['app-dir']); console.log(`Staged ${result.staging}\nCandidate package: ${result.packagePath}`); }
 }
 if (require.main === module) { try { main(process.argv.slice(2)); } catch (err) { console.error(err.message); process.exitCode = 1; } }
-module.exports = { ASSETS, packageVersion, validateIdentity, readIdentity, manifest, validateAssets, validateRuntime, packageFamilyName, packageSid, validateProduct, stage };
+module.exports = { ASSETS, packageVersion, validateIdentity, readIdentity, manifest, validateAssets, validateRuntime, packageFamilyName, packageSid, validateProduct, validateStoreVersion, fullName, stage };

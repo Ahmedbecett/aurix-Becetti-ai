@@ -131,7 +131,7 @@ jobs:
           if-no-files-found: ignore
           retention-days: 7
       - name: Publish directly downloadable validation candidate (not Store publication)
-        if: github.event_name == 'push' && github.ref == 'refs/heads/arena/1f56f634-aurix-becetti-ai'
+        if: github.event_name == 'push' && github.ref == 'refs/heads/arena/ec5ef43a-aurix-becetti-ai'
         shell: pwsh
         env:
           GH_TOKEN: ${{ github.token }}
@@ -147,7 +147,13 @@ jobs:
             "`n## Previous artifact inspection`nFile: $($old.file)`n`nExact bytes: $($old.bytes)`n`nSHA-256: $($old.sha256)`n`nZIP CRC and SHA-256 block-map checks passed for the original artifact downloaded by the runner. This does not verify the bytes that reached Partner Center." | Add-Content -Encoding utf8 dist/store/release-notes.md
           }
           $assets = @($package, 'dist/store/SHA256SUMS.txt', 'dist/store/msix-integrity.json')
-          gh release create "aurix-store-candidate-$version" @assets --target $env:GITHUB_SHA --prerelease --title "AURIX $version - Store validation candidate" --notes-file dist/store/release-notes.md
+          $tag = "aurix-store-candidate-$version"
+          if (gh release view $tag --json tagName 2>$null) {
+            # A version is immutable once published: deleting and recreating the tag with a different
+            # payload would hand out an MSIX whose full name already exists with other contents.
+            throw "Release $tag already exists. Every new package must use a higher version; bump package.json instead of overwriting $tag."
+          }
+          gh release create $tag @assets --target $env:GITHUB_SHA --prerelease --title "AURIX $version - Store validation candidate" --notes-file dist/store/release-notes.md
           if ($LASTEXITCODE -ne 0) { throw 'Could not publish the downloadable candidate assets.' }
       # Publish the ads build so the owner has a real download link. This only
       # attaches files to a pre-release; it never rebuilds with a new version and
@@ -159,13 +165,17 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
         run: |
-          $tag = 'windows-ads-1.0.2.0'
           $version = (Get-Content package.json -Raw | ConvertFrom-Json).version
+          # The tag carries the package version: two builds of the same version with different
+          # contents would otherwise both be uploaded under one full name.
+          $tag = "windows-ads-$version.0"
           $info = Get-Content dist/store/msix-integrity.json -Raw | ConvertFrom-Json
           $package = Join-Path 'dist/store' $info.file
           if (Test-Path dist/previous-msix-integrity.json) { Copy-Item dist/previous-msix-integrity.json dist/store/previous-msix-integrity.json }
           $notes = @(
             "AURIX AI $version for Windows x64 - package with the MG Ads banner integration.",
+            "",
+            "Package full name: $($info.file) - unique for this version. The Microsoft Store rejects a new payload uploaded under an existing full name, so every build gets a new version.",
             "",
             "Not submitted to the Microsoft Store. Unsigned test candidate: install only after enabling Developer Mode or trusting the certificate.",
             "",

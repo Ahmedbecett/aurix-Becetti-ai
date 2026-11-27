@@ -6,7 +6,7 @@
 
 | | |
 |---|---|
-| Microsoft Store (Windows 10 / 11, x64, v1.0.2.0) | https://apps.microsoft.com/detail/9nlm756d1czr?ocid=webpdpshare |
+| Microsoft Store (Windows 10 / 11, x64) | https://apps.microsoft.com/detail/9nlm756d1czr?ocid=webpdpshare — published **1.0.2.0**; ads build **1.0.3.0** pending upload |
 | Web app | https://aurix-ea09b.web.app |
 | English listing copy (description, features, media) | [`LISTING-EN.md`](LISTING-EN.md) |
 | Walkthrough video (28 s, silent) | [`release/media/aurix-walkthrough.mp4`](release/media/aurix-walkthrough.mp4) |
@@ -33,8 +33,12 @@ the complete feature list and the media kit, is in [`LISTING-EN.md`](LISTING-EN.
 
 Electron desktop packaging now includes the current dashboard, images, code, writing, chat/PDF, projects and settings from the same `src/` files. Run `npm ci`, then `npm run desktop` to develop or `npm run dist:win -- --publish never` on Windows to build an NSIS installer and a portable EXE. A Windows GitHub Actions workflow is in `.github/workflows/windows.yml`.
 
-**Build status:** the published Windows package is version **1.0.2.0** with both manifest display
-names set to **AURIX AI**. The identity, publisher and PFN are unchanged. The archive passes
+**Build status:** the source is now **1.0.3.0** and both manifest display names are **AURIX AI**.
+The published Store package is 1.0.2.0; 1.0.3.0 adds the MG Ads banners. A version bump is mandatory,
+not cosmetic: Partner Center rejected a second `Ahmedbecetti.AURIXAI_1.0.2.0_x64` package with
+different contents, because a package full name is `<IdentityName>_<Version>_<Arch>` and must be
+unique. `scripts/store.cjs` now refuses any version that is already published or not higher than the
+live one, and the release tags derive from `package.json`. The identity, publisher and PFN are unchanged. The archive passes
 ZIP/CRC/block-map/staging checks, `MakeAppx pack`/unpack and `scripts/verify-msix.py`, and the
 package is published as a GitHub release ([direct MSIX download and checksums](WINDOWS-DOWNLOADS-AR.md)).
 The MSIX on that page is unsigned and is for testing; Microsoft Store is the supported install
@@ -69,7 +73,7 @@ The same studio is shipped as a static app for the owner's `skullaistudio.blogsp
 | PDF chat | text-based PDF (≤5 MB, ≤20 pages) extracted locally with pdf.js; only the excerpt is sent to `/api/chat` → Google Gemini | Text PDFs only — scanned PDFs need OCR, which is not included; chat needs the configured backend |
 | Library | Projects, folders, favourites, history per signed-in account, on-device; JSON export and deletion in Settings | Local data is lost if app/browser storage is cleared; JSON export does not include image bytes |
 | Accounts | Firebase Authentication with Google sign-in; optional cloud copies for supported text/code projects in Firestore, per-user rules | Google sign-in gates every AI action; email sign-in is not built |
-| Windows ads | MG Ads banners from `desktop/ads.cjs` (bundled credentials) on signed-in Windows screens only | Shipped in the published 1.0.2.0 build; the website and the sign-in screen show no ads |
+| Windows ads | MG Ads banners from `desktop/ads.cjs` (bundled credentials) on signed-in Windows screens only | Included in the 1.0.3.0 build (the published 1.0.2.0 predates the banners); the website and the sign-in screen show no ads |
 | Internationalization | English default, French/Arabic controls, Arabic RTL shell | Main tool copy is English; full French/Arabic localization is unfinished |
 | Video | Explicitly disabled and labelled unavailable in the UI | No provider configured — this is stated in the app and in every listing |
 | Legal pages | About, Contact, Privacy, Terms in `release/*-page.html` + `pages/windows-privacy.html` | Published on Firebase Hosting with `robots.txt` + `sitemap.xml` |

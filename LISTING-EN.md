@@ -8,7 +8,8 @@ shipped build does not have.
 - **App name:** AURIX AI
 - **Microsoft Store:** <https://apps.microsoft.com/detail/9nlm756d1czr?ocid=webpdpshare>
 - **Store product ID:** 9NLM756D1CZR
-- **Version:** 1.0.2.0 (x64), Windows 10 22H2 or Windows 11
+- **Version:** **1.0.3.0** is the build with the MG Ads banners, awaiting Store upload; the published
+  Store build is 1.0.2.0 (same app, no banners). Windows 10 22H2 or Windows 11, x64.
 - **Web app:** <https://aurix-ea09b.web.app>
 - **Developer:** Ahmedbecetti (independent project)
 - **Support:** <ahmedbecetti41@gmail.com>
@@ -117,7 +118,7 @@ be captured on a Windows machine before they can be uploaded to the Store — se
 ## Direct download (unsigned builds)
 
 Microsoft Store is the recommended way to install. The repository also publishes the same
-1.0.2.0 MSIX packaging for testing:
+1.0.2.0 MSIX packaging for testing (the ads build is 1.0.3.0):
 <https://github.com/Ahmedbecett/aurix-Becetti-ai/releases/tag/windows-ads-1.0.2.0>
 (see [`WINDOWS-DOWNLOADS-AR.md`](WINDOWS-DOWNLOADS-AR.md)). Those builds are unsigned and need
 Developer Mode or a trusted certificate; that page is not a substitute for the Store listing.

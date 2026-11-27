@@ -154,7 +154,7 @@ def hero():
     d.text((LEFT + 30, card_top + 20), 'AURIX AI', font=font(36), fill=TEXT)
     d.text((LEFT + 30, card_top + 68), 'Microsoft Store: apps.microsoft.com/detail/9nlm756d1czr',
            font=font(21, bold=False), fill=MUTED)
-    d.text((LEFT + 30, card_top + 98), 'Version 1.0.2.0  ·  Windows 10 22H2 / 11  ·  x64',
+    d.text((LEFT + 30, card_top + 98), 'Version 1.0.3.0  ·  Windows 10 22H2 / 11  ·  x64',
            font=font(20, bold=False), fill=MUTED2)
 
     d.text((LEFT, 1006), 'aurix-ea09b.web.app  ·  Independent project. Free providers are best effort; results need review.',
@@ -242,7 +242,7 @@ def video():
         (slide('Get AURIX AI', 'One download, one sign-in, three studios and PDF chat.',
                ['Microsoft Store: apps.microsoft.com/detail/9nlm756d1czr',
                 'Website: aurix-ea09b.web.app',
-                'Version 1.0.2.0  ·  x64  ·  Windows 10 22H2 / 11']), 4.5),
+                'Version 1.0.3.0  ·  x64  ·  Windows 10 22H2 / 11']), 4.5),
         (slide('What AURIX AI does not do', 'Honest limits, stated up front.',
                ['No video generation.', 'Free AI providers can be slow, rate-limited or unavailable.',
                 'Banners come from MG Ads on the signed-in Windows screen.'], footer='aurix-ea09b.web.app'), 4.0),
@@ -273,7 +273,7 @@ def video():
         'Image studio: describe a picture, get a real generation from Cloudflare Workers AI.',
         'Writing and code studio: draft, refine, generate and repair, then copy or save.',
         'Ask about a text-based PDF you choose. The file stays on your device.',
-        'Get AURIX AI: Microsoft Store apps.microsoft.com/detail/9nlm756d1czr, version 1.0.2.0, x64.',
+        'Get AURIX AI: Microsoft Store apps.microsoft.com/detail/9nlm756d1czr, version 1.0.3.0, x64.',
         'Honest limits: no video generation, free providers are best effort, banners from MG Ads.',
     ]
     for caption, seconds in zip(captions, [5, 5, 5, 5, 4.5, 4]):

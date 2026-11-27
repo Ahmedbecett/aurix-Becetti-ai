@@ -1,6 +1,8 @@
 # AURIX — رابط MSIX مباشر بعد رفض الحزمة السابقة
 
-## التنزيل الحالي: الإصدار 1.0.2.0
+## التنزيل الحالي: الإصدار 1.0.3.0
+
+> **لماذا 1.0.3.0؟** المتجر يرفض حزمتين بالاسم الكامل نفسه `Ahmedbecetti.AURIXAI_1.0.2.0_x64` بمحتوى مختلف. لذلك نسخة الإعلانات تحمل 1.0.3.0. روابط 1.0.2.0 أدناه تبقى للسجل فقط.
 
 **[تنزيل ملف MSIX مباشرة](https://github.com/Ahmedbecett/aurix-Becetti-ai/releases/download/aurix-store-candidate-1.0.2/Ahmedbecetti.AURIXAI_1.0.2.0_x64.msix)**
 
@@ -77,16 +79,27 @@ SHA-256 block-map checks: passed
 - ما زال نشر/فحص صفحات Google auth والخصوصية، واختبارات الوظائف الحية وسلامة المحتوى ولقطات الشاشة متطلبات قبل الإرسال النهائي. راجع [STORE-AR.md](STORE-AR.md).
 - لا تستخدم روابط artifact للإصدار 1.0.0.0 في المحادثات السابقة لإعادة التقديم. الرابط الحالي هو ملف MSIX المباشر أعلاه، ولا تنطبق عليه صلاحية artifact القديمة البالغة 30 يومًا.
 
-### 2026-11-26 — حزمة تحمل نظام الإعلانات
+### 2026-11-26 — حزمة تحمل نظام الإعلانات (الإصدار 1.0.3.0)
 
-- تشغيل بناء المتجر مرة أخرى على نفس الإصدار `1.0.2.0` (بدون رفع إلى Store).
-- بعد نجاح `MSIX candidate (public owner identity)` تُنشر الحزمة في صفحة الإصدار `windows-ads-1.0.2.0`
-  مع `SHA256SUMS.txt` و`AppxManifest.xml` و`store-build.json` و`msix-integrity.json`.
-- ملف `AURIX-Windows-x64-ads` = نسخة Electron المحمولة/NSIS التي تُظهر البانر فعليًا في Chromium.
+**رفع الإصدار إلزامي.** رفض Partner Center رفع `Ahmedbecetti.AURIXAI_1.0.2.0_x64` برسالة أن الاسم
+الكامل نفسه موجود بمحتوى مختلف. الاسم الكامل للحزمة هو `IdentityName_Version_Arch`، ولا يوجد فيه
+جزء يمكن تغييره سوى الإصدار. لذلك نسخة الإعلانات = **1.0.3.0**.
 
-### رابط مباشر — نسخة الإعلانات (1.0.2.0)
+- الهوية والناشر وPFN وSID واسم العرض `AURIX AI` لم تتغيّر.
+- `scripts/store.cjs` صار يرفض أي إصدار مذكور في `publishedFullNames` أو غير أعلى من `liveVersion`،
+  ورسالة الخطأ تذكر الإصدار التالي المطلوب.
+- وسوم GitHub Releases تُشتق الآن من `package.json`، فلا يمكن نشر حزمتين بمحتوى مختلف تحت وسم واحد.
 
-https://github.com/Ahmedbecett/aurix-Becetti-ai/releases/tag/windows-ads-1.0.2.0
+بعد نجاح `MSIX candidate (public owner identity)` تُنشر الحزمة في صفحة الإصدار
+`windows-ads-1.0.3.0` مع `SHA256SUMS.txt` و`AppxManifest.xml` و`store-build.json` و`msix-integrity.json`.
+ملف `AURIX-Windows-x64-ads` = نسخة Electron المحمولة/NSIS التي تُظهر البانر فعليًا في Chromium.
+
+### رابط مباشر — نسخة الإعلانات (1.0.3.0)
+
+https://github.com/Ahmedbecett/aurix-Becetti-ai/releases/tag/windows-ads-1.0.3.0
+
+> الروابط التالية تخص البناء المؤقت بالإصدار 1.0.2.0 (سجل فقط)؛ الحزمة القابلة للرفع هي 1.0.3.0
+> وستظهر في الصفحة أعلاه بعد تشغيل خط البناء.
 
 | الملف | الرابط |
 |---|---|

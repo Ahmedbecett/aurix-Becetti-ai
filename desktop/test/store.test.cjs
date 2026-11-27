@@ -3,7 +3,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
-const { packageVersion, validateIdentity, readIdentity, manifest, validateAssets, validateRuntime, ASSETS, stage, packageFamilyName, packageSid, validateProduct } = require('../../scripts/store.cjs');
+const { packageVersion, validateIdentity, readIdentity, manifest, validateAssets, validateRuntime, ASSETS, stage, packageFamilyName, packageSid, validateProduct, validateStoreVersion, fullName } = require('../../scripts/store.cjs');
 const identity = { identityName: 'TestPublisher.AURIX', publisher: 'CN=Test Publisher', publisherDisplayName: 'Test Publisher', displayName: 'AURIX' };
 const root = path.resolve(__dirname, '../..');
 
@@ -55,6 +55,19 @@ test('owner identity remains stable and both manifest display names match the re
   assert.throws(() => validateProduct(owner, { ...product, packageSid: 'S-1-15-2-wrong' }), /do not match/);
   assert.throws(() => validateProduct(owner, { ...product, storeId: 'invalid' }), /product ID/);
   assert.match(manifest(owner, '1.0.0'), /Name="Ahmedbecetti.AURIXAI" Publisher="CN=A5D5DC31-4A15-4059-8030-D96C51054596"/);
+});
+test('a published package full name can never be reused for a new build', () => {
+  const owner = JSON.parse(fs.readFileSync(path.join(root, 'store/identity.store.json'), 'utf8'));
+  const product = JSON.parse(fs.readFileSync(path.join(root, 'store/product.json'), 'utf8'));
+  assert.equal(fullName(owner, '1.0.3'), 'Ahmedbecetti.AURIXAI_1.0.3.0_x64');
+  // Partner Center error: two packages with the full name Ahmedbecetti.AURIXAI_1.0.2.0_X64 but different contents.
+  assert.throws(() => validateStoreVersion(owner, '1.0.2', product), /already used by a published build/);
+  assert.throws(() => validateStoreVersion(owner, '1.0.1', product), /lower than the published version/);
+  assert.throws(() => validateStoreVersion(owner, '1.0.2', { ...product, publishedFullNames: ['ahmedbecetti.aurixai_1.0.2.0_X64'] }), /already used/);
+  assert.equal(validateStoreVersion(owner, '1.0.3', product), 'Ahmedbecetti.AURIXAI_1.0.3.0_x64');
+  assert.equal(validateStoreVersion(owner, '1.1.0', product), 'Ahmedbecetti.AURIXAI_1.1.0.0_x64');
+  // The current package.json version must clear the guard against the live product record.
+  assert.equal(validateStoreVersion(owner, JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8')).version, product), 'Ahmedbecetti.AURIXAI_1.0.3.0_x64');
 });
 test('all manifest logos are real PNGs of the declared dimensions', () => {
   validateAssets();
