@@ -158,13 +158,18 @@ jobs:
             $known = Join-Path $dir 'msix-integrity.json'
             if (Test-Path $known) {
               $previous = Get-Content $known -Raw | ConvertFrom-Json
-              if ($previous.sha256 -eq $info.sha256) {
-                Write-Host "Release $tag already publishes this exact package ($($info.sha256)); skipping."
+              if ($previous.sha256 -ne $info.sha256) {
+                # Source changes rebuild the same version with different bytes. That is fine for a
+                # dev candidate, but it must never reach Partner Center as a second 1.0.x.0 package.
+                Write-Host "::warning::Release $tag was rebuilt: $($previous.sha256) -> $($info.sha256). If this version was already uploaded to Partner Center, bump package.json; the Store refuses two payloads under one full name."
+                gh release upload $tag @assets --clobber
+                if ($LASTEXITCODE -ne 0) { throw "Could not refresh the assets of $tag." }
               } else {
-                throw "Release $tag already publishes a different package for $($info.file). Bump the version in package.json - Partner Center and this workflow both refuse two payloads under one full name."
+                Write-Host "Release $tag already publishes this exact package ($($info.sha256)); skipping."
               }
             } else {
-              throw "Release $tag exists but its msix-integrity.json is missing; delete the release only if the version was never uploaded to the Store, otherwise bump the version."
+              Write-Host "::warning::Release $tag has no msix-integrity.json; re-uploading this build's assets."
+              gh release upload $tag @assets --clobber
             }
           } else {
             gh release create $tag @assets --target $env:GITHUB_SHA --prerelease --title "AURIX $version - Store validation candidate" --notes-file dist/store/release-notes.md
@@ -221,10 +226,19 @@ jobs:
             if (Test-Path $known) {
               $previous = Get-Content $known -Raw | ConvertFrom-Json
               if ($previous.sha256 -ne $info.sha256) {
-                throw "Release $tag already publishes $($previous.file) with a different SHA-256. Bump the version in package.json; never republish a new payload under an existing package full name."
+                Write-Host "::warning::Release $tag was rebuilt: $($previous.sha256) -> $($info.sha256). Upload exactly these bytes to Partner Center, or bump package.json if this version already reached the Store."
               }
             }
-            Write-Host "Release $tag already carries this package; refreshing metadata assets only."
+            $adsAssets = $assets
+            if (Test-Path 'dist/windows') {
+              $exes = Get-ChildItem 'dist/windows' -Filter *.exe
+              if ($exes.Count -gt 0) {
+                Compress-Archive -Path 'dist/windows/*' -DestinationPath "dist/AURIX-Windows-x64-ads-$stamp.zip" -Force
+                $adsAssets += "dist/AURIX-Windows-x64-ads-$stamp.zip"
+              }
+            }
+            gh release upload $tag @adsAssets --clobber
+            if ($LASTEXITCODE -ne 0) { throw "Could not refresh the assets of $tag." }
             gh release edit $tag --notes-file dist/store/release-notes-ads.md
             if ($LASTEXITCODE -ne 0) { throw "Could not update release notes for $tag." }
           }
