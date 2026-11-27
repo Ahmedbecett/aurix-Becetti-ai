@@ -85,6 +85,10 @@ SHA-256 block-map checks: passed
 الكامل نفسه موجود بمحتوى مختلف. الاسم الكامل للحزمة هو `IdentityName_Version_Arch`، ولا يوجد فيه
 جزء يمكن تغييره سوى الإصدار. لذلك نسخة الإعلانات = **1.0.3.0**.
 
+> **قاعدة الرفع:** ارفع الملف المذكور أدناه (`1.0.3.0`) واحذف الحزمة المرفوضة `1.0.2.0` من قائمة
+> الرفع في Partner Center إن كانت لا تزال موجودة هناك — لكن لا تحذف النسخة **المنشورة** فعليًا.
+> بعد النجاح يصبح المنشور 1.0.3.0، وأي بناء تالٍ يحتاج `1.0.4.0`.
+
 - الهوية والناشر وPFN وSID واسم العرض `AURIX AI` لم تتغيّر.
 - `scripts/store.cjs` صار يرفض أي إصدار مذكور في `publishedFullNames` أو غير أعلى من `liveVersion`،
   ورسالة الخطأ تذكر الإصدار التالي المطلوب.
@@ -92,14 +96,34 @@ SHA-256 block-map checks: passed
 
 بعد نجاح `MSIX candidate (public owner identity)` تُنشر الحزمة في صفحة الإصدار
 `windows-ads-1.0.3.0` مع `SHA256SUMS.txt` و`AppxManifest.xml` و`store-build.json` و`msix-integrity.json`.
-ملف `AURIX-Windows-x64-ads` = نسخة Electron المحمولة/NSIS التي تُظهر البانر فعليًا في Chromium.
+ملف `AURIX-Windows-x64-ads-<commit>.zip` (عند وجوده) = نسخة Electron المحمولة/NSIS التي تُظهر البانر
+فعليًا في Chromium.
 
-### رابط مباشر — نسخة الإعلانات (1.0.3.0)
+### رابط مباشر — نسخة الإعلانات (1.0.3.0) ✅ جاهزة للرفع إلى المتجر
 
 https://github.com/Ahmedbecett/aurix-Becetti-ai/releases/tag/windows-ads-1.0.3.0
 
-> الروابط التالية تخص البناء المؤقت بالإصدار 1.0.2.0 (سجل فقط)؛ الحزمة القابلة للرفع هي 1.0.3.0
-> وستظهر في الصفحة أعلاه بعد تشغيل خط البناء.
+```text
+File: Ahmedbecetti.AURIXAI_1.0.3.0_x64.msix
+Exact bytes: 164085018
+SHA-256: 6a9c21c066baa4bf6d8407d6d58dcec1d66fda1919eaa778b4550c607c02330c
+Source commit: 258bd37
+```
+
+| الملف | الرابط |
+|---|---|
+| MSIX | https://github.com/Ahmedbecett/aurix-Becetti-ai/releases/download/windows-ads-1.0.3.0/Ahmedbecetti.AURIXAI_1.0.3.0_x64.msix |
+| SHA-256 | https://github.com/Ahmedbecett/aurix-Becetti-ai/releases/download/windows-ads-1.0.3.0/SHA256SUMS.txt |
+| بيانات التحقق | https://github.com/Ahmedbecett/aurix-Becetti-ai/releases/download/windows-ads-1.0.3.0/msix-integrity.json |
+| بيان الحزمة | https://github.com/Ahmedbecett/aurix-Becetti-ai/releases/download/windows-ads-1.0.3.0/AppxManifest.xml |
+| بيانات البناء | https://github.com/Ahmedbecett/aurix-Becetti-ai/releases/download/windows-ads-1.0.3.0/store-build.json |
+
+هذه الحزمة نفسها هي التي تُرفع إلى Partner Center → Packages. لا ترفع أي حزمة `1.0.2.0` أخرى:
+اسمها الكامل مسجّل بالمحتوى القديم، والمتجر يرفض تكراره.
+
+### أرشيف — نسخة الإعلانات المؤقتة (1.0.2.0، سجل فقط)
+
+https://github.com/Ahmedbecett/aurix-Becetti-ai/releases/tag/windows-ads-1.0.2.0
 
 | الملف | الرابط |
 |---|---|
