@@ -87,7 +87,7 @@ window.chrome.webview.hostObjects.MGADSDK.mgExchange("showAd", json)
 ```
 
 و`window.chrome.webview.hostObjects` موجود في **WebView2** فقط، ولا وجود له في **Electron/Chromium**
-(وهو محرّك حزمة `1.0.2.0` الحالية). لذلك:
+(وهو محرّك الحزمة المنشورة 1.0.2.0، ويُعاد البناء منه نفسه إلى 1.0.3.0). لذلك:
 
 - في حزمة Electron الحالية: **يُحمَّل SDK ويُستدعى `ShowAd` بالمعرّفات الصحيحة، لكن المضيف غير موجود
   فلا يرسم إعلانًا.** لهذا أضفت كشفًا صريحًا لحالة `sdkMissing` بدل صندوق صامت.
@@ -110,7 +110,7 @@ window.chrome.webview.hostObjects.MGADSDK.mgExchange("showAd", json)
 | اختبارات سطح المكتب (23 سابقة + 13 جديدة) | `node --test desktop/test/*.cjs` | ✅ **36/36** |
 | اختبار التطبيق (بوابة Google، الطلبات، التخزين، RTL) | `node test.mjs` | ✅ PASS |
 | اختبار Worker (توقيع Firebase، CORS، حصص) | `node backend/test.mjs` | ✅ PASS |
-| تحقق هوية المتجر | `node scripts/store.cjs --check` | ✅ `Ahmedbecetti.AURIXAI 1.0.2.0` |
+| تحقق هوية المتجر | `node scripts/store.cjs --check` | ✅ `Ahmedbecetti.AURIXAI 1.0.3.0` + `Package full name: Ahmedbecetti.AURIXAI_1.0.3.0_x64` |
 | المفتاح محزوم في العملية الرئيسية فقط ولا يظهر للصفحة | اختبار آلي | ✅ |
 
 **ما تغطيه اختبارات الإعلانات تحديدًا:** المعرّفان بالحرف وبلا زيادة؛ عدم فعل أي شيء في المتصفح العادي (لا
