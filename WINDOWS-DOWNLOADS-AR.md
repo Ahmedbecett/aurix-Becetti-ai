@@ -21,6 +21,22 @@
 
 **[تنزيل Ahmedbecetti.AURIXAI_1.0.4.0_x64.msix مباشرة](https://github.com/Ahmedbecett/aurix-Becetti-ai/releases/download/windows-ads-1.0.4.0/Ahmedbecetti.AURIXAI_1.0.4.0_x64.msix)**
 
+```text
+File: Ahmedbecetti.AURIXAI_1.0.4.0_x64.msix
+Exact bytes: 164085022
+SHA-256: 137535100e289e1c970595aa5323f9bccfd7d26f458cdbc43e6460e09c0b4275
+Source commit: add5334 (run 45973516370, success)
+Package full name: Ahmedbecetti.AURIXAI_1.0.4.0_x64
+```
+
+تحقّق قبل الرفع (يجب أن يطابق الرقمان تمامًا):
+
+```powershell
+(Get-Item .\Ahmedbecetti.AURIXAI_1.0.4.0_x64.msix).Length
+Get-FileHash .\Ahmedbecetti.AURIXAI_1.0.4.0_x64.msix -Algorithm SHA256
+python scripts/diagnose-msix.py .\Ahmedbecetti.AURIXAI_1.0.4.0_x64.msix
+```
+
 هذا هو الملف نفسه الذي يُرفع إلى Partner Center → Packages. ملف MSIX مباشر، لا أرشيف artifact ولا ZIP.
 نُشر كـGitHub prerelease للاختبار والتقديم، **وليس كتطبيق معتمد بعد**. البايتات والبصمة في صفحة الإصدار:
 [SHA-256](https://github.com/Ahmedbecett/aurix-Becetti-ai/releases/download/windows-ads-1.0.4.0/SHA256SUMS.txt) ·

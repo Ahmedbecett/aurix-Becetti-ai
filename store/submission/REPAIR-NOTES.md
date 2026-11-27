@@ -7,7 +7,12 @@ Partner Center accepts exactly one of them:
 |---|---|---|---|
 | 1.0.2.0 | `Ahmedbecetti.AURIXAI_1.0.2.0_x64` | published in the Store | ❌ never again |
 | 1.0.3.0 | `Ahmedbecetti.AURIXAI_1.0.3.0_x64` | submitted, failed certification with **error 5001** | ❌ never again |
-| **1.0.4.0** | **`Ahmedbecetti.AURIXAI_1.0.4.0_x64`** | **this build** | ✅ **this file only** |
+| **1.0.4.0** | **`Ahmedbecetti.AURIXAI_1.0.4.0_x64`** | **built and published from run 45973516370 (commit add5334)** | ✅ **this file only** |
+
+Verified artifact: `Ahmedbecetti.AURIXAI_1.0.4.0_x64.msix`, **164,085,022 bytes**,
+SHA-256 `137535100e289e1c970595aa5323f9bccfd7d26f458cdbc43e6460e09c0b4275`,
+release <https://github.com/Ahmedbecett/aurix-Becetti-ai/releases/tag/windows-ads-1.0.4.0>.
+Any other hash means a different (or damaged) file - do not upload it.
 
 ## Why a new version instead of re-uploading 1.0.3.0
 
