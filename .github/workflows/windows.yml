@@ -148,13 +148,28 @@ jobs:
           }
           $assets = @($package, 'dist/store/SHA256SUMS.txt', 'dist/store/msix-integrity.json')
           $tag = "aurix-store-candidate-$version"
-          if (gh release view $tag --json tagName 2>$null) {
-            # A version is immutable once published: deleting and recreating the tag with a different
-            # payload would hand out an MSIX whose full name already exists with other contents.
-            throw "Release $tag already exists. Every new package must use a higher version; bump package.json instead of overwriting $tag."
+          # A package full name is <IdentityName>_<Version>_<Arch>, so a published version is immutable.
+          # Re-running the same commit is a no-op; a different payload under the same version is an error.
+          $existing = gh release view $tag --json tagName --jq '.tagName' 2>$null
+          if ($LASTEXITCODE -eq 0 -and $existing) {
+            $dir = Join-Path $env:RUNNER_TEMP "existing-$version"
+            New-Item -ItemType Directory -Force -Path $dir | Out-Null
+            gh release download $tag --pattern 'msix-integrity.json' --dir $dir --clobber 2>$null
+            $known = Join-Path $dir 'msix-integrity.json'
+            if (Test-Path $known) {
+              $previous = Get-Content $known -Raw | ConvertFrom-Json
+              if ($previous.sha256 -eq $info.sha256) {
+                Write-Host "Release $tag already publishes this exact package ($($info.sha256)); skipping."
+              } else {
+                throw "Release $tag already publishes a different package for $($info.file). Bump the version in package.json - Partner Center and this workflow both refuse two payloads under one full name."
+              }
+            } else {
+              throw "Release $tag exists but its msix-integrity.json is missing; delete the release only if the version was never uploaded to the Store, otherwise bump the version."
+            }
+          } else {
+            gh release create $tag @assets --target $env:GITHUB_SHA --prerelease --title "AURIX $version - Store validation candidate" --notes-file dist/store/release-notes.md
+            if ($LASTEXITCODE -ne 0) { throw 'Could not publish the downloadable candidate assets.' }
           }
-          gh release create $tag @assets --target $env:GITHUB_SHA --prerelease --title "AURIX $version - Store validation candidate" --notes-file dist/store/release-notes.md
-          if ($LASTEXITCODE -ne 0) { throw 'Could not publish the downloadable candidate assets.' }
       # Publish the ads build so the owner has a real download link. This only
       # attaches files to a pre-release; it never rebuilds with a new version and
       # never uploads anything to the Microsoft Store.
@@ -190,13 +205,29 @@ jobs:
             "AURIX-Windows-x64-ads.zip contains the Electron setup and portable editions of the same commit."
           ) -join "`n"
           $notes | Set-Content -Encoding utf8 dist/store/release-notes-ads.md
-          # The release already exists; a missing release is an error, not a reason to create one.
-          gh release view $tag --json tagName,isPrerelease --jq '"release: \(.tagName) prerelease=\(.isPrerelease)"'
-          if ($LASTEXITCODE -ne 0) { throw "Release $tag is missing; create the pre-release first." }
+          # The tag carries the version, so a missing tag means this version is new: create it.
+          # If the tag exists it must hold the same bytes; a different payload needs a version bump.
+          $existing = gh release view $tag --json tagName --jq '.tagName' 2>$null
           $stamp = $env:GITHUB_SHA.Substring(0, 7)
           $assets = @($package, 'dist/store/SHA256SUMS.txt', 'dist/store/msix-integrity.json', 'dist/store/AppxManifest.xml', 'dist/store/store-build.json')
-          gh release upload $tag @assets --clobber
-          if ($LASTEXITCODE -ne 0) { throw 'Could not upload the ads package.' }
+          if ($LASTEXITCODE -ne 0 -or -not $existing) {
+            gh release create $tag @assets --target $env:GITHUB_SHA --prerelease --title "AURIX AI $version - ads build (Windows x64)" --notes-file dist/store/release-notes-ads.md
+            if ($LASTEXITCODE -ne 0) { throw "Could not create release $tag." }
+          } else {
+            $dir = Join-Path $env:RUNNER_TEMP "ads-$version"
+            New-Item -ItemType Directory -Force -Path $dir | Out-Null
+            gh release download $tag --pattern 'msix-integrity.json' --dir $dir --clobber 2>$null
+            $known = Join-Path $dir 'msix-integrity.json'
+            if (Test-Path $known) {
+              $previous = Get-Content $known -Raw | ConvertFrom-Json
+              if ($previous.sha256 -ne $info.sha256) {
+                throw "Release $tag already publishes $($previous.file) with a different SHA-256. Bump the version in package.json; never republish a new payload under an existing package full name."
+              }
+            }
+            Write-Host "Release $tag already carries this package; refreshing metadata assets only."
+            gh release edit $tag --notes-file dist/store/release-notes-ads.md
+            if ($LASTEXITCODE -ne 0) { throw "Could not update release notes for $tag." }
+          }
           if (Test-Path 'dist/windows') {
             $exes = Get-ChildItem 'dist/windows' -Filter *.exe
             if ($exes.Count -gt 0) {
