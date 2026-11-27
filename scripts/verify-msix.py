@@ -107,6 +107,7 @@ def verify(package, expected_manifest=None, staged=None):
             'payloadFiles': len(files),
             'zipCrcVerified': True, 'sha256BlockMapVerified': True,
             'stagingCompared': bool(staged), 'signaturePresent': 'AppxSignature.p7x' in entries,
+            'canonicalUploadFile': package.name,
             'storeAcceptance': 'NOT_VERIFIED_BY_PARTNER_CENTER'}
 
 

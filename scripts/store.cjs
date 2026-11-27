@@ -50,18 +50,23 @@ function validateProduct(identity, product) {
   return product;
 }
 // Partner Center identifies a package by its full name <IdentityName>_<Version>_<Arch>. Uploading a
-// second package with an existing full name but different contents is rejected, so once a version is
-// published that exact version can never be reused for a new build.
+// second package with an existing full name but different contents is rejected, so once a version has
+// been published *or submitted* (even if it later failed certification) that exact version is dead.
 function fullName(identity, version) {
   return `${identity.identityName}_${packageVersion(version)}_x64`;
 }
 function validateStoreVersion(identity, version, product) {
   const name = fullName(identity, version);
   if (!product) return name;
-  const taken = Array.isArray(product.publishedFullNames) ? product.publishedFullNames : [];
-  const clash = taken.find(t => String(t).toLowerCase() === name.toLowerCase());
+  const clash = (Array.isArray(product.publishedFullNames) ? product.publishedFullNames : [])
+    .find(t => String(t).toLowerCase() === name.toLowerCase());
   if (clash) {
     throw Error(`Package full name ${clash} is already used by a published build. Raise the version in package.json (next: ${product.nextVersion || 'bump the patch number'}) - Partner Center rejects a new payload under an existing full name.`);
+  }
+  const rejected = (Array.isArray(product.rejectedFullNames) ? product.rejectedFullNames : [])
+    .find(t => String(t).toLowerCase() === name.toLowerCase());
+  if (rejected) {
+    throw Error(`Package full name ${rejected} was already submitted and failed certification. Never reuse it - Partner Center keeps the record. Raise the version in package.json (next: ${product.nextVersion || 'bump the patch number'}).`);
   }
   const live = product.liveVersion;
   if (live && /^\d+\.\d+\.\d+\.0$/.test(live)) {
@@ -74,6 +79,32 @@ function validateStoreVersion(identity, version, product) {
     }
   }
   return name;
+}
+// The repository lists are a local hint. The authoritative answer comes from Partner Center, so the
+// build asks it first when a token is available: every package full name that already exists on the
+// product (published, in flight, or rejected) is refused.
+async function preflight(identity, version, options = {}) {
+  const local = validateStoreVersion(identity, version, productFor(identity));
+  const token = options.token || process.env.STORE_ACCESS_TOKEN;
+  if (!token || !options.storeId) return { fullName: local, source: 'local', checked: [] };
+  const base = options.url || 'https://manage.devcenter.microsoft.com/v1.0/my';
+  const headers = { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' };
+  const packages = [];
+  const submissions = Number.isInteger(options.submissions) ? options.submissions : 5;
+  for (let top = 0; top < submissions; top++) {
+    const response = await (options.fetch || fetch)(`${base}/applications/${encodeURIComponent(options.storeId)}/submissions/${top}/packages`, { headers });
+    if (response.status === 404) break;
+    if (!response.ok) throw Error(`Partner Center preflight failed with HTTP ${response.status}. Do not upload until this succeeds.`);
+    const body = await response.json();
+    for (const item of body.items || []) {
+      packages.push({ submission: top, name: item.packageFullName, status: item.fileStatus || item.status || 'unknown' });
+    }
+  }
+  const clash = packages.find(p => String(p.name).toLowerCase() === local.toLowerCase());
+  if (clash) {
+    throw Error(`Partner Center already holds ${clash.name} (submission ${clash.submission}, ${clash.status}). Never reuse a submitted full name: raise package.json to ${productFor(identity)?.nextVersion || 'the next version'} and rebuild.`);
+  }
+  return { fullName: local, source: 'partner-center', checked: packages };
 }
 function productFor(identity) {
   const filename = path.join(ROOT, 'store/product.json');
@@ -123,6 +154,9 @@ function stage(identity, version, appDir) {
   const app = path.resolve(ROOT, appDir || 'dist/store-runtime/win-unpacked');
   const productGuard = productFor(identity);
   validateStoreVersion(identity, version, productGuard);
+  if (productGuard && productGuard.rejectedFullNames && productGuard.rejectedFullNames.some(n => String(n).toLowerCase() === fullName(identity, version).toLowerCase())) {
+    throw Error('Refusing to stage a version that already failed certification. Raise package.json.');
+  }
   const output = path.join(ROOT, 'dist/store');
   const staging = path.join(output, 'staging');
   if (app === output || app.startsWith(output + path.sep)) throw Error('Runtime directory must be outside dist/store.');
@@ -169,4 +203,4 @@ function main(args) {
   else { const result = stage(identity, version, options['app-dir']); console.log(`Staged ${result.staging}\nCandidate package: ${result.packagePath}`); }
 }
 if (require.main === module) { try { main(process.argv.slice(2)); } catch (err) { console.error(err.message); process.exitCode = 1; } }
-module.exports = { ASSETS, packageVersion, validateIdentity, readIdentity, manifest, validateAssets, validateRuntime, packageFamilyName, packageSid, validateProduct, validateStoreVersion, fullName, stage };
+module.exports = { ASSETS, packageVersion, validateIdentity, readIdentity, manifest, validateAssets, validateRuntime, packageFamilyName, packageSid, validateProduct, validateStoreVersion, preflight, fullName, stage };

@@ -1,6 +1,11 @@
 # AURIX AI — تجهيز Microsoft Store (MSIX)
 
-> **الحالة الآن: التطبيق منشور على Microsoft Store — النسخة 1.0.2.0، ونسخة الإعلانات 1.0.3.0 جاهزة للرفع.**
+> **الحالة الآن:** 1.0.2.0 منشورة في Microsoft Store · 1.0.3.0 رُفضت (5001) · **1.0.4.0 هي الحزمة الصحيحة للرفع**.
+
+> **الملف الوحيد المسموح برفعه: `Ahmedbecetti.AURIXAI_1.0.4.0_x64.msix`** من صفحة
+> [`windows-ads-1.0.4.0`](https://github.com/Ahmedbecett/aurix-Becetti-ai/releases/tag/windows-ads-1.0.4.0).
+> 1.0.2.0 منشورة في المتجر، و1.0.3.0 رُفضت بالخطأ 5001 — **اسماهما الكاملان محجوزان ولا يُرفعان مرة أخرى**.
+> التفاصيل: [`store/submission/REPAIR-NOTES.md`](store/submission/REPAIR-NOTES.md).
 
 > **خطأ الشهادة 5001:** تقرير تقني كامل بالسبب المرجّح وخطوات الحسم قبل أي إعادة إرسال في
 > [`STORE-ERROR-5001-AR.md`](STORE-ERROR-5001-AR.md). أداة الفحص: `python scripts/diagnose-msix.py <file>.msix`.

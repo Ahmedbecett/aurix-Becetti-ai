@@ -13,6 +13,9 @@
   "publishedFullNames": [
     "Ahmedbecetti.AURIXAI_1.0.2.0_x64"
   ],
-  "nextVersion": "1.0.3.0",
-  "versionRuleNote": "Partner Center rejects two packages with the same full name but different contents (error seen on upload of 1.0.2.0). 1.0.2.0 is already taken by the published build, so the ads build must ship as 1.0.3.0. scripts/store.cjs refuses to stage any version that is listed in publishedFullNames or below the live version."
+  "nextVersion": "1.0.4.0",
+  "versionRuleNote": "Partner Center rejects two packages with the same full name but different contents. 1.0.2.0 is published in the Store; 1.0.3.0 failed certification with error 5001 and is therefore never reused either. The first build that has not been submitted is the only one that should be uploaded. scripts/store.cjs refuses any version listed here or not higher than liveVersion.",
+  "rejectedFullNames": [
+    "Ahmedbecetti.AURIXAI_1.0.3.0_x64"
+  ]
 }

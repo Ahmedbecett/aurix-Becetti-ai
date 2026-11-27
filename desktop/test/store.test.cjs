@@ -3,7 +3,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
-const { packageVersion, validateIdentity, readIdentity, manifest, validateAssets, validateRuntime, ASSETS, stage, packageFamilyName, packageSid, validateProduct, validateStoreVersion, fullName } = require('../../scripts/store.cjs');
+const { packageVersion, validateIdentity, readIdentity, manifest, validateAssets, validateRuntime, ASSETS, stage, packageFamilyName, packageSid, validateProduct, validateStoreVersion, preflight, fullName } = require('../../scripts/store.cjs');
 const identity = { identityName: 'TestPublisher.AURIX', publisher: 'CN=Test Publisher', publisherDisplayName: 'Test Publisher', displayName: 'AURIX' };
 const root = path.resolve(__dirname, '../..');
 
@@ -59,16 +59,49 @@ test('owner identity remains stable and both manifest display names match the re
 test('a published package full name can never be reused for a new build', () => {
   const owner = JSON.parse(fs.readFileSync(path.join(root, 'store/identity.store.json'), 'utf8'));
   const product = JSON.parse(fs.readFileSync(path.join(root, 'store/product.json'), 'utf8'));
-  assert.equal(fullName(owner, '1.0.3'), 'Ahmedbecetti.AURIXAI_1.0.3.0_x64');
+  assert.equal(fullName(owner, '1.0.4'), 'Ahmedbecetti.AURIXAI_1.0.4.0_x64');
   // Partner Center error: two packages with the full name Ahmedbecetti.AURIXAI_1.0.2.0_X64 but different contents.
   assert.throws(() => validateStoreVersion(owner, '1.0.2', product), /already used by a published build/);
   assert.throws(() => validateStoreVersion(owner, '1.0.1', product), /lower than the published version/);
   assert.throws(() => validateStoreVersion(owner, '1.0.2', { ...product, publishedFullNames: ['ahmedbecetti.aurixai_1.0.2.0_X64'] }), /already used/);
-  assert.equal(validateStoreVersion(owner, '1.0.3', product), 'Ahmedbecetti.AURIXAI_1.0.3.0_x64');
+  assert.throws(() => validateStoreVersion(owner, '1.0.3', product), /failed certification/);
+  assert.equal(validateStoreVersion(owner, '1.0.4', product), 'Ahmedbecetti.AURIXAI_1.0.4.0_x64');
   assert.equal(validateStoreVersion(owner, '1.1.0', product), 'Ahmedbecetti.AURIXAI_1.1.0.0_x64');
   // The current package.json version must clear the guard against the live product record.
-  assert.equal(validateStoreVersion(owner, JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8')).version, product), 'Ahmedbecetti.AURIXAI_1.0.3.0_x64');
+  assert.equal(validateStoreVersion(owner, JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8')).version, product), 'Ahmedbecetti.AURIXAI_1.0.4.0_x64');
 });
+test('preflight asks Partner Center before a version is used', async () => {
+  const owner = JSON.parse(fs.readFileSync(path.join(root, 'store/identity.store.json'), 'utf8'));
+  const options = { token: 'test-token', storeId: '9NLM756D1CZR', submissions: 2 };
+  const seen = [];
+  const fetchWith = rows => async url => { seen.push(url); return { ok: true, status: 200, json: async () => ({ items: rows }) }; };
+
+  const clash = await preflight(owner, '1.0.4', { ...options, fetch: fetchWith([
+    { packageFullName: 'Ahmedbecetti.AURIXAI_1.0.2.0_x64', fileStatus: 'PackagePublished' },
+    { packageFullName: 'Ahmedbecetti.AURIXAI_1.0.4.0_x64', fileStatus: 'PackageValidationFailed' },
+  ]) }).then(() => null, error => error.message);
+  assert.match(clash, /Partner Center already holds Ahmedbecetti\.AURIXAI_1\.0\.4\.0_x64/);
+
+  const clean = await preflight(owner, '1.0.4', { ...options, fetch: fetchWith([
+    { packageFullName: 'Ahmedbecetti.AURIXAI_1.0.2.0_x64', fileStatus: 'PackagePublished' },
+  ]) });
+  assert.equal(clean.source, 'partner-center');
+  assert.equal(clean.fullName, 'Ahmedbecetti.AURIXAI_1.0.4.0_x64');
+  assert.equal(clean.checked.length, 2);
+  assert.match(seen[0], /applications\/9NLM756D1CZR\/submissions\/0\/packages/);
+
+  const down = async () => ({ ok: false, status: 401, json: async () => ({}) });
+  await assert.rejects(() => preflight(owner, '1.0.4', { ...options, fetch: down }), /preflight failed with HTTP 401/);
+});
+
+test('a rejected submission is never treated as a free version', () => {
+  const owner = JSON.parse(fs.readFileSync(path.join(root, 'store/identity.store.json'), 'utf8'));
+  const product = JSON.parse(fs.readFileSync(path.join(root, 'store/product.json'), 'utf8'));
+  assert.ok(product.rejectedFullNames.includes('Ahmedbecetti.AURIXAI_1.0.3.0_x64'));
+  assert.throws(() => validateStoreVersion(owner, '1.0.3', product), /failed certification/);
+  assert.equal(validateStoreVersion(owner, '1.0.4', product), 'Ahmedbecetti.AURIXAI_1.0.4.0_x64');
+});
+
 test('all manifest logos are real PNGs of the declared dimensions', () => {
   validateAssets();
   const output = manifest(identity, '1.0.0');

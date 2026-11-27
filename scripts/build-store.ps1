@@ -53,3 +53,21 @@ $hash = Get-FileHash $package -Algorithm SHA256
 Copy-Item 'dist/store/staging/AppxManifest.xml' 'dist/store/AppxManifest.xml' -Force
 Write-Host "Built unsigned Store candidate: $package"
 Write-Host 'Not ready for public sideloading. Complete Windows testing, WACK, screenshots and Partner Center declarations before submission.'
+
+# ---------------------------------------------------------------------------------------------
+# Pre-publish gate. This build is only useful if its package full name does not already exist on
+# the product: Partner Center rejects a second payload under an existing name, and re-uploading a
+# version that already failed certification (1.0.3.0 / error 5001) fails again.
+# When STORE_ACCESS_TOKEN is set, the answer comes from Partner Center itself.
+# ---------------------------------------------------------------------------------------------
+# A clash that Partner Center knows about is fatal. Without a token only the local lists apply, so the
+# artifact stays a dev download and the upload step must run the preflight with a token first.
+node scripts/store-preflight.cjs --enforce
+$preflight = if ($LASTEXITCODE -eq 0 -and $env:STORE_ACCESS_TOKEN) { 'partner-center-confirmed' } elseif ($LASTEXITCODE -eq 0) { 'local-lists-only' } else { 'unknown' }
+$report = Get-Content 'dist/store/store-build.json' -Raw | ConvertFrom-Json
+$report | Add-Member -NotePropertyName preflight -NotePropertyValue $preflight -Force
+$report | ConvertTo-Json -Depth 8 | Set-Content -Encoding utf8 'dist/store/store-build.json'
+if ($preflight -eq 'unknown') { throw 'The store preflight could not confirm that this package full name is free.' }
+Write-Host "Preflight: $preflight" 
+$gate = Get-Content 'dist/store/store-build.json' -Raw | ConvertFrom-Json
+Write-Host "Publish this file only: $($gate.packageFile)  ($($gate.manifestSHA256.Substring(0,12))...)"

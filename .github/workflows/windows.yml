@@ -195,6 +195,9 @@ jobs:
           $notes = @(
             "AURIX AI $version for Windows x64 - package with the MG Ads banner integration.",
             "",
+            "UPLOAD THIS FILE ONLY: $($info.file)",
+            "It is the canonical package for Microsoft Store submission. Any other .msix in this repository is history and must not be uploaded.",
+            "",
             "Package full name: $($info.file) - unique for this version. The Microsoft Store rejects a new payload uploaded under an existing full name, so every build gets a new version.",
             "",
             "Not submitted to the Microsoft Store. Unsigned test candidate: install only after enabling Developer Mode or trusting the certificate.",

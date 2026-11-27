@@ -8,8 +8,8 @@ shipped build does not have.
 - **App name:** AURIX AI
 - **Microsoft Store:** <https://apps.microsoft.com/detail/9nlm756d1czr?ocid=webpdpshare>
 - **Store product ID:** 9NLM756D1CZR
-- **Version:** **1.0.3.0** is the build with the MG Ads banners, awaiting Store upload; the published
-  Store build is 1.0.2.0 (same app, no banners). Windows 10 22H2 or Windows 11, x64.
+- **Version:** **1.0.4.0** is the canonical build for the next Store submission (MG Ads banners
+  included). The published Store build is 1.0.2.0. Windows 10 22H2 or Windows 11, x64.
 - **Web app:** <https://aurix-ea09b.web.app>
 - **Developer:** Ahmedbecetti (independent project)
 - **Support:** <ahmedbecetti41@gmail.com>
@@ -117,10 +117,10 @@ be captured on a Windows machine before they can be uploaded to the Store — se
 
 ## Direct download (unsigned builds)
 
-Microsoft Store is the recommended way to install. The repository also publishes the exact MSIX
-that is uploaded to Partner Center for testing — **1.0.3.0** (the ads build):
-<https://github.com/Ahmedbecett/aurix-Becetti-ai/releases/tag/windows-ads-1.0.3.0>
-File `Ahmedbecetti.AURIXAI_1.0.3.0_x64.msix`, 164,085,018 bytes,
-SHA-256 `6a9c21c066baa4bf6d8407d6d58dcec1d66fda1919eaa778b4550c607c02330c`.
+Microsoft Store is the recommended way to install. Exactly one file may be uploaded to Partner
+Center: **1.0.4.0** — `Ahmedbecetti.AURIXAI_1.0.4.0_x64.msix`, published on
+<https://github.com/Ahmedbecett/aurix-Becetti-ai/releases/tag/windows-ads-1.0.4.0>.
+The earlier 1.0.2.0 (published in the Store) and 1.0.3.0 (rejected with error 5001) downloads are
+history only — their package full names are taken, so uploading either one fails.
 (see [`WINDOWS-DOWNLOADS-AR.md`](WINDOWS-DOWNLOADS-AR.md)). Those builds are unsigned and need
 Developer Mode or a trusted certificate; that page is not a substitute for the Store listing.

@@ -1,12 +1,35 @@
 # AURIX — رابط MSIX مباشر بعد رفض الحزمة السابقة
+> ## ✅ الملف الصحيح الوحيد للرفع: `Ahmedbecetti.AURIXAI_1.0.4.0_x64.msix`
+>
+> https://github.com/Ahmedbecett/aurix-Becetti-ai/releases/tag/windows-ads-1.0.4.0
+>
+> **لا تستخدم 1.0.3.0** (رُفضت بالخطأ 5001) ولا **1.0.2.0** (منشورة في المتجر) — الاسم الكامل لكل منهما
+> محجوز في Partner Center، ورفع أي منهما يفشل. كل ما أسفل هذا التنبيه سجل تاريخي.
 
-## التنزيل الحالي: الإصدار 1.0.3.0
+## سجل الإصدارات (تاريخي — لا ترفع منه)
 
-> **لماذا 1.0.3.0؟** المتجر يرفض حزمتين بالاسم الكامل نفسه `Ahmedbecetti.AURIXAI_1.0.2.0_x64` بمحتوى مختلف. لذلك نسخة الإعلانات تحمل 1.0.3.0. روابط 1.0.2.0 أدناه تبقى للسجل فقط.
+| الإصدار | الحالة | السبب |
+|---|---|---|
+| 1.0.2.0 | منشور في المتجر | النسخة العامة الحالية |
+| 1.0.3.0 | **رُفض** — Certification Error 5001 | اسم كامل مسجّل في الإرسال الفاشل؛ لا يُعاد استخدامه |
+| 1.0.4.0 | ✅ الحزمة الصحيحة | اسم كامل جديد لم يُرسل قط |
 
-**[تنزيل ملف MSIX مباشرة](https://github.com/Ahmedbecett/aurix-Becetti-ai/releases/download/aurix-store-candidate-1.0.2/Ahmedbecetti.AURIXAI_1.0.2.0_x64.msix)**
+سبب رفع الإصدار أصلًا: المتجر يرفض حزمتين بالاسم الكامل نفسه `Ahmedbecetti.AURIXAI_1.0.2.0_x64`
+بمحتوى مختلف. التقرير التقني لخطأ 5001: [`STORE-ERROR-5001-AR.md`](STORE-ERROR-5001-AR.md).
 
-هذا ملف MSIX نفسه، وليس أرشيف artifact خارجيًا يحتاج تسجيل الدخول أو فك ZIP. نُشر كـGitHub prerelease للاختبار والتقديم، **وليس كتطبيق معتمد أو منشور في Microsoft Store**.
+## ⬇ التنزيل الحالي — 1.0.4.0
+
+**[تنزيل Ahmedbecetti.AURIXAI_1.0.4.0_x64.msix مباشرة](https://github.com/Ahmedbecett/aurix-Becetti-ai/releases/download/windows-ads-1.0.4.0/Ahmedbecetti.AURIXAI_1.0.4.0_x64.msix)**
+
+هذا هو الملف نفسه الذي يُرفع إلى Partner Center → Packages. ملف MSIX مباشر، لا أرشيف artifact ولا ZIP.
+نُشر كـGitHub prerelease للاختبار والتقديم، **وليس كتطبيق معتمد بعد**. البايتات والبصمة في صفحة الإصدار:
+[SHA-256](https://github.com/Ahmedbecett/aurix-Becetti-ai/releases/download/windows-ads-1.0.4.0/SHA256SUMS.txt) ·
+[تقرير السلامة](https://github.com/Ahmedbecett/aurix-Becetti-ai/releases/download/windows-ads-1.0.4.0/msix-integrity.json) ·
+[بيان الحزمة](https://github.com/Ahmedbecett/aurix-Becetti-ai/releases/download/windows-ads-1.0.4.0/AppxManifest.xml)
+
+### أرشيف — 1.0.2.0 (منشورة في المتجر، لا تُرفع)
+
+**[تنزيل MSIX 1.0.2.0](https://github.com/Ahmedbecett/aurix-Becetti-ai/releases/download/aurix-store-candidate-1.0.2/Ahmedbecetti.AURIXAI_1.0.2.0_x64.msix)**
 
 ```text
 File: Ahmedbecetti.AURIXAI_1.0.2.0_x64.msix
