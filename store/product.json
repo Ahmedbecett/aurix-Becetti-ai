@@ -27,5 +27,10 @@
     "sourceCommit": "547c288",
     "frozen": true,
     "note": "Upload exactly this file to Partner Center. The release is immutable; a later rebuild of the same version is never uploaded, because replacing the file would break this hash."
+  },
+  "ownerReportedLatestPublish": {
+    "reportedOn": "2026-11-27",
+    "version": "unconfirmed",
+    "note": "The owner reports that the newest update is now published on the Microsoft Store and that it contains the MG Ads integration. The exact package version was not confirmed, and this repository cannot read the Store listing. Confirm the published version in Partner Center -> Overview -> Packages before bumping package.json again: publishedFullNames below must then be updated to that full name, and the next build must use a higher version."
   }
 }
