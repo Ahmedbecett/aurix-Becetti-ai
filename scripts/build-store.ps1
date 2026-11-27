@@ -60,14 +60,19 @@ Write-Host 'Not ready for public sideloading. Complete Windows testing, WACK, sc
 # version that already failed certification (1.0.3.0 / error 5001) fails again.
 # When STORE_ACCESS_TOKEN is set, the answer comes from Partner Center itself.
 # ---------------------------------------------------------------------------------------------
-# A clash that Partner Center knows about is fatal. Without a token only the local lists apply, so the
-# artifact stays a dev download and the upload step must run the preflight with a token first.
+# A clash that Partner Center knows about is fatal, and a local clash is fatal too. The result is
+# recorded so nobody mistakes a local-only check for a Partner Center confirmation.
 node scripts/store-preflight.cjs --enforce
-$preflight = if ($LASTEXITCODE -eq 0 -and $env:STORE_ACCESS_TOKEN) { 'partner-center-confirmed' } elseif ($LASTEXITCODE -eq 0) { 'local-lists-only' } else { 'unknown' }
+$localClash = ($LASTEXITCODE -ne 0)
+$preflight = if ($localClash) { 'blocked' } elseif ($env:STORE_ACCESS_TOKEN) { 'partner-center-confirmed' } else { 'local-lists-only' }
 $report = Get-Content 'dist/store/store-build.json' -Raw | ConvertFrom-Json
 $report | Add-Member -NotePropertyName preflight -NotePropertyValue $preflight -Force
+$report | Add-Member -NotePropertyName uploadFile -NotePropertyValue $report.packageFile -Force
 $report | ConvertTo-Json -Depth 8 | Set-Content -Encoding utf8 'dist/store/store-build.json'
-if ($preflight -eq 'unknown') { throw 'The store preflight could not confirm that this package full name is free.' }
-Write-Host "Preflight: $preflight" 
+if ($localClash) { throw 'This package full name is already published, already submitted, or below the published version. Raise the version in package.json.' }
+if ($preflight -eq 'local-lists-only') {
+    Write-Host '::warning::Partner Center was not asked (STORE_ACCESS_TOKEN unset). Upload only after `node scripts/store-preflight.cjs --require-partner-center` succeeds.'
+}
+Write-Host "Preflight: $preflight - upload only $($report.packageFile)" 
 $gate = Get-Content 'dist/store/store-build.json' -Raw | ConvertFrom-Json
 Write-Host "Publish this file only: $($gate.packageFile)  ($($gate.manifestSHA256.Substring(0,12))...)"
