@@ -11,6 +11,8 @@
 | English listing copy (description, features, media) | [`LISTING-EN.md`](LISTING-EN.md) |
 | Walkthrough video (28 s, silent) | [`release/media/aurix-walkthrough.mp4`](release/media/aurix-walkthrough.mp4) |
 | Direct unsigned MSIX (testing only) | [`WINDOWS-DOWNLOADS-AR.md`](WINDOWS-DOWNLOADS-AR.md) |
+| Store error 5001 — technical report | [`STORE-ERROR-5001-AR.md`](STORE-ERROR-5001-AR.md) |
+| Pre-upload MSIX audit | `python scripts/diagnose-msix.py <file>.msix` |
 
 > **الموقع الحي:** https://aurix-ea09b.web.app (Firebase Hosting) — وتطبيق Windows منشور على Microsoft Store.
 > هذا المستودع هو مصدر المشروع ونسخته الاحتياطية. لا توجد نسخة Vercel منشورة بعد اليوم.

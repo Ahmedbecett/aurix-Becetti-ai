@@ -1,6 +1,9 @@
 # AURIX AI — تجهيز Microsoft Store (MSIX)
 
 > **الحالة الآن: التطبيق منشور على Microsoft Store — النسخة 1.0.2.0، ونسخة الإعلانات 1.0.3.0 جاهزة للرفع.**
+
+> **خطأ الشهادة 5001:** تقرير تقني كامل بالسبب المرجّح وخطوات الحسم قبل أي إعادة إرسال في
+> [`STORE-ERROR-5001-AR.md`](STORE-ERROR-5001-AR.md). أداة الفحص: `python scripts/diagnose-msix.py <file>.msix`.
 > الصفحة: https://apps.microsoft.com/detail/9nlm756d1czr?ocid=webpdpshare (المعرّف `9NLM756D1CZR`).
 > هذا الملف يبقى سجلًا لكيفية بناء الحزمة والتحقق منها. الوصف الإنجليزي المنشور والوسائط في
 > [`LISTING-EN.md`](LISTING-EN.md). لقطات الشاشة الحقيقية من ويندوز وتشغيل WACK مهمة على جهاز

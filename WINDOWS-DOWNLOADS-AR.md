@@ -121,6 +121,17 @@ Source commit: 258bd37
 هذه الحزمة نفسها هي التي تُرفع إلى Partner Center → Packages. لا ترفع أي حزمة `1.0.2.0` أخرى:
 اسمها الكامل مسجّل بالمحتوى القديم، والمتجر يرفض تكراره.
 
+### قبل الرفع إلى Partner Center
+
+شغّل المدقق على الملف نفسه؛ يشرح كل شرط تفحصه البوابة (ZIP/CRC، manifest، الإصدار، التوجيه،
+الأصول، BlockMap) ويعطي `PASS/WARN/FAIL`:
+
+```powershell
+python scripts/diagnose-msix.py .\Ahmedbecetti.AURIXAI_1.0.3.0_x64.msix
+```
+
+خلفية وتشخيص خطأ 5001: [`STORE-ERROR-5001-AR.md`](STORE-ERROR-5001-AR.md).
+
 ### أرشيف — نسخة الإعلانات المؤقتة (1.0.2.0، سجل فقط)
 
 https://github.com/Ahmedbecett/aurix-Becetti-ai/releases/tag/windows-ads-1.0.2.0
