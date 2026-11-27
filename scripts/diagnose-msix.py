@@ -107,7 +107,19 @@ def audit(package):
         fail(area, 'File not found: %s' % package)
         return
     raw = package.read_bytes()
-    ok(area, 'File: %s (%d bytes, sha256 %s)' % (package.name, len(raw), hashlib.sha256(raw).hexdigest()))
+    digest = hashlib.sha256(raw).hexdigest()
+    ok(area, 'File: %s (%d bytes, sha256 %s)' % (package.name, len(raw), digest))
+    canonical = product.get('canonicalPackage') or {}
+    if canonical.get('sha256') and canonical.get('frozen'):
+        if package.name == canonical.get('file'):
+            if digest == canonical['sha256'] and len(raw) == canonical.get('bytes'):
+                ok(area, 'Byte-identical to the frozen canonical artifact %s' % canonical.get('fullName'))
+            else:
+                fail(area, 'This file is not the published %s (expected %d bytes / %s). Re-download it; never rebuild or repackage the file you upload.'
+                     % (canonical.get('file'), canonical.get('bytes', 0), canonical['sha256']))
+        else:
+            warn(area, 'Canonical artifact for submission is %s (%s). This file is %s and must not be uploaded.'
+                 % (canonical.get('file'), canonical.get('fullName'), package.name))
     if not raw.startswith(b'PK'):
         fail(area, 'Not a ZIP container. An MSIX starts with "PK"; a renamed EXE/ZIP with a wrapper will fail preprocessing.')
         return

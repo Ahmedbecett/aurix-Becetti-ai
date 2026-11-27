@@ -118,8 +118,8 @@ be captured on a Windows machine before they can be uploaded to the Store — se
 ## Direct download (unsigned builds)
 
 Microsoft Store is the recommended way to install. Exactly one file may be uploaded to Partner
-Center: **1.0.4.0** — `Ahmedbecetti.AURIXAI_1.0.4.0_x64.msix`, 164,085,022 bytes,
-SHA-256 `137535100e289e1c970595aa5323f9bccfd7d26f458cdbc43e6460e09c0b4275`, published on
+Center: **1.0.4.0** — `Ahmedbecetti.AURIXAI_1.0.4.0_x64.msix`, 164,085,025 bytes,
+SHA-256 `c4697223fc668e500911dfe9401ddebc3ea52259531867d89fef0838e99a37b8`, published on
 <https://github.com/Ahmedbecett/aurix-Becetti-ai/releases/tag/windows-ads-1.0.4.0>.
 The earlier 1.0.2.0 (published in the Store) and 1.0.3.0 (rejected with error 5001) downloads are
 history only — their package full names are taken, so uploading either one fails.

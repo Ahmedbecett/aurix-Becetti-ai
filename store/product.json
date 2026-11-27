@@ -17,5 +17,15 @@
   "versionRuleNote": "Partner Center rejects two packages with the same full name but different contents. 1.0.2.0 is published in the Store; 1.0.3.0 failed certification with error 5001 and is therefore never reused either. The first build that has not been submitted is the only one that should be uploaded. scripts/store.cjs refuses any version listed here or not higher than liveVersion.",
   "rejectedFullNames": [
     "Ahmedbecetti.AURIXAI_1.0.3.0_x64"
-  ]
+  ],
+  "canonicalPackage": {
+    "fullName": "Ahmedbecetti.AURIXAI_1.0.4.0_x64",
+    "file": "Ahmedbecetti.AURIXAI_1.0.4.0_x64.msix",
+    "bytes": 164085025,
+    "sha256": "c4697223fc668e500911dfe9401ddebc3ea52259531867d89fef0838e99a37b8",
+    "release": "https://github.com/Ahmedbecett/aurix-Becetti-ai/releases/tag/windows-ads-1.0.4.0",
+    "sourceCommit": "547c288",
+    "frozen": true,
+    "note": "Upload exactly this file to Partner Center. The release is immutable; a later rebuild of the same version is never uploaded, because replacing the file would break this hash."
+  }
 }

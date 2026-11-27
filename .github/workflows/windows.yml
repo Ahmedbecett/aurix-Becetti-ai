@@ -159,11 +159,9 @@ jobs:
             if (Test-Path $known) {
               $previous = Get-Content $known -Raw | ConvertFrom-Json
               if ($previous.sha256 -ne $info.sha256) {
-                # Source changes rebuild the same version with different bytes. That is fine for a
-                # dev candidate, but it must never reach Partner Center as a second 1.0.x.0 package.
-                Write-Host "::warning::Release $tag was rebuilt: $($previous.sha256) -> $($info.sha256). If this version was already uploaded to Partner Center, bump package.json; the Store refuses two payloads under one full name."
-                gh release upload $tag @assets --clobber
-                if ($LASTEXITCODE -ne 0) { throw "Could not refresh the assets of $tag." }
+                # Rebuilding the same version produces different bytes. The published candidate stays
+                # as it is: replacing it would make the recorded SHA-256 point at a file nobody has.
+                Write-Host "::warning::Release $tag is frozen at $($previous.sha256); this rebuild ($($info.sha256)) was not uploaded. Bump package.json if it must ship."
               } else {
                 Write-Host "Release $tag already publishes this exact package ($($info.sha256)); skipping."
               }
@@ -222,28 +220,22 @@ jobs:
             gh release create $tag @assets --target $env:GITHUB_SHA --prerelease --title "AURIX AI $version - ads build (Windows x64)" --notes-file dist/store/release-notes-ads.md
             if ($LASTEXITCODE -ne 0) { throw "Could not create release $tag." }
           } else {
+            # A published version is immutable. Replace its MSIX and the documented SHA-256 stops
+            # matching the file people already downloaded - the same confusion that produced the
+            # duplicate-full-name rejection. Keep the original artifact and say so.
             $dir = Join-Path $env:RUNNER_TEMP "ads-$version"
             New-Item -ItemType Directory -Force -Path $dir | Out-Null
             gh release download $tag --pattern 'msix-integrity.json' --dir $dir --clobber 2>$null
             $known = Join-Path $dir 'msix-integrity.json'
             if (Test-Path $known) {
               $previous = Get-Content $known -Raw | ConvertFrom-Json
+              Write-Host "Release $tag is frozen at $($previous.file) sha256=$($previous.sha256) ($($previous.bytes) bytes)."
               if ($previous.sha256 -ne $info.sha256) {
-                Write-Host "::warning::Release $tag was rebuilt: $($previous.sha256) -> $($info.sha256). Upload exactly these bytes to Partner Center, or bump package.json if this version already reached the Store."
+                Write-Host "::warning::This rebuild differs from the published $tag artifact. The published file was kept; bump package.json if the new build must ship."
               }
+            } else {
+              Write-Host "::warning::Release $tag has no msix-integrity.json; leaving its assets untouched."
             }
-            $adsAssets = $assets
-            if (Test-Path 'dist/windows') {
-              $exes = Get-ChildItem 'dist/windows' -Filter *.exe
-              if ($exes.Count -gt 0) {
-                Compress-Archive -Path 'dist/windows/*' -DestinationPath "dist/AURIX-Windows-x64-ads-$stamp.zip" -Force
-                $adsAssets += "dist/AURIX-Windows-x64-ads-$stamp.zip"
-              }
-            }
-            gh release upload $tag @adsAssets --clobber
-            if ($LASTEXITCODE -ne 0) { throw "Could not refresh the assets of $tag." }
-            gh release edit $tag --notes-file dist/store/release-notes-ads.md
-            if ($LASTEXITCODE -ne 0) { throw "Could not update release notes for $tag." }
           }
           if (Test-Path 'dist/windows') {
             $exes = Get-ChildItem 'dist/windows' -Filter *.exe

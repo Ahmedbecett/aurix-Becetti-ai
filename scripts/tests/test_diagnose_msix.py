@@ -48,6 +48,26 @@ class AuditTests(unittest.TestCase):
         self.assertTrue(any('not inside the package' in p for p in missing))
         self.assertTrue(any('logo' in p.lower() for p in failures(run(logo_size=(120, 120)))))
 
+    def test_flags_a_file_that_is_not_the_frozen_canonical_artifact(self):
+        import json
+        product_path = module.ROOT / 'store' / 'product.json'
+        original = product_path.read_text(encoding='utf-8')
+        product = json.loads(original)
+        canonical = product['canonicalPackage']
+        try:
+            with tempfile.TemporaryDirectory() as tmp:
+                package = fixture.build(Path(tmp) / canonical['file'])
+                module.results.clear()
+                module.audit(package)
+                self.assertTrue(any('not the published' in r[2] for r in module.results if r[0] == 'FAIL'))
+                # A file with another name is only a warning, never an upload candidate.
+                other = fixture.build(Path(tmp) / 'Ahmedbecetti.AURIXAI_9.9.9.0_x64.msix')
+                module.results.clear()
+                module.audit(other)
+                self.assertTrue(any('must not be uploaded' in r[2] for r in module.results if r[0] == 'WARN'))
+        finally:
+            product_path.write_text(original, encoding='utf-8')
+
     def test_detects_corrupt_zip_and_foreign_file(self):
         with tempfile.TemporaryDirectory() as tmp:
             good = Path(tmp) / 'g.msix'

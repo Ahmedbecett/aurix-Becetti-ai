@@ -23,9 +23,11 @@
 
 ```text
 File: Ahmedbecetti.AURIXAI_1.0.4.0_x64.msix
-Exact bytes: 164085022
-SHA-256: 137535100e289e1c970595aa5323f9bccfd7d26f458cdbc43e6460e09c0b4275
-Source commit: add5334 (run 45973516370, success)
+Exact bytes: 164085025
+SHA-256: c4697223fc668e500911dfe9401ddebc3ea52259531867d89fef0838e99a37b8
+Source commit: 547c288
+
+هذا الملف مجمَّد (frozen): أي إعادة بناء لاحقة لا تستبدله، حتى لا تختلف البصمة عن الملف الذي نزّلته.
 Package full name: Ahmedbecetti.AURIXAI_1.0.4.0_x64
 ```
 
